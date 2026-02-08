@@ -6,7 +6,6 @@ import 'package:pageui/core/constants/borders.dart';
 import 'package:pageui/core/custom_widget/logo_widget.dart';
 import 'package:pageui/features/auth/presentation/widgets/auth_text_form_field.dart';
 import 'package:pageui/features/auth/presentation/widgets/password_text_form_field.dart';
-import 'package:pageui/features/auth/presentation/widgets/security_tip_text.dart';
 
 class LoginViewBody extends StatelessWidget {
   const LoginViewBody({super.key});
