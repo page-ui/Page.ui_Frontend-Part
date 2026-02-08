@@ -1,0 +1,41 @@
+import 'package:flutter/material.dart';
+import 'package:pageui/features/auth/presentation/views/login_view.dart';
+
+sealed class AppRoutes {
+  const AppRoutes();
+  static void pop<T extends Object?>(
+    final BuildContext context, [
+    final T? result,
+  ]) => Navigator.pop<T>(context);
+
+  static Future<T?> pushNamed<T extends Object?>(
+    final BuildContext context,
+    final String routeName, {
+    final Object? arguments,
+  }) => Navigator.pushNamed<T>(context, routeName, arguments: arguments);
+
+  static Future<T?> pushNamedAndRemoveAll<T extends Object?>(
+    final BuildContext context,
+    final String newRouteName, {
+    final Object? arguments,
+  }) => Navigator.pushNamedAndRemoveUntil<T>(
+    context,
+    newRouteName,
+    (_) => false,
+    arguments: arguments,
+  );
+}
+
+Map<String, Widget Function(BuildContext, Object?)> _routes = {
+  LoginView.routeName: (_, _) => const LoginView(),
+};
+
+Route<dynamic>? Function(RouteSettings)? onGenerateRoute = (final settings) {
+  final builder =
+      _routes[settings.name] ??
+      (_, _) => const Scaffold(body: Center(child: Text('Page not found')));
+  return MaterialPageRoute(
+    builder: (final context) => builder(context, settings.arguments),
+    settings: settings,
+  );
+};
