@@ -1,6 +1,8 @@
 // import 'package:flutter/material.dart';
 // import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'package:flutter/material.dart';
+
 class AppIcons {
   AppIcons._();
   // static final IconData share = FontAwesomeIcons.shareNodes;
@@ -10,7 +12,8 @@ class AppIcons {
   // static final IconData delete = FontAwesomeIcons.trash;
   // static final IconData edit = FontAwesomeIcons.pencil;
   // static final IconData errorIcon = Icons.error;
-  // static final IconData arrowForward = Icons.arrow_forward_ios;
+  static final IconData arrowForward = Icons.arrow_forward_ios;
+  static final IconData dot = Icons.circle;
   // static final IconData gridIcon = FontAwesomeIcons.gripVertical;
   // static final IconData listIcon = FontAwesomeIcons.listUl;
   // static final IconData title = FontAwesomeIcons.alignLeft;
@@ -25,7 +28,7 @@ class AppIcons {
   // static final IconData files = FontAwesomeIcons.paperclip;
   // static final IconData calender = FontAwesomeIcons.calendarWeek;
   // static final IconData angleRight = FontAwesomeIcons.angleLeft;
-  // static final IconData relationArrow = Icons.arrow_outward;
+  static final IconData relationArrow = Icons.arrow_outward;
   // static final IconData darkMode = Icons.dark_mode_rounded;
   // static final IconData lightMode = Icons.light_mode_rounded;
   // static final IconData search = FontAwesomeIcons.magnifyingGlass;

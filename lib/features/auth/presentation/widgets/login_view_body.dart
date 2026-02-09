@@ -17,6 +17,7 @@ class LoginViewBody extends StatelessWidget {
           child: Column(
             children: [
               LogoWidget(),
+
               Container(
                 constraints: BoxConstraints(
                   maxWidth: MediaQuery.sizeOf(context).width > 600
@@ -27,18 +28,27 @@ class LoginViewBody extends StatelessWidget {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.white.withOpacity(0.25),
-                      blurRadius: 30,
+                      color: AppColors.green.withOpacity(0.6),
+                      blurRadius: 26,
+                      spreadRadius: 2,
+                      blurStyle: BlurStyle.solid,
                     ),
                   ],
-                  borderRadius: AppBorders.xxxs,
-                  color: AppColors.lightGrey,
-                  gradient: LinearGradient(
-                    colors: [AppColors.lightAmber, AppColors.cyan],
+                  borderRadius: AppBorders.xxxxs,
+                  border: Border.all(
+                    color: AppColors.primaryColor,
+                    width: 2,
+                    strokeAlign: BorderSide.strokeAlignOutside,
                   ),
+                  color: AppColors.mainBackgroundColor,
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.only(
+                    bottom: 16.0,
+                    top: 8,
+                    right: 16,
+                    left: 16,
+                  ),
                   child: LoginViewForm(),
                 ),
               ),

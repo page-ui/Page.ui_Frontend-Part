@@ -15,42 +15,55 @@ class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      obscureText: isSecure,
-      obscuringCharacter: "*",
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'this field is required';
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        suffixIcon: IconButton(
-          icon: Icon(isSecure ? Icons.visibility_off : Icons.visibility),
-          iconSize: 20,
-          onPressed: () {
-            setState(() {
-              isSecure = !isSecure;
-            });
-          },
-        ),
-        labelText: "Password",
-        labelStyle: AppTextStyles.bodyMedium!.copyWith(color: AppColors.black),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: AppBorders.xxs,
-          borderSide: BorderSide(color: AppColors.anotherGray),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: AppBorders.xxs,
-          borderSide: BorderSide(color: AppColors.brown),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: AppBorders.xxs,
-          borderSide: BorderSide(color: AppColors.red),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: AppBorders.xxs,
-          borderSide: BorderSide(color: AppColors.darkGrey),
+    return SizedBox(
+      height: 37,
+      child: TextFormField(
+        style: AppTextStyles.bodyMedium!.copyWith(color: AppColors.white),
+        cursorColor: AppColors.primaryColor,
+        mouseCursor: SystemMouseCursors.click,
+        obscureText: isSecure,
+        obscuringCharacter: "*",
+        validator: (value) {
+          // TODO: write the validator
+          // if (value == null || value.isEmpty) {
+          //   return 'this field is required';
+          // }
+          // return null;
+        },
+        decoration: InputDecoration(
+          suffixIcon: IconButton(
+            icon: Icon(
+              isSecure ? Icons.visibility_off : Icons.visibility,
+              color: AppColors.darkSurface,
+            ),
+            iconSize: 20,
+            onPressed: () {
+              setState(() {
+                isSecure = !isSecure;
+              });
+            },
+          ),
+          labelText: "Password",
+
+          labelStyle: AppTextStyles.bodyMedium!.copyWith(
+            color: AppColors.darkSurface,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: AppBorders.xxxs,
+            borderSide: BorderSide(color: AppColors.darkSurface),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: AppBorders.xxxs,
+            borderSide: BorderSide(color: AppColors.cyan),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: AppBorders.xxxs,
+            borderSide: BorderSide(color: AppColors.red),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: AppBorders.xxxs,
+            borderSide: BorderSide(color: AppColors.darkGrey),
+          ),
         ),
       ),
     );

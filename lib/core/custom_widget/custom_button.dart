@@ -10,8 +10,8 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       child: Text(
-        "Login",
-        style: AppTextStyles.bodyLarge!.copyWith(color: AppColors.white),
+        "[Login]",
+        style: AppTextStyles.bodyLarge!.copyWith(color: AppColors.green),
       ),
       onPressed: () {},
       style: ButtonStyle(
@@ -22,17 +22,14 @@ class CustomButton extends StatelessWidget {
           WidgetState.any: Size(double.infinity, 50),
         }),
         backgroundColor: WidgetStateColor.fromMap({
-          WidgetState.any: AppColors.anotherGray,
+          WidgetState.pressed: AppColors.spaceBlack,
+          WidgetState.any: AppColors.transparent,
         }),
         enableFeedback: true,
         shape: WidgetStateProperty.fromMap({
-          WidgetState.hovered: RoundedRectangleBorder(
-            borderRadius: AppBorders.xxs,
-            side: BorderSide(color: AppColors.black),
-          ),
           WidgetState.any: RoundedRectangleBorder(
-            borderRadius: AppBorders.xxs,
-            side: BorderSide(color: AppColors.grey),
+            borderRadius: AppBorders.xxxs,
+            side: BorderSide(color: AppColors.primaryColor),
           ),
         }),
       ),

@@ -19,7 +19,9 @@ class PageDotUi extends StatelessWidget {
           onGenerateRoute: onGenerateRoute,
           title: 'Page.ui',
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(scaffoldBackgroundColor: AppColors.spaceBlack),
+          theme: ThemeData(
+            scaffoldBackgroundColor: AppColors.mainBackgroundColor,
+          ),
           builder: (context, child) {
             AppTextStyles.init(context);
             return child ?? const SizedBox();

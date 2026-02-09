@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 @immutable
 sealed class AppColors {
   const AppColors();
+  static const Color primaryColor = Color(0xff539062);
+  static const Color mainBackgroundColor = Color(0xff0f0f0f);
   static const Color lightAmber = Color.fromARGB(255, 252, 206, 69);
   // Normal colors
   static const Color amber = Colors.amber;
