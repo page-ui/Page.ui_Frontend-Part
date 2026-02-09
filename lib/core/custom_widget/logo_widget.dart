@@ -21,13 +21,13 @@ class _LogoWidgetState extends State<LogoWidget>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 900),
+      duration: const Duration(milliseconds: 1000),
     );
 
     _fade = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
 
     _slide = Tween<Offset>(
-      begin: const Offset(0, -0.8),
+      begin: const Offset(0, -0.9),
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
 
