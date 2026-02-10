@@ -6,6 +6,6 @@ class Assets {
 
   static const String assetsImagesLogoWithoutBackground = "assets/images/logoWithoutBackground.png";
 
-  static const String assetsImagesMainbackground = "assets/images/mainbackground.png";
+  static const String assetsImagesMainBackground2 = "assets/images/mainBackground2.avif";
 }
 

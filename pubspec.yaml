@@ -33,6 +33,7 @@ dependencies:
   dio: ^5.9.1
   flutter:
     sdk: flutter
+  flutter_avif: ^3.1.0
   flutter_screenutil: ^5.9.3
   flutter_secure_storage: ^10.0.0
   fluttertest: ^0.0.1
