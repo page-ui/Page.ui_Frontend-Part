@@ -48,11 +48,6 @@ class _ForgetPaswordViewFormState extends State<ForgetPaswordViewForm> {
           customRowAuth(hint: "Type Your Email"),
           const SizedBox(height: 4),
           AuthTextFormField(
-            onChanged: (value) {
-              setState(() {
-                email = value;
-              });
-            },
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'This field is required';
@@ -75,22 +70,18 @@ class _ForgetPaswordViewFormState extends State<ForgetPaswordViewForm> {
   }
 
   Widget _resetPasswordStep() {
-    String newPassword;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        customRowAuth(hint: "New Password"),
-        const SizedBox(height: 4),
-        PasswordTextFormField(
-          onChanged: (String value) {
-            setState(() {
-              newPassword = value;
-            });
-          },
-        ),
-        const SizedBox(height: 20),
-        CustomButton(title: 'Reset Password', onPressed: () {}),
-      ],
+    String Password;
+    return Form(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          customRowAuth(hint: "New Password"),
+          const SizedBox(height: 4),
+          PasswordTextFormField(),
+          const SizedBox(height: 20),
+          CustomButton(title: 'Reset Password', onPressed: () {}),
+        ],
+      ),
     );
   }
 

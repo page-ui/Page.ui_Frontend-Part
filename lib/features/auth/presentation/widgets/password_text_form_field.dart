@@ -6,9 +6,9 @@ import 'package:pageui/core/constants/borders.dart';
 import 'package:pageui/features/auth/presentation/widgets/password_validator.dart';
 
 class PasswordTextFormField extends StatefulWidget {
-  const PasswordTextFormField({super.key, this.controller, required this.onChanged});
+  const PasswordTextFormField({super.key, this.controller,});
   final TextEditingController? controller;
-   final Function(String) onChanged;
+
   @override
   State<PasswordTextFormField> createState() => _PasswordTextFormFieldState();
 }
@@ -19,7 +19,6 @@ class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      onChanged: widget.onChanged,
       validator: passwordValidator,
       controller: widget.controller,
       style: AppTextStyles.bodyMedium!.copyWith(color: AppColors.white),

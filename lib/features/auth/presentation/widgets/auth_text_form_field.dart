@@ -9,15 +9,12 @@ class AuthTextFormField extends StatelessWidget {
     super.key,
     this.controller,
     required this.validator,
-    required this.onChanged,
   });
-   final Function(String) onChanged;
   final TextEditingController? controller;
   final FormFieldValidator<String> validator;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      onChanged: onChanged,
       controller: controller,
       validator: validator,
       cursorColor: AppColors.primaryColor,
