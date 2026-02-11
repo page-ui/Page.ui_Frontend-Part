@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pageui/features/auth/presentation/widgets/custom_auth_screen_theme.dart';
+import 'package:pageui/features/auth/presentation/widgets/signup_view_body.dart';
 
 class SignupView extends StatelessWidget {
   const SignupView({super.key});
@@ -7,7 +8,7 @@ class SignupView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomAuthScreenTheme(viewTitle: 'Signup', child: Text("")),
+      body: CustomAuthScreenTheme(viewTitle: 'Signup', child: SignupViewBody()),
     );
   }
 }

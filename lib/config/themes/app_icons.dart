@@ -2,6 +2,7 @@
 // import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AppIcons {
   AppIcons._();
@@ -14,6 +15,11 @@ class AppIcons {
   // static final IconData errorIcon = Icons.error;
   static final IconData arrowForward = Icons.arrow_forward_ios;
   static final IconData dot = Icons.circle;
+  // static final IconData visibilityOff = Icons.visibility_off;
+  // static final IconData visibilityOn = Icons.visibility;
+
+  static final IconData visibilityOff = FontAwesomeIcons.eyeLowVision;
+  static final IconData visibilityOn = FontAwesomeIcons.solidEye;
   // static final IconData gridIcon = FontAwesomeIcons.gripVertical;
   // static final IconData listIcon = FontAwesomeIcons.listUl;
   // static final IconData title = FontAwesomeIcons.alignLeft;

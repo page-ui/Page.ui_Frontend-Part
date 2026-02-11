@@ -29,7 +29,7 @@ sealed class AppRoutes {
     return Navigator.push(
       context,
       PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 300),
+        transitionDuration: const Duration(milliseconds: 400),
         pageBuilder: (_, __, ___) => const SignupView(),
         transitionsBuilder: (_, animation, __, child) {
           final slide =

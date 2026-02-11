@@ -6,8 +6,11 @@ class MainBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: Image.asset(Assets.assetsImagesMainBackground, fit: BoxFit.cover),
+    return Image.asset(
+      Assets.assetsImagesMainBackground,
+      fit: BoxFit.fill,
+      height: MediaQuery.sizeOf(context).height,
+      width: MediaQuery.sizeOf(context).width,
     );
   }
 }

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:pageui/core/custom_widget/custom_button.dart';
 import 'package:pageui/features/auth/presentation/widgets/auth_text_form_field.dart';
 import 'package:pageui/features/auth/presentation/widgets/custom_row_auth.dart';
-import 'package:pageui/features/auth/presentation/widgets/do_not_have_an_account_widget.dart';
+import 'package:pageui/features/auth/presentation/widgets/have_an_account_widget.dart';
 import 'package:pageui/features/auth/presentation/widgets/password_text_form_field.dart';
 
-class LoginViewForm extends StatelessWidget {
-  const LoginViewForm({super.key});
+class SignpForm extends StatelessWidget {
+  const SignpForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,17 +14,35 @@ class LoginViewForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          customRowAuth(hint: "UserName"),
+          SizedBox(height: 4),
+          AuthTextFormField(),
+
+          SizedBox(height: 16),
+
           customRowAuth(hint: "Email"),
           SizedBox(height: 4),
           AuthTextFormField(),
+
           SizedBox(height: 16),
+
           customRowAuth(hint: "Password"),
           SizedBox(height: 4),
           PasswordTextFormField(),
+
+          SizedBox(height: 16),
+
+          customRowAuth(hint: "Confirm Password"),
+          SizedBox(height: 4),
+          PasswordTextFormField(),
+
           SizedBox(height: 6),
-          DoNotHaveAnAccountWidget(),
+
+          HaveAnAccountWidget(),
+
           SizedBox(height: 20),
-          Center(child: CustomButton(title: 'Login')),
+
+          Center(child: CustomButton(title: "Register")),
         ],
       ),
     );

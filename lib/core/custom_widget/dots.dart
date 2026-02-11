@@ -3,19 +3,19 @@ import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_icons.dart';
 
 class Dots extends StatelessWidget {
-  const Dots({
-    super.key,
-  });
-
+  Dots({super.key});
+  final double size = 10;
+  final Color color = AppColors.darkGrey;
+  final IconData icon = AppIcons.dot;
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(AppIcons.dot, color: AppColors.darkGrey, size: 8),
+        Icon(icon, color: color, size: size),
         SizedBox(width: 4),
-        Icon(AppIcons.dot, color: AppColors.darkGrey, size: 8),
+        Icon(icon, color: color, size: size),
         SizedBox(width: 4),
-        Icon(AppIcons.dot, color: AppColors.darkGrey, size: 8),
+        Icon(icon, color: color, size: size),
       ],
     );
   }

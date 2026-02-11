@@ -4,13 +4,13 @@ import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/core/constants/borders.dart';
 
 class CustomButton extends StatelessWidget {
-  const CustomButton({super.key});
-
+  const CustomButton({super.key, required this.title});
+  final String title;
   @override
   Widget build(BuildContext context) {
     return TextButton(
       child: Text(
-        "[Login]",
+        "[$title]",
         style: AppTextStyles.bodyLarge!.copyWith(color: AppColors.green),
       ),
       onPressed: () {},
@@ -28,7 +28,7 @@ class CustomButton extends StatelessWidget {
         enableFeedback: true,
         shape: WidgetStateProperty.fromMap({
           WidgetState.any: RoundedRectangleBorder(
-            borderRadius: AppBorders.xxxs,
+            borderRadius: AppBorders.xxxxs,
             side: BorderSide(color: AppColors.primaryColor),
           ),
         }),

@@ -21,24 +21,27 @@ class CustomAuthScreenTheme extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        MainBackground(),
-        SingleChildScrollView(
+        const MainBackground(),
+        Positioned.fill(
           child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 180.0),
+            child: SingleChildScrollView(
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   const LogoWidget(),
+                  const SizedBox(height: 24),
                   LayoutBuilder(
                     builder: (context, constraints) {
                       double maxWidth;
+
                       if (constraints.maxWidth > 1200) {
                         maxWidth = 500;
                       } else if (constraints.maxWidth > 800) {
                         maxWidth = 500;
                       } else {
-                        maxWidth = constraints.maxWidth * 0.9;
+                        maxWidth = constraints.maxWidth * 0.62;
                       }
+
                       return ConstrainedBox(
                         constraints: BoxConstraints(maxWidth: maxWidth),
                         child: Container(
@@ -48,7 +51,7 @@ class CustomAuthScreenTheme extends StatelessWidget {
                                 color: AppColors.green.withOpacity(0.6),
                                 blurRadius: 26,
                                 spreadRadius: 2,
-                                blurStyle: BlurStyle.solid,
+                                blurStyle: BlurStyle.outer,
                               ),
                             ],
                             borderRadius: AppBorders.xxxxs,
@@ -65,25 +68,25 @@ class CustomAuthScreenTheme extends StatelessWidget {
                               horizontal: 24,
                             ),
                             child: Column(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Dots(),
                                 CustomDivider(),
-                                SizedBox(height: 8),
-                                Align(
-                                  alignment: AlignmentGeometry.center,
-                                  child: Text(
-                                    viewTitle,
-                                    style: AppTextStyles.titleLarge!.copyWith(
-                                      color: AppColors.primaryColor,
-                                    ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  viewTitle,
+                                  style: AppTextStyles.titleLarge!.copyWith(
+                                    color: AppColors.primaryColor,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
+                                const SizedBox(height: 8),
                                 Divider(
                                   color: AppColors.primaryColor.withOpacity(
                                     0.3,
                                   ),
                                 ),
-                                SizedBox(height: 8),
+                                const SizedBox(height: 16),
                                 child,
                               ],
                             ),
