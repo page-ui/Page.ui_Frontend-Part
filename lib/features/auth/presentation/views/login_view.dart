@@ -7,7 +7,8 @@ class LoginView extends StatelessWidget {
   static String routeName = "LoginView";
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: CustomAuthScreenTheme(viewTitle: 'Login',
-    child: LoginViewBody()));
+    return Scaffold(
+      body: CustomAuthScreenTheme(viewTitle: 'Login', child: LoginViewBody()),
+    );
   }
 }

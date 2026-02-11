@@ -1,5 +1,3 @@
-
-
 import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,6 +17,7 @@ class CacheHelper {
   dynamic getDataFromHive() {
     box.keys;
   }
+
   String? getDataString({required String key}) {
     return sharedPreferences.getString(key);
   }

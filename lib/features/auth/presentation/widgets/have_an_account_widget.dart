@@ -21,7 +21,7 @@ class HaveAnAccountWidget extends StatelessWidget {
         GestureDetector(
           onTap: () => AppRoutes.pop(context),
           child: Text(
-            "[Login]",
+            "[ Login ]",
             style: AppTextStyles.bodySmall!.copyWith(
               color: AppColors.primaryColor,
             ),

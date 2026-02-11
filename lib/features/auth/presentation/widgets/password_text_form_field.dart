@@ -6,8 +6,9 @@ import 'package:pageui/core/constants/borders.dart';
 import 'package:pageui/features/auth/presentation/widgets/password_validator.dart';
 
 class PasswordTextFormField extends StatefulWidget {
-  const PasswordTextFormField({super.key});
-
+  const PasswordTextFormField({super.key, this.controller, required this.onChanged});
+  final TextEditingController? controller;
+   final Function(String) onChanged;
   @override
   State<PasswordTextFormField> createState() => _PasswordTextFormFieldState();
 }
@@ -17,45 +18,45 @@ class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 37,
-      child: TextFormField(
-        style: AppTextStyles.bodyMedium!.copyWith(color: AppColors.white),
-        cursorColor: AppColors.primaryColor,
-        mouseCursor: SystemMouseCursors.click,
-        obscureText: isSecure,
-        obscuringCharacter: "*",
-        validator: passwordValidator,
-        decoration: InputDecoration(
-          prefixIcon: Icon(AppIcons.arrowForward, size: 10),
-          suffixIcon: IconButton(
-            icon: Icon(
-              isSecure ? AppIcons.visibilityOff : AppIcons.visibilityOn,
-              color: AppColors.darkSurface,
-            ),
-            iconSize: 20,
-            onPressed: () {
-              setState(() {
-                isSecure = !isSecure;
-              });
-            },
+    return TextFormField(
+      onChanged: widget.onChanged,
+      validator: passwordValidator,
+      controller: widget.controller,
+      style: AppTextStyles.bodyMedium!.copyWith(color: AppColors.white),
+      cursorColor: AppColors.primaryColor,
+      mouseCursor: SystemMouseCursors.click,
+      obscureText: isSecure,
+      obscuringCharacter: "*",
+
+      decoration: InputDecoration(
+        prefixIcon: Icon(AppIcons.arrowForward, size: 10),
+        suffixIcon: IconButton(
+          icon: Icon(
+            isSecure ? AppIcons.visibilityOff : AppIcons.visibilityOn,
+            color: AppColors.darkSurface,
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: AppBorders.xxxxs,
-            borderSide: BorderSide(color: AppColors.darkSurface),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: AppBorders.xxxs,
-            borderSide: BorderSide(color: AppColors.cyan),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: AppBorders.xxxxs,
-            borderSide: BorderSide(color: AppColors.red),
-          ),
-          border: OutlineInputBorder(
-            borderRadius: AppBorders.xxxxs,
-            borderSide: BorderSide(color: AppColors.darkGrey),
-          ),
+          iconSize: 20,
+          onPressed: () {
+            setState(() {
+              isSecure = !isSecure;
+            });
+          },
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: AppBorders.xxxxs,
+          borderSide: BorderSide(color: AppColors.darkSurface),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: AppBorders.xxxs,
+          borderSide: BorderSide(color: AppColors.cyan),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: AppBorders.xxxxs,
+          borderSide: BorderSide(color: AppColors.red),
+        ),
+        border: OutlineInputBorder(
+          borderRadius: AppBorders.xxxxs,
+          borderSide: BorderSide(color: AppColors.darkGrey),
         ),
       ),
     );

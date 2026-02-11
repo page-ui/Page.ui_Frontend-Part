@@ -68,11 +68,11 @@ class ServerFailure extends Failure {
   }
 }
 
-
-
-class NetworkFailure extends Failure{
+class NetworkFailure extends Failure {
   NetworkFailure({required super.message});
-  factory NetworkFailure.error(){
-    return NetworkFailure(message: "No internet connection. Please connect to a network.");
+  factory NetworkFailure.error() {
+    return NetworkFailure(
+      message: "No internet connection. Please connect to a network.",
+    );
   }
 }

@@ -16,25 +16,41 @@ class SignpForm extends StatelessWidget {
         children: [
           customRowAuth(hint: "UserName"),
           SizedBox(height: 4),
-          AuthTextFormField(),
+          AuthTextFormField(
+            onChanged: (value) {},
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'This field is required';
+              }
+              return null;
+            },
+          ),
 
           SizedBox(height: 16),
 
           customRowAuth(hint: "Email"),
           SizedBox(height: 4),
-          AuthTextFormField(),
+          AuthTextFormField(
+            onChanged: (value) {},
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'This field is required';
+              }
+              return null;
+            },
+          ),
 
           SizedBox(height: 16),
 
           customRowAuth(hint: "Password"),
           SizedBox(height: 4),
-          PasswordTextFormField(),
+          PasswordTextFormField(onChanged: (value) {}),
 
           SizedBox(height: 16),
 
           customRowAuth(hint: "Confirm Password"),
           SizedBox(height: 4),
-          PasswordTextFormField(),
+          PasswordTextFormField(onChanged: (value) {}),
 
           SizedBox(height: 6),
 
@@ -42,7 +58,9 @@ class SignpForm extends StatelessWidget {
 
           SizedBox(height: 20),
 
-          Center(child: CustomButton(title: "Register")),
+          Center(
+            child: CustomButton(title: "Register", onPressed: () {}),
+          ),
         ],
       ),
     );

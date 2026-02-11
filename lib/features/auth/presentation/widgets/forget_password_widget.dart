@@ -3,8 +3,8 @@ import 'package:pageui/config/routes/on_generate_routes.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
 
-class DoNotHaveAnAccountWidget extends StatelessWidget {
-  const DoNotHaveAnAccountWidget({super.key});
+class ForgetPasswordWidget extends StatelessWidget {
+  const ForgetPasswordWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,16 +12,10 @@ class DoNotHaveAnAccountWidget extends StatelessWidget {
       alignment: WrapAlignment.center,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        Text(
-          "Don't have an account? ",
-          style: AppTextStyles.bodySmall!.copyWith(
-            color: AppColors.primaryColor,
-          ),
-        ),
         GestureDetector(
-          onTap: () => AppRoutes.pushSignupView(context),
+          onTap: () => AppRoutes.pushForgetPasswordView(context),
           child: Text(
-            "[ Register ]",
+            "[ Forget Passoword ]",
             style: AppTextStyles.bodySmall!.copyWith(
               color: AppColors.primaryColor,
             ),

@@ -4,16 +4,17 @@ import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/core/constants/borders.dart';
 
 class CustomButton extends StatelessWidget {
-  const CustomButton({super.key, required this.title});
+  const CustomButton({super.key, required this.title, required this.onPressed});
   final String title;
+  final void Function()? onPressed;
   @override
   Widget build(BuildContext context) {
     return TextButton(
       child: Text(
-        "[$title]",
+        "[ $title ]",
         style: AppTextStyles.bodyLarge!.copyWith(color: AppColors.green),
       ),
-      onPressed: () {},
+      onPressed: onPressed,
       style: ButtonStyle(
         maximumSize: WidgetStateProperty.fromMap({
           WidgetState.any: Size(double.infinity, 50),
