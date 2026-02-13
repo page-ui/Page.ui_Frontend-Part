@@ -10,7 +10,7 @@ class ForgetPaswordView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomAuthScreenTheme(
-        viewTitle: 'Forget Password? Quickly Rest Your Password',
+        viewTitle: 'Forget Password?',
         child: ForgetPaswordViewBody(),
       ),
     );

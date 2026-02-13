@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pageui/features/auth/presentation/views/forget_pasword_view.dart';
 import 'package:pageui/features/auth/presentation/views/login_view.dart';
 import 'package:pageui/features/auth/presentation/views/signup_view.dart';
+import 'package:pageui/features/intro_screens/presentation/views/splash_view.dart';
 
 sealed class AppRoutes {
   const AppRoutes();
@@ -26,8 +27,16 @@ sealed class AppRoutes {
     (_) => false,
     arguments: arguments,
   );
+
   static Future<void> pushSignupView(BuildContext context) {
-    return Navigator.push(context, cutomRouteBuilder(mainChild: SignupView()));
+    return Navigator.push(
+      context,
+      cutomRouteBuilder(mainChild: SignupView(), duration: 700),
+    );
+  }
+
+  static Future<void> pushLoginView(BuildContext context) {
+    return Navigator.push(context, cutomRouteBuilder(mainChild: LoginView()));
   }
 
   static Future<void> pushForgetPasswordView(BuildContext context) {
@@ -39,13 +48,17 @@ sealed class AppRoutes {
 
   static PageRouteBuilder<Object?> cutomRouteBuilder({
     required Widget mainChild,
+    int duration = 500,
   }) {
     return PageRouteBuilder(
-      transitionDuration: const Duration(milliseconds: 400),
+      transitionDuration: Duration(milliseconds: duration),
       pageBuilder: (_, __, ___) => mainChild,
       transitionsBuilder: (_, animation, __, child) {
-        final slide = Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
-            .animate(
+        final slide =
+            Tween<Offset>(
+              begin: const Offset(1.8, 0),
+              end: Offset.zero,
+            ).animate(
               CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
             );
 
@@ -62,6 +75,7 @@ sealed class AppRoutes {
 
 Map<String, Widget Function(BuildContext, Object?)> _routes = {
   LoginView.routeName: (_, _) => const LoginView(),
+  SplashView.routeName: (_, _) => const SplashView(),
   SignupView.routeName: (_, _) => const SignupView(),
   ForgetPaswordView.routeName: (_, _) => const ForgetPaswordView(),
 };
