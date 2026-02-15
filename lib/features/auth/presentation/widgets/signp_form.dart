@@ -49,7 +49,7 @@ class _SignpFormState extends State<SignpForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          customRowAuth(hint: "UserName"),
+          customRowAuth(hint: "Name"),
           SizedBox(height: 4),
           AuthTextFormField(
             controller: _nameController,

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 
 class VerifyOTPWidget extends StatefulWidget {
-  VerifyOTPWidget({super.key, required this.controllers});
-  List<TextEditingController> controllers;
+  const VerifyOTPWidget({super.key, required this.controllers});
+  final List<TextEditingController> controllers;
   @override
   State<VerifyOTPWidget> createState() => _VerifyOTPWidgetState();
 }

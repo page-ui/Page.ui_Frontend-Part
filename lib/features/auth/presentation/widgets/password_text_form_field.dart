@@ -6,7 +6,7 @@ import 'package:pageui/core/constants/borders.dart';
 import 'package:pageui/features/auth/presentation/widgets/password_validator.dart';
 
 class PasswordTextFormField extends StatefulWidget {
-  const PasswordTextFormField({super.key, this.controller,});
+  const PasswordTextFormField({super.key, this.controller});
   final TextEditingController? controller;
 
   @override
@@ -46,7 +46,7 @@ class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
           borderSide: BorderSide(color: AppColors.darkSurface),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: AppBorders.xxxs,
+          borderRadius: AppBorders.xxxxs,
           borderSide: BorderSide(color: AppColors.cyan),
         ),
         errorBorder: OutlineInputBorder(
