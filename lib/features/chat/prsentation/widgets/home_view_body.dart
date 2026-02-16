@@ -21,7 +21,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
 
   void _handleOpenningDrawers(double width) {
     String currentMode;
-    if (width < 550)
+    if (width < 500)
       currentMode = "mobile";
     else if (width < 1000)
       currentMode = "tablet";
@@ -49,9 +49,9 @@ class _HomeViewBodyState extends State<HomeViewBody> {
       builder: (context, constraints) {
         _handleOpenningDrawers(constraints.maxWidth);
 
-        bool isMobile = constraints.maxWidth < 550;
+        bool isMobile = constraints.maxWidth < 500;
         bool isTablet =
-            constraints.maxWidth >= 550 && constraints.maxWidth < 1000;
+            constraints.maxWidth >= 500 && constraints.maxWidth < 1000;
         bool isDesktop = constraints.maxWidth >= 1000;
 
         return Scaffold(

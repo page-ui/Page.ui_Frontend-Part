@@ -16,6 +16,8 @@ class LoginCubit extends Cubit<LoginState> {
         emit(LoginFailure(message: failure.message));
       },
       (user) {
+        print("Access Token: ${user.accessToken}");
+        print("Refresh Token: ${user.refreshToken}");
         emit(LoginSuccess());
       },
     );

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:pageui/features/auth/data/repos/auth_repo_impl.dart';
+import 'package:pageui/features/auth/domain/params/reset_password.dart';
 
 part 'forget_password_state.dart';
 
@@ -21,16 +22,15 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
     );
   }
 
-  Future<void> changePassword({required String newPassword}) async {
+  // Inside ForgetPasswordCubit
+  Future<void> resetPassword({required ResetPasswordParams params}) async {
     emit(ForgetPasswordLoading());
-    final result = await authRepoImpl.changePassword(newPassword: newPassword);
+    final result = await authRepoImpl.changePassword(
+      params: params,
+    ); // Update Repo interface too
     result.fold(
-      (failure) {
-        emit(ForgetPasswordFailure(message: failure.message));
-      },
-      (code) {
-        emit(ForgetPasswordSuccess());
-      },
+      (failure) => emit(ForgetPasswordFailure(message: failure.message)),
+      (_) => emit(ForgetPasswordSuccess()),
     );
   }
 }
