@@ -11,34 +11,27 @@ class PageDotUi extends StatelessWidget {
   const PageDotUi({super.key});
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(360, 790),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, state) {
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.fill,
-              image: AssetImage(Assets.assetsImagesMainBackground),
-            ),
-          ),
-          child: MaterialApp(
-            initialRoute: SplashView.routeName,
-            onGenerateRoute: onGenerateRoute,
-            title: 'Page.ui',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              scaffoldBackgroundColor: AppColors.transparent,
-              fontFamily: fontName,
-            ),
-            builder: (context, child) {
-              AppTextStyles.init(context);
-              return child ?? const SizedBox();
-            },
-          ),
-        );
-      },
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          fit: BoxFit.fill,
+          image: AssetImage(Assets.assetsImagesMainBackground),
+        ),
+      ),
+      child: MaterialApp(
+        initialRoute: SplashView.routeName,
+        onGenerateRoute: onGenerateRoute,
+        title: 'Page.ui',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          scaffoldBackgroundColor: AppColors.transparent,
+          fontFamily: fontName,
+        ),
+        builder: (context, child) {
+          AppTextStyles.init(context);
+          return child ?? const SizedBox();
+        },
+      ),
     );
   }
 }
