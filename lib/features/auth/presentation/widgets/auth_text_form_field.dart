@@ -9,12 +9,15 @@ class AuthTextFormField extends StatelessWidget {
     super.key,
     this.controller,
     required this.validator,
+    this.enable = true,
   });
+  final bool enable;
   final TextEditingController? controller;
   final FormFieldValidator<String> validator;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: enable,
       controller: controller,
       validator: validator,
       cursorColor: AppColors.primaryColor,
@@ -27,6 +30,10 @@ class AuthTextFormField extends StatelessWidget {
   InputDecoration CustomInputDecorationForTextField() {
     return InputDecoration(
       prefixIcon: Icon(AppIcons.arrowForward, size: 10),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: AppBorders.xxxxs,
+        borderSide: BorderSide(color: AppColors.lightAmber),
+      ),
       enabledBorder: OutlineInputBorder(
         borderRadius: AppBorders.xxxxs,
         borderSide: BorderSide(color: AppColors.darkSurface),

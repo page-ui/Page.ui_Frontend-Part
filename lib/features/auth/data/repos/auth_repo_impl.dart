@@ -10,6 +10,7 @@ import 'package:pageui/features/auth/data/model/user_tokens_model.dart';
 import 'package:pageui/features/auth/domain/params/login_params.dart';
 import 'package:pageui/features/auth/domain/params/reset_password.dart';
 import 'package:pageui/features/auth/domain/params/signup_params.dart';
+import 'package:pageui/features/auth/domain/params/verify_reset_code_params.dart';
 import 'package:pageui/features/auth/domain/repos/auth_repo.dart';
 
 class AuthRepoImpl extends AuthRepo {
@@ -67,14 +68,26 @@ class AuthRepoImpl extends AuthRepo {
   }
 
   @override
-  Future<Either<Failure, String>> sendCodeForForgetPassword({
+  Future<Either<Failure, bool>> forgotPasswordRequest({
     required String email,
   }) async {
     try {
-      final response = await dataSource.sendCodeForForgetPassword(email: email);
+      final response = await dataSource.forgotPasswordRequest(email: email);
       return Right(response);
     } catch (e) {
-      return Left(ServerFailure(message: "Check your email connection."));
+      return Left(ServerFailure(message: "May be you write a wrong account."));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> verifyResetCode({
+    required VerifyResetCodeParams params,
+  }) async {
+    try {
+      final response = await dataSource.verifyResetCodeParams(params: params);
+      return Right(response);
+    } catch (e) {
+      return Left(ServerFailure(message: "There was a propblem, please make sure you're write the code correct, or resend the code."));
     }
   }
 

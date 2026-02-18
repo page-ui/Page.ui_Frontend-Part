@@ -6,7 +6,7 @@ import 'package:pageui/core/constants/borders.dart';
 void showWebSnackBar({
   required BuildContext context,
   required String message,
-  Duration duration = const Duration(seconds: 4),
+  Duration duration = const Duration(seconds: 6),
   Color backgroundColor = AppColors.black,
   Color textColor = AppColors.primaryColor,
   IconData? icon,
@@ -121,7 +121,9 @@ class _WebToastWidgetState extends State<_WebToastWidget>
                   Expanded(
                     child: Text(
                       widget.message,
-                      style: AppTextStyles.bodyMedium!.copyWith(color: widget.textColor),
+                      style: AppTextStyles.bodyMedium!.copyWith(
+                        color: widget.textColor,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 8),

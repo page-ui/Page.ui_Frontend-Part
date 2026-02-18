@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/core/custom_widget/custom_button.dart';
 import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
+import 'package:pageui/features/auth/domain/params/verify_reset_code_params.dart';
+import 'package:pageui/features/auth/presentation/controllers/forget_password_cubit/forget_password_cubit.dart';
+import 'package:pageui/features/auth/presentation/widgets/resend_the_verfication_code_button.dart';
 import 'package:pageui/features/auth/presentation/widgets/verify_o_t_p_widget.dart';
 
 class OTPCodeVerfication extends StatefulWidget {
@@ -11,7 +14,10 @@ class OTPCodeVerfication extends StatefulWidget {
     required this.controllers,
     required this.nextStep,
     required this.email,
+    required this.onGetToken,
   });
+  final ValueChanged<String> onGetToken;
+
   final List<TextEditingController> controllers;
   final void Function() nextStep;
   final String email;
@@ -22,71 +28,93 @@ class OTPCodeVerfication extends StatefulWidget {
 class _OTPCodeVerficationState extends State<OTPCodeVerfication> {
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   GlobalKey<FormState> formKeyCodeVerify = GlobalKey<FormState>();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: formKeyCodeVerify,
-      autovalidateMode: autovalidateMode,
-      child: Column(
-        children: [
-          const Text(
-            "VERIFY OTP",
-            style: TextStyle(
-              color: AppColors.primaryColor,
-              fontSize: 22,
-              letterSpacing: 1.5,
-              overflow: TextOverflow.clip,
+    var text = const Text(
+      "VERIFY OTP",
+      style: TextStyle(
+        color: AppColors.primaryColor,
+        fontSize: 22,
+        letterSpacing: 1.5,
+        overflow: TextOverflow.clip,
+      ),
+    );
+    return BlocListener<ForgetPasswordCubit, ForgetPasswordState>(
+      listener: (context, state) {
+        if (state is ForgetPasswordVerficationCodeSuccess) {
+          widget.onGetToken(state.code);
+          setState(() {
+            isLoading = false;
+          });
+          showWebSnackBar(context: context, message: 'OTP Verified.');
+          widget.nextStep();
+        } else if (state is ForgetPasswordFailure) {
+          setState(() {
+            isLoading = false;
+          });
+          showWebSnackBar(
+            context: context,
+            message: state.message,
+            backgroundColor: AppColors.red,
+            textColor: AppColors.white,
+          );
+        } else if (state is ForgetPasswordLoading) {
+          setState(() {
+            isLoading = true;
+          });
+        }
+      },
+      child: Form(
+        key: formKeyCodeVerify,
+        autovalidateMode: autovalidateMode,
+        child: Column(
+          children: [
+            text,
+            const SizedBox(height: 8),
+            const Text(
+              "ENTER THE 5-DIGIT CODE SENT TO YOU",
+              style: TextStyle(color: AppColors.primaryColor, fontSize: 13),
             ),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            "ENTER THE 5-DIGIT CODE SENT TO YOU",
-            style: TextStyle(color: AppColors.primaryColor, fontSize: 13),
-          ),
-          const SizedBox(height: 24),
+            const SizedBox(height: 24),
 
-          VerifyOTPWidget(controllers: widget.controllers),
-          const SizedBox(height: 30),
-          Align(
-            alignment: AlignmentGeometry.topLeft,
-            child: TextButton(
-              onPressed: () {},
-              child: Text(
-                "Resend the code",
-                style: AppTextStyles.bodySmall!.copyWith(
-                  color: AppColors.white,
-                ),
-              ),
-            ),
-          ),
-          CustomButton(
-            title: "VERIFY",
-            onPressed: () {
-              for (var controller in widget.controllers) {
-                if (controller.text.isEmpty) {
-                  showWebSnackBar(
-                    context: context,
-                    message: 'OTP not completed.',
-                    backgroundColor: AppColors.red,
-                    textColor: AppColors.white,
-                  );
-                  return;
+            VerifyOTPWidget(controllers: widget.controllers),
+            const SizedBox(height: 30),
+            ResendTheVerficationCodeButton(widget: widget),
+            CustomButton(
+              title: "VERIFY",
+              onPressed: () {
+                for (var controller in widget.controllers) {
+                  if (controller.text.isEmpty) {
+                    showWebSnackBar(
+                      context: context,
+                      message: 'OTP not completed.',
+                      backgroundColor: AppColors.red,
+                      textColor: AppColors.white,
+                    );
+                    return;
+                  }
                 }
-              }
-              if (formKeyCodeVerify.currentState!.validate()) {
-                FocusScope.of(context).unfocus();
-                showWebSnackBar(context: context, message: 'OTP Verified.');
-                formKeyCodeVerify.currentState!.reset();
-                widget.nextStep();
-              } else {
-                setState(() {
-                  autovalidateMode = AutovalidateMode.always;
-                });
-              }
-            },
-          ),
-        ],
+                if (formKeyCodeVerify.currentState!.validate()) {
+                  FocusScope.of(context).unfocus();
+                  print(widget.controllers.map((e) => e.text).join());
+                  context.read<ForgetPasswordCubit>().verifyResetCode(
+                    params: VerifyResetCodeParams(
+                      email: widget.email,
+                      code: widget.controllers.map((e) => e.text).join(),
+                    ),
+                  );
+                  formKeyCodeVerify.currentState!.reset();
+                } else {
+                  setState(() {
+                    autovalidateMode = AutovalidateMode.always;
+                  });
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

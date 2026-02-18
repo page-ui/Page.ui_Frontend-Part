@@ -7,7 +7,9 @@ import 'package:pageui/features/auth/presentation/widgets/custom_row_auth.dart';
 import 'package:pageui/features/auth/presentation/widgets/password_text_form_field.dart';
 
 class PasswordReset extends StatefulWidget {
-  const PasswordReset({super.key,});
+  const PasswordReset({super.key, required this.email, required this.token});
+  final String token;
+  final String email;
   @override
   State<PasswordReset> createState() => _PasswordResetState();
 }

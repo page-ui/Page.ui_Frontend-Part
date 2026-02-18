@@ -1,0 +1,102 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pageui/config/themes/app_colors.dart';
+import 'package:pageui/core/custom_widget/custom_button.dart';
+import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
+import 'package:pageui/features/auth/presentation/controllers/forget_password_cubit/forget_password_cubit.dart';
+import 'package:pageui/features/auth/presentation/widgets/auth_text_form_field.dart';
+import 'package:pageui/features/auth/presentation/widgets/custom_row_auth.dart';
+import 'package:pageui/features/auth/presentation/widgets/email_validator.dart';
+import 'package:pageui/features/auth/presentation/widgets/have_an_account_widget.dart';
+
+class ForgetPasswordRequest extends StatefulWidget {
+  const ForgetPasswordRequest({
+    super.key,
+    required this.nextStep,
+    required this.onEmailChanged,
+  });
+  final void Function() nextStep;
+  final ValueChanged<String> onEmailChanged;
+  @override
+  State<ForgetPasswordRequest> createState() => _ForgetPasswordRequestState();
+}
+
+class _ForgetPasswordRequestState extends State<ForgetPasswordRequest> {
+  AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
+  GlobalKey<FormState> formKeyEmailCheck = GlobalKey<FormState>();
+  TextEditingController _emailController = TextEditingController();
+  bool isLoading = false;
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<ForgetPasswordCubit, ForgetPasswordState>(
+      listener: (context, state) {
+        if (state is ForgetPasswordSuccess) {
+          setState(() {
+            isLoading = false;
+          });
+          showWebSnackBar(context: context, message: 'Check Your Email.');
+          widget.nextStep();
+        } else if (state is ForgetPasswordFailure) {
+          setState(() {
+            isLoading = false;
+          });
+          showWebSnackBar(
+            context: context,
+            message: state.message,
+            backgroundColor: AppColors.red,
+            textColor: AppColors.white,
+          );
+        } else if (state is ForgetPasswordLoading) {
+          setState(() {
+            isLoading = true;
+          });
+        }
+      },
+      child: Form(
+        autovalidateMode: autovalidateMode,
+        key: formKeyEmailCheck,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            customRowAuth(hint: "Type Your Email"),
+            const SizedBox(height: 4),
+            AuthTextFormField(
+              controller: _emailController,
+              validator: EmailValidator,
+              enable: !isLoading,
+            ),
+            const SizedBox(height: 4),
+            HaveAnAccountWidget(),
+            const SizedBox(height: 20),
+            AbsorbPointer(
+              absorbing: isLoading,
+              child: CustomButton(
+                child: isLoading
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(),
+                      )
+                    : null,
+                title: 'Send Code',
+                onPressed: () {
+                  if (formKeyEmailCheck.currentState!.validate()) {
+                    context.read<ForgetPasswordCubit>().forgotPasswordRequest(
+                      email: _emailController.text,
+                    );
+                    FocusScope.of(context).unfocus();
+                    formKeyEmailCheck.currentState!.reset();
+                    widget.onEmailChanged(_emailController.text);
+                  } else {
+                    setState(() {
+                      autovalidateMode = AutovalidateMode.always;
+                    });
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

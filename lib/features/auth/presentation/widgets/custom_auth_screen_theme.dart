@@ -18,26 +18,38 @@ class CustomAuthScreenTheme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const LogoWidget(),
-              const SizedBox(height: 24),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  double maxWidth;
-                  if (constraints.maxWidth > 1200) {
-                    maxWidth = 500;
-                  } else if (constraints.maxWidth > 800) {
-                    maxWidth = 500;
-                  } else {
-                    maxWidth = constraints.maxWidth * 0.62;
-                  }
-                  return ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: maxWidth),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double maxWidth;
+        double maxHeight = 2000;
+        bool isMobile = false;
+        if (constraints.maxWidth > 1200) {
+          maxWidth = 500;
+        } else if (constraints.maxWidth > 800) {
+          maxWidth = 500;
+        } else if (constraints.maxWidth < 480) {
+          maxWidth = double.infinity;
+          maxHeight = MediaQuery.sizeOf(context).height;
+          isMobile = true;
+        } else {
+          maxWidth = constraints.maxWidth * 0.62;
+        }
+        return Positioned.fill(
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Visibility(visible: !isMobile, child: const LogoWidget()),
+                  Visibility(
+                    visible: !isMobile,
+                    child: const SizedBox(height: 24),
+                  ),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: maxWidth,
+                      maxHeight: maxHeight,
+                    ),
                     child: Container(
                       decoration: BoxDecoration(
                         boxShadow: [
@@ -48,7 +60,9 @@ class CustomAuthScreenTheme extends StatelessWidget {
                             blurStyle: BlurStyle.outer,
                           ),
                         ],
-                        borderRadius: AppBorders.xxxxs,
+                        borderRadius: isMobile
+                            ? AppBorders.zero
+                            : AppBorders.xxxxs,
                         border: Border.all(
                           color: AppColors.primaryColor,
                           width: 2,
@@ -57,14 +71,20 @@ class CustomAuthScreenTheme extends StatelessWidget {
                         color: AppColors.mainBackgroundColor,
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 20,
+                        padding: EdgeInsets.symmetric(
+                          vertical: isMobile ? 50 : 20,
                           horizontal: 24,
                         ),
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
+                          mainAxisSize: isMobile
+                              ? MainAxisSize.max
+                              : MainAxisSize.min,
                           children: [
-                            Dots(),
+                            Visibility(visible: !isMobile, child: Dots()),
+                            Visibility(
+                              visible: isMobile,
+                              child: const LogoWidget(),
+                            ),
                             CustomDivider(),
                             const SizedBox(height: 8),
                             ScrambAnimatedTitleText(viewTitle: viewTitle),
@@ -76,13 +96,13 @@ class CustomAuthScreenTheme extends StatelessWidget {
                         ),
                       ),
                     ),
-                  );
-                },
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

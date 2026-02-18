@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pageui/features/auth/presentation/widgets/forget_password_request.dart';
 import 'package:pageui/features/auth/presentation/widgets/password_reset.dart';
 import 'package:pageui/features/auth/presentation/widgets/OTP_code_verfication.dart';
-import 'package:pageui/features/auth/presentation/widgets/sent_code.dart';
 
 class ForgetPaswordViewForm extends StatefulWidget {
   const ForgetPaswordViewForm({super.key});
@@ -14,6 +14,7 @@ class _ForgetPaswordViewFormState extends State<ForgetPaswordViewForm> {
   late List<TextEditingController> controllers;
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   String? email;
+  String? token;
   @override
   void initState() {
     super.initState();
@@ -44,7 +45,7 @@ class _ForgetPaswordViewFormState extends State<ForgetPaswordViewForm> {
             controller: _controller,
             physics: const NeverScrollableScrollPhysics(),
             children: [
-              SentCode(
+              ForgetPasswordRequest(
                 nextStep: nextStep,
                 onEmailChanged: (String e) {
                   setState(() {
@@ -56,8 +57,13 @@ class _ForgetPaswordViewFormState extends State<ForgetPaswordViewForm> {
                 controllers: controllers,
                 nextStep: nextStep,
                 email: email ?? "",
+                onGetToken: (String value) {
+                  setState(() {
+                    token = value;
+                  });
+                },
               ),
-              PasswordReset(),
+              PasswordReset(email: email ?? "", token: token ?? ""),
             ],
           ),
         ),
