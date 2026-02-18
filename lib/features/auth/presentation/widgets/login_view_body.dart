@@ -6,13 +6,14 @@ import 'package:pageui/features/auth/presentation/controllers/login_cubit/login_
 import 'package:pageui/features/auth/presentation/widgets/login_view_form.dart';
 
 class LoginViewBody extends StatelessWidget {
-  const LoginViewBody({super.key});
+  const LoginViewBody({super.key, required this.onChangeLoadingValue});
+  final void Function(bool)? onChangeLoadingValue;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => LoginCubit(authRepoImpl: getit.get<AuthRepoImpl>()),
-      child: LoginViewForm(),
+      child: LoginViewForm(onChangeLoadingValue: onChangeLoadingValue),
     );
   }
 }

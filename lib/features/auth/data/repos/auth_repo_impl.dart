@@ -10,34 +10,6 @@ import 'package:pageui/features/auth/domain/params/reset_password.dart';
 import 'package:pageui/features/auth/domain/params/signup_params.dart';
 import 'package:pageui/features/auth/domain/repos/auth_repo.dart';
 
-// class AuthRepoImpl extends AuthRepo {
-//   @override
-//   Future<Either<Failure, UserModel>> login({required LoginParams param}) {
-//     // TODO: implement login
-//     throw UnimplementedError();
-//   }
-
-//   @override
-//   Future<Either<Failure, UserModel>> signup({required SignupParams param}) {
-//     // TODO: implement signup
-//     throw UnimplementedError();
-//   }
-
-//   @override
-//   Future<Either<Failure, void>> changePassword({required String newPassword}) {
-//     // TODO: implement changePassword
-//     throw UnimplementedError();
-//   }
-
-//   @override
-//   Future<Either<Failure, String>> sendCodeForForgetPassword({
-//     required String email,
-//   }) {
-//     // TODO: implement sendCodeForForgetPassword
-//     throw UnimplementedError();
-//   }
-// }
-
 class AuthRepoImpl extends AuthRepo {
   final AuthDataSource dataSource;
   final NetworkInfo networkInfo;
@@ -63,6 +35,7 @@ class AuthRepoImpl extends AuthRepo {
       );
       return Right(user);
     } on Exception catch (e) {
+      print("auth Repo: ${e.toString()}");
       if (e is ServerFailure) {
         return Left(ServerFailure.fromServer(401));
       }

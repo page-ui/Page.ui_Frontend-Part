@@ -14,8 +14,8 @@ import 'package:pageui/features/auth/presentation/widgets/forget_password_widget
 import 'package:pageui/features/auth/presentation/widgets/password_text_form_field.dart';
 
 class LoginViewForm extends StatefulWidget {
-  LoginViewForm({super.key});
-
+  LoginViewForm({super.key, required this.onChangeLoadingValue});
+  final void Function(bool)? onChangeLoadingValue;
   @override
   State<LoginViewForm> createState() => _LoginViewFormState();
 }
@@ -46,8 +46,15 @@ class _LoginViewFormState extends State<LoginViewForm> {
       listener: (context, state) {
         if (state is LoginSuccess) {
           showWebSnackBar(context: context, message: "Login Success");
+          widget.onChangeLoadingValue!(false);
+          AppRoutes.pushHomeView(context);
         } else if (state is LoginFailure) {
           showWebSnackBar(context: context, message: state.message);
+          widget.onChangeLoadingValue!(false);
+        } else if (state is LoginLoading) {
+          widget.onChangeLoadingValue!(true);
+        } else {
+          widget.onChangeLoadingValue!(false);
         }
       },
       child: Form(

@@ -33,7 +33,9 @@ class AuthDataSourceImpl extends AuthDataSource {
         !result.data!.containsKey('login') ||
         result.data!['login'] == null ||
         result.hasException) {
-      throw Exception('Login data not found in GraphQL response');
+      throw Exception(
+        'Login failed. Please check your credentials and try again.',
+      );
     }
 
     return UserTokens.fromJson(result.data!['login']);
