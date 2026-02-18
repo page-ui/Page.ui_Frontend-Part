@@ -7,4 +7,9 @@ class Queries {
       }
     }
     ''';
+  static String signupMutation = r'''
+    mutation Register($input: RegisterInput!) {
+      register(input: $input)
+    }
+    ''';
 }

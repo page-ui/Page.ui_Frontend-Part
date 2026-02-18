@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:pageui/core/constants/constants.dart';
 import 'package:pageui/core/database/cache/secure_storage.dart';
 import 'package:pageui/core/errors/failure.dart';
 import 'package:pageui/core/network/network_info.dart';
 import 'package:pageui/features/auth/data/data_source/auth_data_source.dart';
-import 'package:pageui/features/auth/data/model/user_model.dart';
+import 'package:pageui/features/auth/data/model/user_tokens_model.dart';
 import 'package:pageui/features/auth/domain/params/login_params.dart';
 import 'package:pageui/features/auth/domain/params/reset_password.dart';
 import 'package:pageui/features/auth/domain/params/signup_params.dart';
@@ -16,32 +18,49 @@ class AuthRepoImpl extends AuthRepo {
   AuthRepoImpl({required this.dataSource, required this.networkInfo});
 
   @override
-  Future<Either<Failure, UserTokens>> login({
+  Future<Either<Failure, UserTokensModel>> login({
     required LoginParams param,
   }) async {
     try {
       if (!await networkInfo.isConnected!) {
         return Left(NetworkFailure.error());
       }
-      final user = await dataSource.login(params: param);
-
-      await SecureStorage.writeData(
-        key: accessTokenKey,
-        value: user.accessToken,
-      );
-      await SecureStorage.writeData(
-        key: refreshTokenKey,
-        value: user.refreshToken,
-      );
-      return Right(user);
+      final userTokensModel = await dataSource.login(params: param);
+      await saveTokens(userTokensModel);
+      return Right(userTokensModel);
     } on Exception catch (e) {
-      print("auth Repo: ${e.toString()}");
       if (e is ServerFailure) {
         return Left(ServerFailure.fromServer(401));
       }
       return Left(
         ServerFailure(
           message: "Login failed. Please check your credentials and try again.",
+        ),
+      );
+    }
+  }
+
+  Future<void> saveTokens(UserTokensModel userTokensModel) async {
+    var tokens = JsonEncoder().convert(userTokensModel.toJson());
+    await SecureStorage.writeData(key: tokensKey, value: tokens);
+  }
+
+  @override
+  Future<Either<Failure, bool>> register({required SignupParams param}) async {
+    try {
+      if (!await networkInfo.isConnected!) {
+        return Left(NetworkFailure.error());
+      }
+      final user = await dataSource.register(params: param);
+      return Right(user);
+    } catch (e) {
+      if (e is ServerFailure) {
+        return Left(ServerFailure.fromServer(401));
+      }
+      return Left(
+        ServerFailure(
+          message:
+              "Register failed. Please try again later. maybe the email is already used.",
         ),
       );
     }
@@ -71,12 +90,6 @@ class AuthRepoImpl extends AuthRepo {
         ServerFailure(message: "Failed to change password. Please try again."),
       );
     }
-  }
-
-  @override
-  Future<Either<Failure, UserTokens>> signup({required SignupParams param}) {
-    // TODO: implement signup
-    throw UnimplementedError();
   }
 
   // Implement others...

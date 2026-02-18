@@ -1,17 +1,17 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:pageui/core/database/api/graph_ql_config.dart';
 import 'package:pageui/core/database/api/queries.dart';
-import 'package:pageui/features/auth/data/model/user_model.dart';
+import 'package:pageui/features/auth/data/model/user_tokens_model.dart';
 import 'package:pageui/features/auth/domain/params/login_params.dart';
 import 'package:pageui/features/auth/domain/params/reset_password.dart';
 import 'package:pageui/features/auth/domain/params/signup_params.dart';
 
 abstract class AuthDataSource {
-  Future<UserTokens> login({required LoginParams params});
-  Future<UserTokens> signup({required SignupParams params});
+  Future<UserTokensModel> login({required LoginParams params});
+  Future<bool> register({required SignupParams params});
   Future<String> sendCodeForForgetPassword({required String email});
   Future<bool> resetPassword({required ResetPasswordParams params});
-  Future<UserTokens> refreshToken({required String refreshToken});
+  Future<UserTokensModel> refreshToken({required String refreshToken});
 }
 
 class AuthDataSourceImpl extends AuthDataSource {
@@ -19,7 +19,7 @@ class AuthDataSourceImpl extends AuthDataSource {
   AuthDataSourceImpl();
 
   @override
-  Future<UserTokens> login({required LoginParams params}) async {
+  Future<UserTokensModel> login({required LoginParams params}) async {
     final result = await _client.mutate(
       MutationOptions(
         document: gql(Queries.loginMutation),
@@ -38,7 +38,34 @@ class AuthDataSourceImpl extends AuthDataSource {
       );
     }
 
-    return UserTokens.fromJson(result.data!['login']);
+    return UserTokensModel.fromJson(result.data!['login']);
+  }
+
+  @override
+  Future<bool> register({required SignupParams params}) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(Queries.signupMutation),
+        variables: {
+          'input': {
+            'email': params.email,
+            'password': params.password,
+            'name': params.userName,
+          },
+        },
+      ),
+    );
+    if (result.data == null ||
+        !result.data!.containsKey('register') ||
+        result.data!['register'] == null ||
+        result.data!['register'] == false ||
+        result.hasException) {
+      throw Exception(
+        "Signup failed. Please try again later. maybe the email is already used.",
+      );
+    }
+
+    return result.data!['register'];
   }
 
   @override
@@ -79,16 +106,8 @@ class AuthDataSourceImpl extends AuthDataSource {
   }
 
   @override
-  Future<UserTokens> signup({required SignupParams params}) {
-    // TODO: implement signup
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<UserTokens> refreshToken({required String refreshToken}) {
+  Future<UserTokensModel> refreshToken({required String refreshToken}) {
     // TODO: implement refreshToken
     throw UnimplementedError();
   }
-
-  // ... Implement signup and resetPassword similarly
 }

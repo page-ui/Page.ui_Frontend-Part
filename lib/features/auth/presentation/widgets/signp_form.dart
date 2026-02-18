@@ -51,7 +51,7 @@ class _SignpFormState extends State<SignpForm> {
     return BlocListener<SignupCubit, SignupState>(
       listener: (context, state) {
         if (state is SignupSuccess) {
-          showWebSnackBar(context: context, message: "Login Success");
+          showWebSnackBar(context: context, message: "Register Success");
           widget.onChangeLoadingValue!(false);
           AppRoutes.pushHomeView(context);
         } else if (state is SignupFailure) {
