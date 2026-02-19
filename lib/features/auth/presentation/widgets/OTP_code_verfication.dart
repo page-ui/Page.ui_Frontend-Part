@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pageui/config/themes/app_colors.dart';
+import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/core/custom_widget/custom_button.dart';
 import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
 import 'package:pageui/features/auth/domain/params/verify_reset_code_params.dart';
@@ -82,6 +83,8 @@ class _OTPCodeVerficationState extends State<OTPCodeVerfication> {
             VerifyOTPWidget(controllers: widget.controllers),
             const SizedBox(height: 30),
             ResendTheVerficationCodeButton(widget: widget),
+
+            SizedBox(height: 8),
             CustomButton(
               title: "VERIFY",
               onPressed: () {
@@ -112,6 +115,14 @@ class _OTPCodeVerficationState extends State<OTPCodeVerfication> {
                   });
                 }
               },
+            ),
+            SizedBox(height: 8),
+            Align(
+              alignment: AlignmentGeometry.bottomLeft,
+              child: Text(
+                "Note: email maybe in spam emails.",
+                style: AppTextStyles.bodyMedium!.copyWith(color: AppColors.red),
+              ),
             ),
           ],
         ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pageui/features/chat/prsentation/widgets/chat_panel.dart';
+import 'package:pageui/features/chat/prsentation/widgets/custom_animated_container_for_the_home_panel.dart';
 import 'package:pageui/features/chat/prsentation/widgets/custom_panel_for_mobile_mode.dart';
 import 'package:pageui/features/chat/prsentation/widgets/history_panel.dart';
+import 'package:pageui/features/chat/prsentation/widgets/home_appbar.dart';
 import 'package:pageui/features/chat/prsentation/widgets/u_i_frame.dart';
 
 class HomeViewBody extends StatefulWidget {
@@ -12,8 +14,8 @@ class HomeViewBody extends StatefulWidget {
 }
 
 class _HomeViewBodyState extends State<HomeViewBody> {
-  bool isLeftOpen = true;
-  bool isRightOpen = true;
+  bool isLeftOpen = false;
+  bool isRightOpen = false;
   String _lastMode = "";
 
   final double leftWidth = 260;
@@ -49,30 +51,22 @@ class _HomeViewBodyState extends State<HomeViewBody> {
       builder: (context, constraints) {
         _handleOpenningDrawers(constraints.maxWidth);
 
-        bool isMobile = constraints.maxWidth < 500;
+        bool isMobile = constraints.maxWidth < 600;
         bool isTablet =
-            constraints.maxWidth >= 500 && constraints.maxWidth < 1000;
-        bool isDesktop = constraints.maxWidth >= 1000;
+            constraints.maxWidth >= 600 && constraints.maxWidth < 1000;
 
         return Scaffold(
+          appBar: HomeAppbar(),
           body: Stack(
             children: [
               Row(
                 children: [
                   if (!isMobile)
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                      width: isLeftOpen ? leftWidth : 0,
-                      child: ClipRect(child: HistoryPanel()),
-                    ),
-
-                  Expanded(
-                    child: UIFrame(
-                      isDesktop: isDesktop,
-                      isMobile: isMobile,
-                      isTablet: isTablet,
-                      onLeftButtonPressed: () {
+                    CustomAnimatedContainerForTheHomePanel(
+                      isLeft: true,
+                      isOpen: isLeftOpen,
+                      width: leftWidth,
+                      onPressed: () {
                         setState(() {
                           isLeftOpen = !isLeftOpen;
                           if ((isTablet || isMobile) && isLeftOpen) {
@@ -80,8 +74,53 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                           }
                         });
                       },
+                      child: HistoryPanel(
+                        onPressed: () {
+                          setState(() {
+                            isLeftOpen = !isLeftOpen;
+                            if ((isTablet || isMobile) && isLeftOpen) {
+                              isRightOpen = false;
+                            }
+                          });
+                        },
+                      ),
+                    ),
 
-                      onRightButtonPressed: () {
+                  UIFrame(
+                    onLeftButtonPressed: () {
+                      setState(() {
+                        isLeftOpen = !isLeftOpen;
+                        if ((isTablet || isMobile) && isLeftOpen) {
+                          isRightOpen = false;
+                        }
+                      });
+                    },
+                    onRightButtonPressed: () {
+                      setState(() {
+                        isRightOpen = !isRightOpen;
+                        if ((isTablet || isMobile) && isRightOpen) {
+                          isLeftOpen = false;
+                        }
+                      });
+                    },
+                    isMobile: isMobile,
+                  ),
+                  if (!isMobile)
+                    CustomAnimatedContainerForTheHomePanel(
+                      child: ChatPanel(
+                        onPressed: () {
+                          setState(() {
+                            isRightOpen = !isRightOpen;
+                            if ((isTablet || isMobile) && isRightOpen) {
+                              isLeftOpen = false;
+                            }
+                          });
+                        },
+                      ),
+                      isLeft: false,
+                      width: rightWidth,
+                      isOpen: isRightOpen,
+                      onPressed: () {
                         setState(() {
                           isRightOpen = !isRightOpen;
                           if ((isTablet || isMobile) && isRightOpen) {
@@ -90,29 +129,38 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                         });
                       },
                     ),
-                  ),
-
-                  if (!isMobile)
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                      width: isRightOpen ? rightWidth : 0,
-                      child: ClipRect(child: ChatPanel()),
-                    ),
                 ],
               ),
 
               if (isMobile && isLeftOpen)
                 CustomPanelForMobileMode(
                   width: leftWidth,
-                  panel: HistoryPanel(),
+                  panel: HistoryPanel(
+                    onPressed: () {
+                      setState(() {
+                        isLeftOpen = !isLeftOpen;
+                        if ((isTablet || isMobile) && isLeftOpen) {
+                          isRightOpen = false;
+                        }
+                      });
+                    },
+                  ),
                   onClose: () => setState(() => isLeftOpen = false),
                 ),
 
               if (isMobile && isRightOpen)
                 CustomPanelForMobileMode(
                   width: rightWidth,
-                  panel: ChatPanel(),
+                  panel: ChatPanel(
+                    onPressed: () {
+                      setState(() {
+                        isRightOpen = !isRightOpen;
+                        if ((isTablet || isMobile) && isRightOpen) {
+                          isLeftOpen = false;
+                        }
+                      });
+                    },
+                  ),
                   onClose: () => setState(() => isRightOpen = false),
                   isRight: true,
                 ),

@@ -30,7 +30,7 @@ class _VerifyOTPWidgetState extends State<VerifyOTPWidget> {
             return Flexible(
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 4),
-                constraints: const BoxConstraints(maxWidth: 50, minWidth: 40),
+                constraints: const BoxConstraints(maxWidth: 55, minWidth: 35),
                 height: 60,
                 decoration: BoxDecoration(
                   color: AppColors.black,

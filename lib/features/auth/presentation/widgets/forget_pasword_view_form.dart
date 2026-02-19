@@ -40,7 +40,7 @@ class _ForgetPaswordViewFormState extends State<ForgetPaswordViewForm> {
             ),
           ),
         SizedBox(
-          height: 270,
+          height: 340,
           child: PageView(
             controller: _controller,
             physics: const NeverScrollableScrollPhysics(),

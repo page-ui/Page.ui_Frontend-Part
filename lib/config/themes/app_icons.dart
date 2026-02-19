@@ -14,6 +14,8 @@ class AppIcons {
   // static final IconData edit = FontAwesomeIcons.pencil;
   // static final IconData errorIcon = Icons.error;
   static final IconData arrowForward = Icons.arrow_forward_ios;
+  static final IconData arrowBackward = Icons.arrow_back_ios;
+
   static final IconData dot = Icons.circle;
   // static final IconData visibilityOff = Icons.visibility_off;
   // static final IconData visibilityOn = Icons.visibility;

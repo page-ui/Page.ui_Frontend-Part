@@ -27,7 +27,7 @@ class CustomAuthScreenTheme extends StatelessWidget {
           maxWidth = 500;
         } else if (constraints.maxWidth > 800) {
           maxWidth = 500;
-        } else if (constraints.maxWidth < 480) {
+        } else if (constraints.maxWidth < 500) {
           maxWidth = double.infinity;
           maxHeight = MediaQuery.sizeOf(context).height;
           isMobile = true;

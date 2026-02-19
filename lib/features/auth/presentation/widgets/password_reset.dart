@@ -51,7 +51,7 @@ class _PasswordResetState extends State<PasswordReset> {
                 } else {
                   showWebSnackBar(
                     context: context,
-                    message: "Password and Confirm Password must be same",
+                    message: "Password and Confirm Password must be same.",
                     backgroundColor: AppColors.red,
                     textColor: AppColors.white,
                   );
