@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/features/chat/prsentation/widgets/home_view_body.dart';
+import 'package:pageui/features/chat/presentation/widgets/home_view_body.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_icons.dart';
-import 'package:pageui/features/chat/prsentation/widgets/custom_button_icon_for_panels.dart';
+import 'package:pageui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
 
 class ChatPanel extends StatelessWidget {
   const ChatPanel({super.key, required this.onPressed});

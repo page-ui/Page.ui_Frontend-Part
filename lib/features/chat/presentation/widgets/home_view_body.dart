@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:pageui/features/chat/prsentation/widgets/chat_panel.dart';
-import 'package:pageui/features/chat/prsentation/widgets/custom_animated_container_for_the_home_panel.dart';
-import 'package:pageui/features/chat/prsentation/widgets/custom_panel_for_mobile_mode.dart';
-import 'package:pageui/features/chat/prsentation/widgets/history_panel.dart';
-import 'package:pageui/features/chat/prsentation/widgets/home_appbar.dart';
-import 'package:pageui/features/chat/prsentation/widgets/u_i_frame.dart';
+import 'package:pageui/features/chat/presentation/widgets/chat_panel.dart';
+import 'package:pageui/features/chat/presentation/widgets/custom_animated_container_for_the_home_panel.dart';
+import 'package:pageui/features/chat/presentation/widgets/custom_panel_for_mobile_mode.dart';
+import 'package:pageui/features/chat/presentation/widgets/history_panel.dart';
+import 'package:pageui/features/chat/presentation/widgets/home_appbar.dart';
+import 'package:pageui/features/chat/presentation/widgets/u_i_frame.dart';
 
 class HomeViewBody extends StatefulWidget {
   const HomeViewBody({super.key});
@@ -23,9 +23,9 @@ class _HomeViewBodyState extends State<HomeViewBody> {
 
   void _handleOpenningDrawers(double width) {
     String currentMode;
-    if (width < 500)
+    if (width < 760)
       currentMode = "mobile";
-    else if (width < 1000)
+    else if (width < 1200)
       currentMode = "tablet";
     else
       currentMode = "desktop";

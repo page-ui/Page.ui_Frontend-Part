@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/constants/borders.dart';
-import 'package:pageui/features/chat/prsentation/widgets/u_i_frame_body.dart';
+import 'package:pageui/features/chat/presentation/widgets/u_i_frame_body.dart';
 
 class UIFrame extends StatelessWidget {
   const UIFrame({

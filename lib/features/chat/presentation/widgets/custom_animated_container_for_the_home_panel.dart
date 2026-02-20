@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/constants/borders.dart';
-import 'package:pageui/features/chat/prsentation/widgets/home_panel_on_closed.dart';
+import 'package:pageui/features/chat/presentation/widgets/home_panel_on_closed.dart';
 
 class CustomAnimatedContainerForTheHomePanel extends StatelessWidget {
   const CustomAnimatedContainerForTheHomePanel({
