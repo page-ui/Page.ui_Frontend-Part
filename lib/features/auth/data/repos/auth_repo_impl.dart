@@ -87,7 +87,12 @@ class AuthRepoImpl extends AuthRepo {
       final response = await dataSource.verifyResetCodeParams(params: params);
       return Right(response);
     } catch (e) {
-      return Left(ServerFailure(message: "There was a propblem, please make sure you're write the code correct, or resend the code."));
+      return Left(
+        ServerFailure(
+          message:
+              "There was a propblem, please make sure you're write the code correct, or resend the code.",
+        ),
+      );
     }
   }
 
@@ -96,7 +101,7 @@ class AuthRepoImpl extends AuthRepo {
     required ResetPasswordParams params,
   }) async {
     try {
-      final response = await dataSource.resetPassword(params: params);
+      await dataSource.resetPassword(params: params);
       return Right(1);
     } catch (e) {
       return Left(
@@ -104,6 +109,4 @@ class AuthRepoImpl extends AuthRepo {
       );
     }
   }
-
-  // Implement others...
 }
