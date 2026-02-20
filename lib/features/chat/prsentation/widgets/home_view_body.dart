@@ -45,21 +45,40 @@ class _HomeViewBodyState extends State<HomeViewBody> {
     }
   }
 
+  onPressedLeftButton({required bool isMobile, required bool isTablet}) {
+    setState(() {
+      isLeftOpen = !isLeftOpen;
+      if ((isTablet || isMobile) && isLeftOpen) {
+        isRightOpen = false;
+      }
+    });
+  }
+
+  onPressedRightButton({required bool isMobile, required bool isTablet}) {
+    setState(() {
+      isRightOpen = !isRightOpen;
+      if ((isTablet || isMobile) && isRightOpen) {
+        isLeftOpen = false;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         _handleOpenningDrawers(constraints.maxWidth);
 
-        bool isMobile = constraints.maxWidth < 600;
+        bool isMobile = constraints.maxWidth < 760;
         bool isTablet =
-            constraints.maxWidth >= 600 && constraints.maxWidth < 1000;
+            constraints.maxWidth >= 760 && constraints.maxWidth < 1200;
 
         return Scaffold(
           appBar: HomeAppbar(),
           body: Stack(
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if (!isMobile)
                     CustomAnimatedContainerForTheHomePanel(
@@ -67,41 +86,33 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                       isOpen: isLeftOpen,
                       width: leftWidth,
                       onPressed: () {
-                        setState(() {
-                          isLeftOpen = !isLeftOpen;
-                          if ((isTablet || isMobile) && isLeftOpen) {
-                            isRightOpen = false;
-                          }
-                        });
+                        onPressedLeftButton(
+                          isMobile: isMobile,
+                          isTablet: isTablet,
+                        );
                       },
                       child: HistoryPanel(
                         onPressed: () {
-                          setState(() {
-                            isLeftOpen = !isLeftOpen;
-                            if ((isTablet || isMobile) && isLeftOpen) {
-                              isRightOpen = false;
-                            }
-                          });
+                          onPressedLeftButton(
+                            isMobile: isMobile,
+                            isTablet: isTablet,
+                          );
                         },
                       ),
                     ),
 
                   UIFrame(
                     onLeftButtonPressed: () {
-                      setState(() {
-                        isLeftOpen = !isLeftOpen;
-                        if ((isTablet || isMobile) && isLeftOpen) {
-                          isRightOpen = false;
-                        }
-                      });
+                      onPressedLeftButton(
+                        isMobile: isMobile,
+                        isTablet: isTablet,
+                      );
                     },
                     onRightButtonPressed: () {
-                      setState(() {
-                        isRightOpen = !isRightOpen;
-                        if ((isTablet || isMobile) && isRightOpen) {
-                          isLeftOpen = false;
-                        }
-                      });
+                      onPressedRightButton(
+                        isMobile: isMobile,
+                        isTablet: isTablet,
+                      );
                     },
                     isMobile: isMobile,
                   ),
@@ -109,24 +120,20 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                     CustomAnimatedContainerForTheHomePanel(
                       child: ChatPanel(
                         onPressed: () {
-                          setState(() {
-                            isRightOpen = !isRightOpen;
-                            if ((isTablet || isMobile) && isRightOpen) {
-                              isLeftOpen = false;
-                            }
-                          });
+                          onPressedRightButton(
+                            isMobile: isMobile,
+                            isTablet: isTablet,
+                          );
                         },
                       ),
                       isLeft: false,
                       width: rightWidth,
                       isOpen: isRightOpen,
                       onPressed: () {
-                        setState(() {
-                          isRightOpen = !isRightOpen;
-                          if ((isTablet || isMobile) && isRightOpen) {
-                            isLeftOpen = false;
-                          }
-                        });
+                        onPressedRightButton(
+                          isMobile: isMobile,
+                          isTablet: isTablet,
+                        );
                       },
                     ),
                 ],
@@ -137,12 +144,10 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                   width: leftWidth,
                   panel: HistoryPanel(
                     onPressed: () {
-                      setState(() {
-                        isLeftOpen = !isLeftOpen;
-                        if ((isTablet || isMobile) && isLeftOpen) {
-                          isRightOpen = false;
-                        }
-                      });
+                      onPressedLeftButton(
+                        isMobile: isMobile,
+                        isTablet: isTablet,
+                      );
                     },
                   ),
                   onClose: () => setState(() => isLeftOpen = false),
@@ -153,12 +158,10 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                   width: rightWidth,
                   panel: ChatPanel(
                     onPressed: () {
-                      setState(() {
-                        isRightOpen = !isRightOpen;
-                        if ((isTablet || isMobile) && isRightOpen) {
-                          isLeftOpen = false;
-                        }
-                      });
+                      onPressedRightButton(
+                        isMobile: isMobile,
+                        isTablet: isTablet,
+                      );
                     },
                   ),
                   onClose: () => setState(() => isRightOpen = false),

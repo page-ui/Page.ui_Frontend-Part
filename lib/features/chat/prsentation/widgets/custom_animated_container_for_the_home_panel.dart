@@ -20,8 +20,12 @@ class CustomAnimatedContainerForTheHomePanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      height: 750,
-      margin: EdgeInsets.all(20),
+      margin: EdgeInsets.only(
+        top: 16,
+        bottom: 10,
+        right: isLeft ? 0 : 8,
+        left: isLeft ? 8 : 0,
+      ),
       padding: EdgeInsets.all(isOpen ? 0 : 6),
       decoration: BoxDecoration(
         borderRadius: AppBorders.xxxxs,
@@ -29,8 +33,8 @@ class CustomAnimatedContainerForTheHomePanel extends StatelessWidget {
         color: AppColors.anotherGray,
         boxShadow: [
           BoxShadow(
-            color: AppColors.green.withOpacity(0.5),
-            blurRadius: 26,
+            color: AppColors.primaryColor.withOpacity(0.5),
+            blurRadius: 20,
             spreadRadius: 2,
             blurStyle: BlurStyle.outer,
           ),

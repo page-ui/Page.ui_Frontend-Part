@@ -24,7 +24,7 @@ class ChatPanel extends StatelessWidget {
               ),
               SizedBox(width: 58),
               CustomButtonIconForPanels(
-                isLeftPanel: false,
+                isLeftPanel: true,
                 onPressed: onPressed,
               ),
             ],
