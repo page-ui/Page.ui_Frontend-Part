@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:pageui/core/database/cache/cache_helper.dart';
 import 'package:pageui/core/database/cache/secure_storage.dart';
 import 'package:pageui/core/helpers/setup_service_locator_getit.dart';
 import 'package:pageui/main_app.dart';
 
 void main() {
-  CacheHelper cacheHelper = CacheHelper();
-  cacheHelper.init();
+  // CacheHelper cacheHelper = CacheHelper();
+  // cacheHelper.init();
   SecureStorage.init();
   setUpServiceLocator();
   runApp(const PageDotUi());
