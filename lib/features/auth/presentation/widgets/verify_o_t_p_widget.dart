@@ -37,7 +37,7 @@ class _VerifyOTPWidgetState extends State<VerifyOTPWidget> {
                   border: Border.all(color: AppColors.primaryColor, width: 1.5),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primaryColor.withOpacity(0.4),
+                      color: AppColors.primaryColor.withValues(alpha: 0.4),
                       blurRadius: 8,
                     ),
                   ],

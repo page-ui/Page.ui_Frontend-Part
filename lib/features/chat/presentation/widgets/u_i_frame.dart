@@ -26,7 +26,7 @@ class UIFrame extends StatelessWidget {
           color: AppColors.anotherGray,
           boxShadow: [
             BoxShadow(
-              color: AppColors.primaryColor.withOpacity(0.5),
+              color: AppColors.primaryColor.withValues(alpha: 0.5),
               blurRadius: 20,
               spreadRadius: 2,
               blurStyle: BlurStyle.outer,

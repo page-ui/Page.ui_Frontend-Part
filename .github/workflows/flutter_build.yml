@@ -57,7 +57,7 @@ jobs:
         run: flutter pub get
         
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --target-platform android-arm64 --analyze-size 
         
       - name: Upload APK artifact
         uses: actions/upload-artifact@v3

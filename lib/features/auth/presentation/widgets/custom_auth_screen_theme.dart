@@ -54,7 +54,7 @@ class CustomAuthScreenTheme extends StatelessWidget {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.green.withOpacity(0.6),
+                            color: AppColors.green.withValues(alpha: 0.6),
                             blurRadius: 26,
                             spreadRadius: 2,
                             blurStyle: BlurStyle.outer,
