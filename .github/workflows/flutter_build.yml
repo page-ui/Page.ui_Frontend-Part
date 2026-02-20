@@ -76,13 +76,7 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Download Android Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: app-release.apk
-          path: release/
-
+      
       - name: Download Web Artifact
         uses: actions/download-artifact@v4
         with:
@@ -93,7 +87,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            release/app-release.apk
             release/web/**
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
