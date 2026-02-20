@@ -60,7 +60,7 @@ jobs:
         run: flutter build apk --target-platform android-arm64 --analyze-size 
         
       - name: Upload APK artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: app-release.apk
           path: build/app/outputs/flutter-apk/app-release.apk
@@ -85,7 +85,7 @@ jobs:
         run: flutter build web --release
         
       - name: Upload Web artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: web-build
           path: build/web/
