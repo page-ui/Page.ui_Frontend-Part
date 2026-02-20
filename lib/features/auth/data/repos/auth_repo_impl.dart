@@ -9,7 +9,7 @@ import 'package:pageui/features/auth/data/data_source/auth_data_source.dart';
 import 'package:pageui/features/auth/data/model/user_tokens_model.dart';
 import 'package:pageui/features/auth/domain/params/login_params.dart';
 import 'package:pageui/features/auth/domain/params/reset_password.dart';
-import 'package:pageui/features/auth/domain/params/signup_params.dart';
+import 'package:pageui/features/auth/domain/params/register_params.dart';
 import 'package:pageui/features/auth/domain/params/verify_reset_code_params.dart';
 import 'package:pageui/features/auth/domain/repos/auth_repo.dart';
 
@@ -47,7 +47,9 @@ class AuthRepoImpl extends AuthRepo {
   }
 
   @override
-  Future<Either<Failure, bool>> register({required SignupParams param}) async {
+  Future<Either<Failure, bool>> register({
+    required RegisterParams param,
+  }) async {
     try {
       if (!await networkInfo.isConnected!) {
         return Left(NetworkFailure.error());

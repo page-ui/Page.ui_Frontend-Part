@@ -7,7 +7,7 @@ class Queries {
       }
     }
     ''';
-  static String signupMutation = r'''
+  static String registerMutation = r'''
     mutation Register($input: RegisterInput!) {
       register(input: $input)
     }

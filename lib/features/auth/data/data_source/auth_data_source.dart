@@ -4,12 +4,12 @@ import 'package:pageui/core/database/api/queries.dart';
 import 'package:pageui/features/auth/data/model/user_tokens_model.dart';
 import 'package:pageui/features/auth/domain/params/login_params.dart';
 import 'package:pageui/features/auth/domain/params/reset_password.dart';
-import 'package:pageui/features/auth/domain/params/signup_params.dart';
+import 'package:pageui/features/auth/domain/params/register_params.dart';
 import 'package:pageui/features/auth/domain/params/verify_reset_code_params.dart';
 
 abstract class AuthDataSource {
   Future<UserTokensModel> login({required LoginParams params});
-  Future<bool> register({required SignupParams params});
+  Future<bool> register({required RegisterParams params});
   Future<bool> forgotPasswordRequest({required String email});
   Future<bool> resetPassword({required ResetPasswordParams params});
   Future<UserTokensModel> refreshToken({required String refreshToken});
@@ -44,10 +44,10 @@ class AuthDataSourceImpl extends AuthDataSource {
   }
 
   @override
-  Future<bool> register({required SignupParams params}) async {
+  Future<bool> register({required RegisterParams params}) async {
     final result = await _client.mutate(
       MutationOptions(
-        document: gql(Queries.signupMutation),
+        document: gql(Queries.registerMutation),
         variables: {
           'input': {
             'email': params.email,
@@ -63,7 +63,7 @@ class AuthDataSourceImpl extends AuthDataSource {
         result.data!['register'] == false ||
         result.hasException) {
       throw Exception(
-        "Signup failed. Please try again later. maybe the email is already used.",
+        "Register failed. Please try again later. maybe the email is already used.",
       );
     }
 

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:pageui/core/helpers/custom_modal_progress_hud.dart';
 import 'package:pageui/features/auth/presentation/widgets/custom_auth_screen_theme.dart';
-import 'package:pageui/features/auth/presentation/widgets/signup_view_body.dart';
+import 'package:pageui/features/auth/presentation/widgets/register_view_body.dart';
 
-class SignupView extends StatefulWidget {
-  const SignupView({super.key});
-  static final routeName = "SignupView";
+class RegisterView extends StatefulWidget {
+  const RegisterView({super.key});
+  static final routeName = "RegisterView";
 
   @override
-  State<SignupView> createState() => _SignupViewState();
+  State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _SignupViewState extends State<SignupView> {
+class _RegisterViewState extends State<RegisterView> {
   bool isLoading = false;
 
   @override
@@ -20,8 +20,8 @@ class _SignupViewState extends State<SignupView> {
       body: CustomModalProgressHud(
         isLoading: isLoading,
         child: CustomAuthScreenTheme(
-          viewTitle: 'Signup',
-          child: SignupViewBody(
+          viewTitle: 'Register',
+          child: RegisterViewBody(
             onChangeLoadingValue: (bool p1) {
               setState(() {
                 isLoading = p1;

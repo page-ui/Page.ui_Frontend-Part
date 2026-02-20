@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pageui/features/auth/presentation/views/forget_pasword_view.dart';
 import 'package:pageui/features/auth/presentation/views/login_view.dart';
-import 'package:pageui/features/auth/presentation/views/signup_view.dart';
+import 'package:pageui/features/auth/presentation/views/register_view.dart';
 import 'package:pageui/features/chat/presentation/views/home_view.dart';
 import 'package:pageui/features/intro_screens/presentation/views/splash_view.dart';
 
@@ -29,10 +29,10 @@ sealed class AppRoutes {
     arguments: arguments,
   );
 
-  static Future<void> pushSignupView(BuildContext context) {
+  static Future<void> pushRegisterView(BuildContext context) {
     return Navigator.push(
       context,
-      cutomRouteBuilder(mainChild: SignupView(), duration: 700),
+      cutomRouteBuilder(mainChild: RegisterView(), duration: 700),
     );
   }
 
@@ -81,7 +81,7 @@ sealed class AppRoutes {
 Map<String, Widget Function(BuildContext, Object?)> _routes = {
   LoginView.routeName: (_, _) => const LoginView(),
   SplashView.routeName: (_, _) => const SplashView(),
-  SignupView.routeName: (_, _) => const SignupView(),
+  RegisterView.routeName: (_, _) => const RegisterView(),
   ForgetPaswordView.routeName: (_, _) => const ForgetPaswordView(),
   HomeView.routeName: (_, _) => const HomeView(),
 };
