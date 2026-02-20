@@ -34,71 +34,69 @@ class CustomAuthScreenTheme extends StatelessWidget {
         } else {
           maxWidth = constraints.maxWidth * 0.62;
         }
-        return Positioned.fill(
-          child: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Visibility(visible: !isMobile, child: const LogoWidget()),
-                  Visibility(
-                    visible: !isMobile,
-                    child: const SizedBox(height: 24),
+        return Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Visibility(visible: !isMobile, child: const LogoWidget()),
+                Visibility(
+                  visible: !isMobile,
+                  child: const SizedBox(height: 24),
+                ),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: maxWidth,
+                    maxHeight: maxHeight,
                   ),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: maxWidth,
-                      maxHeight: maxHeight,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.green.withValues(alpha: 0.6),
+                          blurRadius: 26,
+                          spreadRadius: 2,
+                          blurStyle: BlurStyle.outer,
+                        ),
+                      ],
+                      borderRadius: isMobile
+                          ? AppBorders.zero
+                          : AppBorders.xxxxs,
+                      border: Border.all(
+                        color: AppColors.primaryColor,
+                        width: 2,
+                        strokeAlign: BorderSide.strokeAlignOutside,
+                      ),
+                      color: AppColors.mainBackgroundColor,
                     ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.green.withOpacity(0.6),
-                            blurRadius: 26,
-                            spreadRadius: 2,
-                            blurStyle: BlurStyle.outer,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: isMobile ? 50 : 20,
+                        horizontal: 24,
+                      ),
+                      child: Column(
+                        mainAxisSize: isMobile
+                            ? MainAxisSize.max
+                            : MainAxisSize.min,
+                        children: [
+                          Visibility(visible: !isMobile, child: Dots()),
+                          Visibility(
+                            visible: isMobile,
+                            child: const LogoWidget(),
                           ),
+                          CustomDivider(),
+                          const SizedBox(height: 8),
+                          ScrambAnimatedTitleText(viewTitle: viewTitle),
+                          const SizedBox(height: 8),
+                          CustomDivider(),
+                          const SizedBox(height: 16),
+                          child,
                         ],
-                        borderRadius: isMobile
-                            ? AppBorders.zero
-                            : AppBorders.xxxxs,
-                        border: Border.all(
-                          color: AppColors.primaryColor,
-                          width: 2,
-                          strokeAlign: BorderSide.strokeAlignOutside,
-                        ),
-                        color: AppColors.mainBackgroundColor,
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: isMobile ? 50 : 20,
-                          horizontal: 24,
-                        ),
-                        child: Column(
-                          mainAxisSize: isMobile
-                              ? MainAxisSize.max
-                              : MainAxisSize.min,
-                          children: [
-                            Visibility(visible: !isMobile, child: Dots()),
-                            Visibility(
-                              visible: isMobile,
-                              child: const LogoWidget(),
-                            ),
-                            CustomDivider(),
-                            const SizedBox(height: 8),
-                            ScrambAnimatedTitleText(viewTitle: viewTitle),
-                            const SizedBox(height: 8),
-                            CustomDivider(),
-                            const SizedBox(height: 16),
-                            child,
-                          ],
-                        ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );

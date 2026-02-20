@@ -106,11 +106,13 @@ class _WebToastWidgetState extends State<_WebToastWidget>
                 borderRadius: AppBorders.xxxxs,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.black.withOpacity(0.3),
+                    color: AppColors.black.withValues(alpha: 0.3),
                     blurRadius: 20,
                   ),
                 ],
-                border: Border.all(color: widget.textColor.withOpacity(0.5)),
+                border: Border.all(
+                  color: widget.textColor.withValues(alpha: 0.5),
+                ),
               ),
               child: Row(
                 children: [

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
-import 'package:pageui/features/chat/prsentation/widgets/custom_button_icon_for_panels.dart';
+import 'package:pageui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
 
 class HomePanelOnClosed extends StatelessWidget {
   const HomePanelOnClosed({

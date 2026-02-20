@@ -101,7 +101,6 @@ class _OTPCodeVerficationState extends State<OTPCodeVerfication> {
                 }
                 if (formKeyCodeVerify.currentState!.validate()) {
                   FocusScope.of(context).unfocus();
-                  print(widget.controllers.map((e) => e.text).join());
                   context.read<ForgetPasswordCubit>().verifyResetCode(
                     params: VerifyResetCodeParams(
                       email: widget.email,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/constants/borders.dart';
-import 'package:pageui/features/chat/prsentation/widgets/home_panel_on_closed.dart';
+import 'package:pageui/features/chat/presentation/widgets/home_panel_on_closed.dart';
 
 class CustomAnimatedContainerForTheHomePanel extends StatelessWidget {
   const CustomAnimatedContainerForTheHomePanel({
@@ -33,7 +33,7 @@ class CustomAnimatedContainerForTheHomePanel extends StatelessWidget {
         color: AppColors.anotherGray,
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryColor.withOpacity(0.5),
+            color: AppColors.primaryColor.withValues(alpha: 0.5),
             blurRadius: 20,
             spreadRadius: 2,
             blurStyle: BlurStyle.outer,

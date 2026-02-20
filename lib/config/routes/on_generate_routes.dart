@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pageui/features/auth/presentation/views/forget_pasword_view.dart';
 import 'package:pageui/features/auth/presentation/views/login_view.dart';
 import 'package:pageui/features/auth/presentation/views/signup_view.dart';
-import 'package:pageui/features/chat/prsentation/views/home_view.dart';
+import 'package:pageui/features/chat/presentation/views/home_view.dart';
 import 'package:pageui/features/intro_screens/presentation/views/splash_view.dart';
 
 sealed class AppRoutes {

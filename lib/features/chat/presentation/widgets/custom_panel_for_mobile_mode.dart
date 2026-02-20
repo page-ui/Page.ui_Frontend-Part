@@ -20,7 +20,9 @@ class CustomPanelForMobileMode extends StatelessWidget {
         GestureDetector(
           onTap: onClose,
           child: Container(
-            decoration: BoxDecoration(color: AppColors.black.withOpacity(0.6)),
+            decoration: BoxDecoration(
+              color: AppColors.black.withValues(alpha: 0.6),
+            ),
           ),
         ),
         Positioned(
