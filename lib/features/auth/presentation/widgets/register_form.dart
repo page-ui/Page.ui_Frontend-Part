@@ -4,23 +4,23 @@ import 'package:pageui/config/routes/on_generate_routes.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/custom_widget/custom_button.dart';
 import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
-import 'package:pageui/features/auth/domain/params/signup_params.dart';
-import 'package:pageui/features/auth/presentation/controllers/signup_cubit/signup_cubit.dart';
+import 'package:pageui/features/auth/domain/params/register_params.dart';
+import 'package:pageui/features/auth/presentation/controllers/register_cubit/register_cubit.dart';
 import 'package:pageui/features/auth/presentation/widgets/auth_text_form_field.dart';
 import 'package:pageui/features/auth/presentation/widgets/custom_row_auth.dart';
 import 'package:pageui/features/auth/presentation/widgets/email_validator.dart';
 import 'package:pageui/features/auth/presentation/widgets/have_an_account_widget.dart';
 import 'package:pageui/features/auth/presentation/widgets/password_text_form_field.dart';
 
-class SignpForm extends StatefulWidget {
-  const SignpForm({super.key, required this.onChangeLoadingValue});
+class RegisterForm extends StatefulWidget {
+  const RegisterForm({super.key, required this.onChangeLoadingValue});
   final void Function(bool)? onChangeLoadingValue;
 
   @override
-  State<SignpForm> createState() => _SignpFormState();
+  State<RegisterForm> createState() => _RegisterFormState();
 }
 
-class _SignpFormState extends State<SignpForm> {
+class _RegisterFormState extends State<RegisterForm> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
@@ -48,16 +48,16 @@ class _SignpFormState extends State<SignpForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignupCubit, SignupState>(
+    return BlocListener<RegisterCubit, RegisterState>(
       listener: (context, state) {
-        if (state is SignupSuccess) {
+        if (state is RegisterSuccess) {
           showWebSnackBar(context: context, message: "Register Success");
           widget.onChangeLoadingValue!(false);
           AppRoutes.pushHomeView(context);
-        } else if (state is SignupFailure) {
+        } else if (state is RegisterFailure) {
           showWebSnackBar(context: context, message: state.message);
           widget.onChangeLoadingValue!(false);
-        } else if (state is SignupLoading) {
+        } else if (state is RegisterLoading) {
           widget.onChangeLoadingValue!(true);
         } else {
           widget.onChangeLoadingValue!(false);
@@ -118,8 +118,8 @@ class _SignpFormState extends State<SignpForm> {
                   if (formKey.currentState!.validate()) {
                     if (_confirmpasswordController.text ==
                         _passwordController.text) {
-                      context.read<SignupCubit>().signup(
-                        params: SignupParams(
+                      context.read<RegisterCubit>().register(
+                        params: RegisterParams(
                           email: _emailController.text,
                           password: _passwordController.text,
                           userName: _nameController.text,

@@ -12,12 +12,37 @@ class _VerifyOTPWidgetState extends State<VerifyOTPWidget> {
   final List<FocusNode> _focusNodes = List.generate(5, (_) => FocusNode());
 
   void _onChanged(String value, int index) {
+    if (index == 0 && value.length > 1) {
+      final characters = value.split('');
+
+      for (int i = 0; i < widget.controllers.length; i++) {
+        if (i < characters.length) {
+          widget.controllers[i].text = characters[i];
+        } else {
+          widget.controllers[i].clear();
+        }
+      }
+
+      _focusNodes.last.requestFocus();
+      return;
+    }
+
+    // Normal typing behavior
     if (value.isNotEmpty && index < 4) {
       _focusNodes[index + 1].requestFocus();
     }
+
     if (value.isEmpty && index > 0) {
       _focusNodes[index - 1].requestFocus();
     }
+  }
+
+  @override
+  void dispose() {
+    for (final node in _focusNodes) {
+      node.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -46,7 +71,7 @@ class _VerifyOTPWidgetState extends State<VerifyOTPWidget> {
                   controller: widget.controllers[index],
                   focusNode: _focusNodes[index],
                   textAlign: TextAlign.center,
-                  maxLength: 1,
+                  maxLength: null,
                   style: const TextStyle(
                     color: AppColors.primaryColor,
                     fontSize: 22,

@@ -19,7 +19,7 @@ class PageDotUi extends StatelessWidget {
       ),
       child: MaterialApp(
         initialRoute: SplashView.routeName,
-        onGenerateRoute: onGenerateRoute,
+        onGenerateRoute: AppRoutes.onGenerateRoute,
         title: 'Page.ui',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pageui/config/themes/app_colors.dart';
@@ -5,29 +7,75 @@ import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/features/auth/presentation/controllers/forget_password_cubit/forget_password_cubit.dart';
 import 'package:pageui/features/auth/presentation/widgets/OTP_code_verfication.dart';
 
-class ResendTheVerficationCodeButton extends StatelessWidget {
-  const ResendTheVerficationCodeButton({
-    super.key,
-    required this.widget,
-  });
+class ResendTheVerficationCodeButton extends StatefulWidget {
+  const ResendTheVerficationCodeButton({super.key, required this.widget});
 
   final OTPCodeVerfication widget;
 
   @override
+  State<ResendTheVerficationCodeButton> createState() =>
+      _ResendTheVerficationCodeButtonState();
+}
+
+class _ResendTheVerficationCodeButtonState
+    extends State<ResendTheVerficationCodeButton> {
+  Timer? _timer;
+  bool _isDisabled = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer();
+  }
+
+  int _secondsRemaining = 120;
+
+  void _startTimer() {
+    _isDisabled = true;
+    _secondsRemaining = 120;
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_secondsRemaining == 0) {
+        timer.cancel();
+        setState(() {
+          _isDisabled = false;
+        });
+      } else {
+        setState(() {
+          _secondsRemaining--;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  String get _formattedTime {
+    final minutes = _secondsRemaining ~/ 60;
+    final seconds = _secondsRemaining % 60;
+    return "$minutes:${seconds.toString().padLeft(2, '0')}";
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: AlignmentGeometry.topLeft,
+      alignment: Alignment.topLeft,
       child: TextButton(
-        onPressed: () {
-          context.read<ForgetPasswordCubit>().forgotPasswordRequest(
-            email: widget.email,
-          );
-        },
+        onPressed: _isDisabled
+            ? null
+            : () {
+                context.read<ForgetPasswordCubit>().forgotPasswordRequest(
+                  email: widget.widget.email,
+                );
+                _startTimer();
+              },
         child: Text(
-          "Resend the code",
-          style: AppTextStyles.bodySmall!.copyWith(
-            color: AppColors.white,
-          ),
+          _isDisabled ? "Resend in $_formattedTime" : "Resend the code",
+          style: AppTextStyles.bodySmall!.copyWith(color: AppColors.white),
         ),
       ),
     );

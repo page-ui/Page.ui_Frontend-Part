@@ -19,7 +19,7 @@ class DoNotHaveAnAccountWidget extends StatelessWidget {
           ),
         ),
         GestureDetector(
-          onTap: () => AppRoutes.pushSignupView(context),
+          onTap: () => AppRoutes.pushRegisterView(context),
           child: Text(
             "[ Register ]",
             style: AppTextStyles.bodySmall!.copyWith(

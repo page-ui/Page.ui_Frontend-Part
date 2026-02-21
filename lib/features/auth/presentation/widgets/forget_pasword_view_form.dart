@@ -75,6 +75,9 @@ class _ForgetPaswordViewFormState extends State<ForgetPaswordViewForm> {
   int _currentStep = 0;
 
   void nextStep() {
+    for (final controller in controllers) {
+      controller.clear();
+    }
     _controller.nextPage(
       duration: const Duration(milliseconds: 400),
       curve: Curves.easeOutCubic,
@@ -83,10 +86,14 @@ class _ForgetPaswordViewFormState extends State<ForgetPaswordViewForm> {
   }
 
   void previousStep() {
+    for (final controller in controllers) {
+      controller.clear();
+    }
     _controller.previousPage(
       duration: const Duration(milliseconds: 400),
       curve: Curves.easeOutCubic,
     );
+
     setState(() => _currentStep--);
   }
 }

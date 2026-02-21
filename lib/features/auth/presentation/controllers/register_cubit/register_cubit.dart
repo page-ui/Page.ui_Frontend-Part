@@ -2,20 +2,20 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:pageui/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:pageui/features/auth/domain/params/login_params.dart';
-import 'package:pageui/features/auth/domain/params/signup_params.dart';
+import 'package:pageui/features/auth/domain/params/register_params.dart';
 
-part 'signup_state.dart';
+part 'register_state.dart';
 
-class SignupCubit extends Cubit<SignupState> {
-  SignupCubit({required this.authRepoImpl}) : super(SignupInitial());
+class RegisterCubit extends Cubit<RegisterState> {
+  RegisterCubit({required this.authRepoImpl}) : super(RegisterInitial());
   final AuthRepoImpl authRepoImpl;
-  Future<void> signup({required SignupParams params}) async {
-    emit(SignupLoading());
+  Future<void> register({required RegisterParams params}) async {
+    emit(RegisterLoading());
     final result = await authRepoImpl.register(param: params);
 
     result.fold(
       (failure) {
-        emit(SignupFailure(message: failure.message));
+        emit(RegisterFailure(message: failure.message));
       },
       (user) async {
         final login = await authRepoImpl.login(
@@ -23,10 +23,10 @@ class SignupCubit extends Cubit<SignupState> {
         );
         login.fold(
           (failure) {
-            emit(SignupFailure(message: failure.message));
+            emit(RegisterFailure(message: failure.message));
           },
           (user) {
-            emit(SignupSuccess());
+            emit(RegisterSuccess());
           },
         );
       },

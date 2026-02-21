@@ -7,18 +7,24 @@ class Queries {
       }
     }
     ''';
-  static String signupMutation = r'''
+  static String registerMutation = r'''
     mutation Register($input: RegisterInput!) {
       register(input: $input)
     }
     ''';
   static String forgotPasswordRequestMutation = r'''
-    mutation ForgotPasswordRequest($email: String!) {
+    mutation ForgotPassword($email: String!) {
       forgotPasswordRequest(email: $email)
     }
     ''';
-  // TODO: write it after receive the api
   static String verifyResetCodeMutation = r'''
-  
+    mutation VerifyCode($email: String!, $code: String!) {
+      verifyResetCode(email: $email, code: $code)
+    }
+  ''';
+  static String resetPassword = r'''
+    mutation ResetPassword($input: ResetPasswordInput!) {
+    resetPassword(input: $input)
+    }
   ''';
 }
