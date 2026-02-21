@@ -13,7 +13,7 @@ abstract class AuthDataSource {
   Future<bool> forgotPasswordRequest({required String email});
   Future<bool> resetPassword({required ResetPasswordParams params});
   Future<UserTokensModel> refreshToken({required String refreshToken});
-  Future<String> verifyResetCodeParams({required VerifyResetCodeParams params});
+  Future<String> verifyResetCode({required VerifyResetCodeParams params});
 }
 
 class AuthDataSourceImpl extends AuthDataSource {
@@ -78,7 +78,6 @@ class AuthDataSourceImpl extends AuthDataSource {
         variables: {'email': email},
       ),
     );
-
     if (result.data == null ||
         !result.data!.containsKey('forgotPasswordRequest') ||
         result.data!['forgotPasswordRequest'] == null ||
@@ -91,7 +90,7 @@ class AuthDataSourceImpl extends AuthDataSource {
   }
 
   @override
-  Future<String> verifyResetCodeParams({
+  Future<String> verifyResetCode({
     required VerifyResetCodeParams params,
   }) async {
     final result = await _client.mutate(
@@ -114,20 +113,13 @@ class AuthDataSourceImpl extends AuthDataSource {
 
   @override
   Future<bool> resetPassword({required ResetPasswordParams params}) async {
-    const String resetPasswordMutation = r'''
-      mutation ResetPassword($input: ResetPasswordInput!) {
-        resetPassword(input: $input)
-      }
-    ''';
-
     final result = await _client.mutate(
       MutationOptions(
-        document: gql(resetPasswordMutation),
+        document: gql(Queries.resetPassword),
         variables: params.toJson(),
       ),
     );
     return result.data!['resetPassword'];
-    // if (result.hasException) throw Exception("Failed to reset password");
   }
 
   @override

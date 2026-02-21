@@ -26,6 +26,12 @@ class _ForgetPasswordRequestState extends State<ForgetPasswordRequest> {
   GlobalKey<FormState> formKeyEmailCheck = GlobalKey<FormState>();
   TextEditingController _emailController = TextEditingController();
   bool isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return BlocListener<ForgetPasswordCubit, ForgetPasswordState>(
@@ -80,12 +86,13 @@ class _ForgetPasswordRequestState extends State<ForgetPasswordRequest> {
                 title: 'Send Code',
                 onPressed: () {
                   if (formKeyEmailCheck.currentState!.validate()) {
+                    final email = _emailController.text;
+                    widget.onEmailChanged(email);
                     context.read<ForgetPasswordCubit>().forgotPasswordRequest(
-                      email: _emailController.text,
+                      email: email,
                     );
                     FocusScope.of(context).unfocus();
                     formKeyEmailCheck.currentState!.reset();
-                    widget.onEmailChanged(_emailController.text);
                   } else {
                     setState(() {
                       autovalidateMode = AutovalidateMode.always;

@@ -86,7 +86,7 @@ class AuthRepoImpl extends AuthRepo {
     required VerifyResetCodeParams params,
   }) async {
     try {
-      final response = await dataSource.verifyResetCodeParams(params: params);
+      final response = await dataSource.verifyResetCode(params: params);
       return Right(response);
     } catch (e) {
       return Left(
