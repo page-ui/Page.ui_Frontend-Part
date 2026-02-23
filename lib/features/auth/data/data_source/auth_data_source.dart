@@ -14,6 +14,7 @@ abstract class AuthDataSource {
   Future<bool> resetPassword({required ResetPasswordParams params});
   Future<UserTokensModel> refreshToken({required String refreshToken});
   Future<String> verifyResetCode({required VerifyResetCodeParams params});
+  Future<bool> emailVerfication({required VerifyResetCodeParams params});
 }
 
 class AuthDataSourceImpl extends AuthDataSource {
@@ -35,7 +36,6 @@ class AuthDataSourceImpl extends AuthDataSource {
         !result.data!.containsKey('login') ||
         result.data!['login'] == null ||
         result.hasException) {
-          
       throw Exception(
         'Login failed. Please check your credentials and try again.',
       );
@@ -97,6 +97,29 @@ class AuthDataSourceImpl extends AuthDataSource {
     final result = await _client.mutate(
       MutationOptions(
         document: gql(Queries.verifyResetCodeMutation),
+        variables: {'email': params.email, 'code': params.code},
+      ),
+    );
+    if (result.data == null ||
+        !result.data!.containsKey('verifyResetCode') ||
+        result.data!['verifyResetCode'] == null ||
+        result.data!['verifyResetCode'] == false ||
+        result.hasException) {
+      throw Exception(
+        "There was a propblem, please make sure you're write the code correct, or resend the code.",
+      );
+    }
+    return result.data!['verifyResetCode'];
+  }
+
+  // TODO
+  @override
+  Future<bool> emailVerfication({
+    required VerifyResetCodeParams params,
+  }) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(Queries.emailVerfication),
         variables: {'email': params.email, 'code': params.code},
       ),
     );

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pageui/config/themes/app_colors.dart';
@@ -6,30 +7,32 @@ import 'package:pageui/core/custom_widget/custom_button.dart';
 import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
 import 'package:pageui/features/auth/domain/params/verify_reset_code_params.dart';
 import 'package:pageui/features/auth/presentation/controllers/forget_password_cubit/forget_password_cubit.dart';
-import 'package:pageui/features/auth/presentation/widgets/resend_the_verfication_code_button.dart';
 import 'package:pageui/features/auth/presentation/widgets/verify_o_t_p_widget.dart';
 
-class OTPCodeVerfication extends StatefulWidget {
-  const OTPCodeVerfication({
-    super.key,
-    this.controllers = const [],
-    this.nextStep = null,
-    required this.email,
-    this.onGetToken = null,
-  });
-  final ValueChanged<String>? onGetToken;
+class OTPCodeVerficationForTheView extends StatefulWidget {
+  const OTPCodeVerficationForTheView({super.key, required this.email});
 
-  final List<TextEditingController> controllers;
-  final void Function()? nextStep;
   final String email;
   @override
-  State<OTPCodeVerfication> createState() => _OTPCodeVerficationState();
+  State<OTPCodeVerficationForTheView> createState() => _OTPCodeVerficationForTheViewState();
 }
 
-class _OTPCodeVerficationState extends State<OTPCodeVerfication> {
+class _OTPCodeVerficationForTheViewState extends State<OTPCodeVerficationForTheView> {
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   GlobalKey<FormState> formKeyCodeVerify = GlobalKey<FormState>();
   bool isLoading = false;
+  List<TextEditingController> controllers = [];
+
+  void initState() {
+    super.initState();
+    controllers = List.generate(5, (_) => TextEditingController());
+  }
+
+  @override
+  void dispose() {
+    controllers.forEach((controller) => controller.dispose());
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +48,10 @@ class _OTPCodeVerficationState extends State<OTPCodeVerfication> {
     return BlocListener<ForgetPasswordCubit, ForgetPasswordState>(
       listener: (context, state) {
         if (state is ForgetPasswordVerficationCodeSuccess) {
-          widget.onGetToken?.call(state.code);
           setState(() {
             isLoading = false;
           });
           showWebSnackBar(context: context, message: 'OTP Verified.');
-          widget.nextStep?.call();
         } else if (state is ForgetPasswordFailure) {
           setState(() {
             isLoading = false;
@@ -80,7 +81,7 @@ class _OTPCodeVerficationState extends State<OTPCodeVerfication> {
             ),
             const SizedBox(height: 24),
 
-            VerifyOTPWidget(controllers: widget.controllers),
+            VerifyOTPWidget(controllers: controllers),
             const SizedBox(height: 30),
             ResendTheVerficationCodeButton(widget: widget),
 
@@ -88,7 +89,7 @@ class _OTPCodeVerficationState extends State<OTPCodeVerfication> {
             CustomButton(
               title: "VERIFY",
               onPressed: () {
-                for (var controller in widget.controllers) {
+                for (var controller in controllers) {
                   if (controller.text.isEmpty) {
                     showWebSnackBar(
                       context: context,
@@ -104,7 +105,7 @@ class _OTPCodeVerficationState extends State<OTPCodeVerfication> {
                   context.read<ForgetPasswordCubit>().verifyResetCode(
                     params: VerifyResetCodeParams(
                       email: widget.email,
-                      code: widget.controllers.map((e) => e.text).join(),
+                      code: controllers.map((e) => e.text).join(),
                     ),
                   );
                   formKeyCodeVerify.currentState!.reset();
@@ -124,6 +125,81 @@ class _OTPCodeVerficationState extends State<OTPCodeVerfication> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class ResendTheVerficationCodeButton extends StatefulWidget {
+  const ResendTheVerficationCodeButton({super.key, required this.widget});
+
+  final OTPCodeVerficationForTheView widget;
+
+  @override
+  State<ResendTheVerficationCodeButton> createState() =>
+      _ResendTheVerficationCodeButtonState();
+}
+
+class _ResendTheVerficationCodeButtonState
+    extends State<ResendTheVerficationCodeButton> {
+  Timer? _timer;
+  bool _isDisabled = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer();
+  }
+
+  int _secondsRemaining = 120;
+
+  void _startTimer() {
+    _isDisabled = true;
+    _secondsRemaining = 120;
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_secondsRemaining == 0) {
+        timer.cancel();
+        setState(() {
+          _isDisabled = false;
+        });
+      } else {
+        setState(() {
+          _secondsRemaining--;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  String get _formattedTime {
+    final minutes = _secondsRemaining ~/ 60;
+    final seconds = _secondsRemaining % 60;
+    return "$minutes:${seconds.toString().padLeft(2, '0')}";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: TextButton(
+        onPressed: _isDisabled
+            ? null
+            : () {
+                context.read<ForgetPasswordCubit>().forgotPasswordRequest(
+                  email: widget.widget.email,
+                );
+                _startTimer();
+              },
+        child: Text(
+          _isDisabled ? "Resend in $_formattedTime" : "Resend the code",
+          style: AppTextStyles.bodySmall!.copyWith(color: AppColors.white),
         ),
       ),
     );

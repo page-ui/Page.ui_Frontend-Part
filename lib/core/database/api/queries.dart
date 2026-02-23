@@ -35,4 +35,8 @@ class Queries {
       }
     }
 ''';
+
+  static String emailVerfication = r'''
+
+''';
 }

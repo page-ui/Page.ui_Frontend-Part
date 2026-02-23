@@ -90,6 +90,24 @@ class AuthRepoImpl extends AuthRepo {
     }
   }
 
+
+    @override
+  Future<Either<Failure, bool>> emailVerfication({
+    required VerifyResetCodeParams params,
+  }) async {
+    try {
+      final response = await dataSource.emailVerfication(params: params);
+      return Right(response);
+    } catch (e) {
+      return Left(
+        ServerFailure(
+          message:
+              "There was a propblem, please make sure you're write the code correct, or resend the code.",
+        ),
+      );
+    }
+  }
+
   @override
   Future<Either<Failure, void>> changePassword({
     required ResetPasswordParams params,
