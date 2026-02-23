@@ -27,4 +27,12 @@ class Queries {
     resetPassword(input: $input)
     }
   ''';
+  static String refreshToken = r'''
+    mutation Refresh($token: String!) {
+      refreshToken(refreshToken: $token) {
+        accessToken
+        refreshToken
+      }
+    }
+''';
 }

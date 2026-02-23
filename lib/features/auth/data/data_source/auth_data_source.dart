@@ -35,6 +35,7 @@ class AuthDataSourceImpl extends AuthDataSource {
         !result.data!.containsKey('login') ||
         result.data!['login'] == null ||
         result.hasException) {
+          
       throw Exception(
         'Login failed. Please check your credentials and try again.',
       );
@@ -123,8 +124,13 @@ class AuthDataSourceImpl extends AuthDataSource {
   }
 
   @override
-  Future<UserTokensModel> refreshToken({required String refreshToken}) {
-    // TODO: implement refreshToken
-    throw UnimplementedError();
+  Future<UserTokensModel> refreshToken({required String refreshToken}) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(Queries.refreshToken),
+        variables: {"token": refreshToken},
+      ),
+    );
+    return result.data!['resetPassword'];
   }
 }

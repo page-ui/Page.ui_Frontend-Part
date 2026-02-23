@@ -1,8 +1,5 @@
-import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
-import 'package:pageui/core/constants/constants.dart';
-import 'package:pageui/core/database/cache/secure_storage.dart';
 import 'package:pageui/core/errors/failure.dart';
 import 'package:pageui/core/network/network_info.dart';
 import 'package:pageui/features/auth/data/data_source/auth_data_source.dart';
@@ -39,11 +36,6 @@ class AuthRepoImpl extends AuthRepo {
         ),
       );
     }
-  }
-
-  Future<void> saveTokens(UserTokensModel userTokensModel) async {
-    var tokens = JsonEncoder().convert(userTokensModel.toJson());
-    await SecureStorage.writeData(key: tokensKey, value: tokens);
   }
 
   @override
@@ -108,6 +100,21 @@ class AuthRepoImpl extends AuthRepo {
     } catch (e) {
       return Left(
         ServerFailure(message: "Failed to change password. Please try again."),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserTokensModel>> refreshToken({
+    required String refreshToken,
+  }) async {
+    try {
+      final res = await dataSource.refreshToken(refreshToken: refreshToken);
+      await saveTokens(res);
+      return Right(res);
+    } catch (e) {
+      return Left(
+        ServerFailure(message: "There was an error. Please try again."),
       );
     }
   }
