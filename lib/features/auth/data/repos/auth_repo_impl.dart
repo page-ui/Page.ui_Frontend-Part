@@ -23,7 +23,6 @@ class AuthRepoImpl extends AuthRepo {
         return Left(NetworkFailure.error());
       }
       final userTokensModel = await dataSource.login(params: param);
-      await saveTokens(userTokensModel);
       return Right(userTokensModel);
     } on Exception catch (e) {
       if (e is ServerFailure) {

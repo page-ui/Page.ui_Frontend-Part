@@ -48,10 +48,7 @@ class GraphQLConfig {
   );
 
   static Future<UserTokensModel?> _refreshToken() async {
-    final client = GraphQLClient(
-      link: httpLink, // IMPORTANT: no authLink here
-      cache: GraphQLCache(),
-    );
+    final client = GraphQLClient(link: httpLink, cache: GraphQLCache());
 
     final result = await client.mutate(
       MutationOptions(
@@ -69,4 +66,11 @@ class GraphQLConfig {
 
     return UserTokensModel.fromJson(result.data!['refreshToken']);
   }
+}
+
+Future<void> initializeAuth() async {
+  final token = await returnTokensFromSecureDB();
+
+  GraphQLConfig.accessToken = token.accessToken;
+  GraphQLConfig.refreshToken = token.refreshToken;
 }

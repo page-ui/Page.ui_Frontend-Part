@@ -42,7 +42,13 @@ class AuthDataSourceImpl extends AuthDataSource {
       );
     }
 
-    return UserTokensModel.fromJson(result.data!['login']);
+    final tokens = UserTokensModel.fromJson(result.data!['login']);
+    await saveTokens(tokens);
+
+    GraphQLConfig.accessToken = tokens.accessToken;
+    GraphQLConfig.refreshToken = tokens.refreshToken;
+
+    return tokens;
   }
 
   @override
@@ -145,20 +151,26 @@ class AuthDataSourceImpl extends AuthDataSource {
   }
 
   @override
+  @override
   Future<UserTokensModel> refreshToken({required String refreshToken}) async {
     final result = await _client.mutate(
       MutationOptions(
         document: gql(Queries.refreshTokenMutation),
         variables: {"token": refreshToken},
+        fetchPolicy: FetchPolicy.noCache,
       ),
     );
-    // TODO:
-    return result.data![''];
+
+    if (result.hasException || result.data == null) {
+      throw Exception("Refresh token failed");
+    }
+
+    return UserTokensModel.fromJson(result.data!['refreshToken']);
   }
 
   @override
   Future<void> resendVerficationCode({required String email}) async {
-    final result = await _client.mutate(
+    await _client.mutate(
       MutationOptions(
         document: gql(Queries.resendVerificationMutation),
         variables: {"email": email},
