@@ -82,7 +82,13 @@ class _OTPCodeVerficationState extends State<OTPCodeVerfication> {
 
             VerifyOTPWidget(controllers: widget.controllers),
             const SizedBox(height: 30),
-            ResendTheVerficationCodeButton(widget: widget),
+            ResendTheVerficationCodeButton(
+              onPressed: () {
+                context.read<ForgetPasswordCubit>().forgotPasswordRequest(
+                  email: widget.email,
+                );
+              },
+            ),
 
             SizedBox(height: 8),
             CustomButton(

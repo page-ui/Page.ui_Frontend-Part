@@ -14,3 +14,5 @@ final class EmailVerficationFailure extends EmailVerficationState {
 final class EmailVerficationLoading extends EmailVerficationState {}
 
 final class EmailVerficationSuccess extends EmailVerficationState {}
+
+final class ResendTheCodeSuccess extends EmailVerficationState {}

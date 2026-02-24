@@ -1,23 +1,27 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pageui/config/routes/on_generate_routes.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/core/custom_widget/custom_button.dart';
 import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
+import 'package:pageui/features/auth/domain/params/login_params.dart';
 import 'package:pageui/features/auth/domain/params/verify_reset_code_params.dart';
-import 'package:pageui/features/auth/presentation/controllers/forget_password_cubit/forget_password_cubit.dart';
+import 'package:pageui/features/auth/presentation/controllers/email_verfication_cubit/email_verfication_cubit.dart';
+import 'package:pageui/features/auth/presentation/widgets/resend_the_verfication_code_button.dart';
 import 'package:pageui/features/auth/presentation/widgets/verify_o_t_p_widget.dart';
 
 class OTPCodeVerficationForTheView extends StatefulWidget {
-  const OTPCodeVerficationForTheView({super.key, required this.email});
+  const OTPCodeVerficationForTheView({super.key, required this.param});
 
-  final String email;
+  final LoginParams param;
   @override
-  State<OTPCodeVerficationForTheView> createState() => _OTPCodeVerficationForTheViewState();
+  State<OTPCodeVerficationForTheView> createState() =>
+      _OTPCodeVerficationForTheViewState();
 }
 
-class _OTPCodeVerficationForTheViewState extends State<OTPCodeVerficationForTheView> {
+class _OTPCodeVerficationForTheViewState
+    extends State<OTPCodeVerficationForTheView> {
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   GlobalKey<FormState> formKeyCodeVerify = GlobalKey<FormState>();
   bool isLoading = false;
@@ -45,14 +49,15 @@ class _OTPCodeVerficationForTheViewState extends State<OTPCodeVerficationForTheV
         overflow: TextOverflow.clip,
       ),
     );
-    return BlocListener<ForgetPasswordCubit, ForgetPasswordState>(
+    return BlocListener<EmailVerficationCubit, EmailVerficationState>(
       listener: (context, state) {
-        if (state is ForgetPasswordVerficationCodeSuccess) {
+        if (state is EmailVerficationSuccess) {
           setState(() {
             isLoading = false;
           });
           showWebSnackBar(context: context, message: 'OTP Verified.');
-        } else if (state is ForgetPasswordFailure) {
+          AppRoutes.pushHomeView(context);
+        } else if (state is EmailVerficationFailure) {
           setState(() {
             isLoading = false;
           });
@@ -62,10 +67,12 @@ class _OTPCodeVerficationForTheViewState extends State<OTPCodeVerficationForTheV
             backgroundColor: AppColors.red,
             textColor: AppColors.white,
           );
-        } else if (state is ForgetPasswordLoading) {
+        } else if (state is EmailVerficationLoading) {
           setState(() {
             isLoading = true;
           });
+        } else if (state is ResendTheCodeSuccess) {
+          showWebSnackBar(context: context, message: 'Check Your Email.');
         }
       },
       child: Form(
@@ -83,7 +90,13 @@ class _OTPCodeVerficationForTheViewState extends State<OTPCodeVerficationForTheV
 
             VerifyOTPWidget(controllers: controllers),
             const SizedBox(height: 30),
-            ResendTheVerficationCodeButton(widget: widget),
+            ResendTheVerficationCodeButton(
+              onPressed: () {
+                context.read<EmailVerficationCubit>().resendTheVerficationCode(
+                  email: widget.param.email,
+                );
+              },
+            ),
 
             SizedBox(height: 8),
             CustomButton(
@@ -102,11 +115,12 @@ class _OTPCodeVerficationForTheViewState extends State<OTPCodeVerficationForTheV
                 }
                 if (formKeyCodeVerify.currentState!.validate()) {
                   FocusScope.of(context).unfocus();
-                  context.read<ForgetPasswordCubit>().verifyResetCode(
+                  context.read<EmailVerficationCubit>().verifyResetCode(
                     params: VerifyResetCodeParams(
-                      email: widget.email,
+                      email: widget.param.email,
                       code: controllers.map((e) => e.text).join(),
                     ),
+                    password: widget.param.password,
                   );
                   formKeyCodeVerify.currentState!.reset();
                 } else {
@@ -125,81 +139,6 @@ class _OTPCodeVerficationForTheViewState extends State<OTPCodeVerficationForTheV
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class ResendTheVerficationCodeButton extends StatefulWidget {
-  const ResendTheVerficationCodeButton({super.key, required this.widget});
-
-  final OTPCodeVerficationForTheView widget;
-
-  @override
-  State<ResendTheVerficationCodeButton> createState() =>
-      _ResendTheVerficationCodeButtonState();
-}
-
-class _ResendTheVerficationCodeButtonState
-    extends State<ResendTheVerficationCodeButton> {
-  Timer? _timer;
-  bool _isDisabled = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _startTimer();
-  }
-
-  int _secondsRemaining = 120;
-
-  void _startTimer() {
-    _isDisabled = true;
-    _secondsRemaining = 120;
-
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_secondsRemaining == 0) {
-        timer.cancel();
-        setState(() {
-          _isDisabled = false;
-        });
-      } else {
-        setState(() {
-          _secondsRemaining--;
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  String get _formattedTime {
-    final minutes = _secondsRemaining ~/ 60;
-    final seconds = _secondsRemaining % 60;
-    return "$minutes:${seconds.toString().padLeft(2, '0')}";
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: TextButton(
-        onPressed: _isDisabled
-            ? null
-            : () {
-                context.read<ForgetPasswordCubit>().forgotPasswordRequest(
-                  email: widget.widget.email,
-                );
-                _startTimer();
-              },
-        child: Text(
-          _isDisabled ? "Resend in $_formattedTime" : "Resend the code",
-          style: AppTextStyles.bodySmall!.copyWith(color: AppColors.white),
         ),
       ),
     );

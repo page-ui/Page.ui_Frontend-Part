@@ -4,6 +4,7 @@ import 'package:pageui/config/routes/on_generate_routes.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/custom_widget/custom_button.dart';
 import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
+import 'package:pageui/features/auth/domain/params/login_params.dart';
 import 'package:pageui/features/auth/domain/params/register_params.dart';
 import 'package:pageui/features/auth/presentation/controllers/register_cubit/register_cubit.dart';
 import 'package:pageui/features/auth/presentation/widgets/auth_text_form_field.dart';
@@ -51,9 +52,15 @@ class _RegisterFormState extends State<RegisterForm> {
     return BlocListener<RegisterCubit, RegisterState>(
       listener: (context, state) {
         if (state is RegisterSuccess) {
-          showWebSnackBar(context: context, message: "Register Success");
+          showWebSnackBar(context: context, message: "Check Your Email.");
           widget.onChangeLoadingValue!(false);
-          AppRoutes.pushHomeView(context);
+          AppRoutes.pushEmailVerficationView(
+            context,
+            param: LoginParams(
+              email: _emailController.text,
+              password: _passwordController.text,
+            ),
+          );
         } else if (state is RegisterFailure) {
           showWebSnackBar(context: context, message: state.message);
           widget.onChangeLoadingValue!(false);

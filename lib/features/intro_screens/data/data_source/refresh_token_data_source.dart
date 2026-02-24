@@ -13,7 +13,7 @@ class RefreshTokenDataSource {
     try {
       final result = await _client.mutate(
         MutationOptions(
-          document: gql(Queries.refreshToken),
+          document: gql(Queries.refreshTokenMutation),
           variables: {"token": refreshToken},
         ),
       );

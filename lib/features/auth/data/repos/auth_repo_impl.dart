@@ -1,4 +1,3 @@
-
 import 'package:dartz/dartz.dart';
 import 'package:pageui/core/errors/failure.dart';
 import 'package:pageui/core/network/network_info.dart';
@@ -32,7 +31,8 @@ class AuthRepoImpl extends AuthRepo {
       }
       return Left(
         ServerFailure(
-          message: "Login failed. Please check your credentials and try again.",
+          message:
+              "Operation failed. Please check your credentials and try again.",
         ),
       );
     }
@@ -90,8 +90,7 @@ class AuthRepoImpl extends AuthRepo {
     }
   }
 
-
-    @override
+  @override
   Future<Either<Failure, bool>> emailVerfication({
     required VerifyResetCodeParams params,
   }) async {
@@ -130,6 +129,20 @@ class AuthRepoImpl extends AuthRepo {
       final res = await dataSource.refreshToken(refreshToken: refreshToken);
       await saveTokens(res);
       return Right(res);
+    } catch (e) {
+      return Left(
+        ServerFailure(message: "There was an error. Please try again."),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> resendVerficationCode({
+    required String email,
+  }) async {
+    try {
+      await dataSource.resendVerficationCode(email: email);
+      return Right(1);
     } catch (e) {
       return Left(
         ServerFailure(message: "There was an error. Please try again."),

@@ -15,6 +15,7 @@ abstract class AuthDataSource {
   Future<UserTokensModel> refreshToken({required String refreshToken});
   Future<String> verifyResetCode({required VerifyResetCodeParams params});
   Future<bool> emailVerfication({required VerifyResetCodeParams params});
+  Future<void> resendVerficationCode({required String email});
 }
 
 class AuthDataSourceImpl extends AuthDataSource {
@@ -112,34 +113,31 @@ class AuthDataSourceImpl extends AuthDataSource {
     return result.data!['verifyResetCode'];
   }
 
-  // TODO
   @override
-  Future<bool> emailVerfication({
-    required VerifyResetCodeParams params,
-  }) async {
+  Future<bool> emailVerfication({required VerifyResetCodeParams params}) async {
     final result = await _client.mutate(
       MutationOptions(
-        document: gql(Queries.emailVerfication),
+        document: gql(Queries.emailVerficationMutation),
         variables: {'email': params.email, 'code': params.code},
       ),
     );
     if (result.data == null ||
-        !result.data!.containsKey('verifyResetCode') ||
-        result.data!['verifyResetCode'] == null ||
-        result.data!['verifyResetCode'] == false ||
+        !result.data!.containsKey('verifyEmail') ||
+        result.data!['verifyEmail'] == null ||
+        result.data!['verifyEmail'] == false ||
         result.hasException) {
       throw Exception(
         "There was a propblem, please make sure you're write the code correct, or resend the code.",
       );
     }
-    return result.data!['verifyResetCode'];
+    return result.data!['verifyEmail'];
   }
 
   @override
   Future<bool> resetPassword({required ResetPasswordParams params}) async {
     final result = await _client.mutate(
       MutationOptions(
-        document: gql(Queries.resetPassword),
+        document: gql(Queries.resetPasswordMutation),
         variables: params.toJson(),
       ),
     );
@@ -150,10 +148,21 @@ class AuthDataSourceImpl extends AuthDataSource {
   Future<UserTokensModel> refreshToken({required String refreshToken}) async {
     final result = await _client.mutate(
       MutationOptions(
-        document: gql(Queries.refreshToken),
+        document: gql(Queries.refreshTokenMutation),
         variables: {"token": refreshToken},
       ),
     );
-    return result.data!['resetPassword'];
+    // TODO:
+    return result.data![''];
+  }
+
+  @override
+  Future<void> resendVerficationCode({required String email}) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(Queries.resendVerificationMutation),
+        variables: {"email": email},
+      ),
+    );
   }
 }

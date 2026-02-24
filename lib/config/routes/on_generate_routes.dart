@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pageui/features/auth/domain/params/login_params.dart';
 import 'package:pageui/features/auth/presentation/views/email_verfication_view.dart';
 import 'package:pageui/features/auth/presentation/views/forget_pasword_view.dart';
 import 'package:pageui/features/auth/presentation/views/login_view.dart';
@@ -50,12 +51,12 @@ sealed class AppRoutes {
   static Future<void> pushForgetPasswordView(BuildContext context) =>
       pushNamed(context, ForgetPaswordView.routeName);
   static Future<void> pushEmailVerficationView(
-    BuildContext context,
-    String email,
-  ) => pushNamedAndRemoveAll(
+    BuildContext context, {
+    required LoginParams param,
+  }) => pushNamedAndRemoveAll(
     context,
     EmailVerficationView.routeName,
-    arguments: email,
+    arguments: param,
   );
 
   // Named routes map
@@ -66,7 +67,7 @@ sealed class AppRoutes {
     ForgetPaswordView.routeName: (_, __) => const ForgetPaswordView(),
     HomeView.routeName: (_, __) => const HomeView(),
     EmailVerficationView.routeName: (_, args) =>
-        EmailVerficationView(email: args as String),
+        EmailVerficationView(param: args as LoginParams),
   };
 
   // onGenerateRoute for MaterialApp
