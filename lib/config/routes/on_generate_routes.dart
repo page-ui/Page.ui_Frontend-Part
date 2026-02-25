@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pageui/features/auth/domain/params/login_params.dart';
+import 'package:pageui/features/auth/presentation/views/email_verfication_view.dart';
 import 'package:pageui/features/auth/presentation/views/forget_pasword_view.dart';
 import 'package:pageui/features/auth/presentation/views/login_view.dart';
 import 'package:pageui/features/auth/presentation/views/register_view.dart';
@@ -48,6 +50,10 @@ sealed class AppRoutes {
 
   static Future<void> pushForgetPasswordView(BuildContext context) =>
       pushNamed(context, ForgetPaswordView.routeName);
+  static Future<void> pushEmailVerficationView(
+    BuildContext context, {
+    required LoginParams param,
+  }) => pushNamed(context, EmailVerficationView.routeName, arguments: param);
 
   // Named routes map
   static final Map<String, Widget Function(BuildContext, Object?)> routes = {
@@ -56,6 +62,8 @@ sealed class AppRoutes {
     RegisterView.routeName: (_, __) => const RegisterView(),
     ForgetPaswordView.routeName: (_, __) => const ForgetPaswordView(),
     HomeView.routeName: (_, __) => const HomeView(),
+    EmailVerficationView.routeName: (_, args) =>
+        EmailVerficationView(param: args as LoginParams),
   };
 
   // onGenerateRoute for MaterialApp
@@ -65,10 +73,34 @@ sealed class AppRoutes {
             routes[settings.name] ??
             (_, __) =>
                 const Scaffold(body: Center(child: Text('Page not found')));
-
-        return MaterialPageRoute(
-          builder: (context) => builder(context, settings.arguments),
+        return customRouteBuilder(
           settings: settings,
+          builder: (context) => builder(context, settings.arguments),
         );
       };
+}
+
+PageRouteBuilder<T> customRouteBuilder<T>({
+  required Widget Function(BuildContext) builder,
+  int duration = 500,
+  RouteSettings? settings,
+}) {
+  return PageRouteBuilder<T>(
+    settings: settings,
+    transitionDuration: Duration(milliseconds: duration),
+    pageBuilder: (context, _, __) => builder(context),
+    transitionsBuilder: (_, animation, __, child) {
+      final slide = Tween<Offset>(
+        begin: const Offset(1.8, 0),
+        end: Offset.zero,
+      ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic));
+
+      final fade = Tween<double>(begin: 0, end: 1).animate(animation);
+
+      return FadeTransition(
+        opacity: fade,
+        child: SlideTransition(position: slide, child: child),
+      );
+    },
+  );
 }

@@ -14,6 +14,8 @@ abstract class AuthDataSource {
   Future<bool> resetPassword({required ResetPasswordParams params});
   Future<UserTokensModel> refreshToken({required String refreshToken});
   Future<String> verifyResetCode({required VerifyResetCodeParams params});
+  Future<bool> emailVerfication({required VerifyResetCodeParams params});
+  Future<void> resendVerficationCode({required String email});
 }
 
 class AuthDataSourceImpl extends AuthDataSource {
@@ -40,7 +42,13 @@ class AuthDataSourceImpl extends AuthDataSource {
       );
     }
 
-    return UserTokensModel.fromJson(result.data!['login']);
+    final tokens = UserTokensModel.fromJson(result.data!['login']);
+    await saveTokens(tokens);
+
+    GraphQLConfig.accessToken = tokens.accessToken;
+    GraphQLConfig.refreshToken = tokens.refreshToken;
+
+    return tokens;
   }
 
   @override
@@ -112,10 +120,30 @@ class AuthDataSourceImpl extends AuthDataSource {
   }
 
   @override
+  Future<bool> emailVerfication({required VerifyResetCodeParams params}) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(Queries.emailVerficationMutation),
+        variables: {'email': params.email, 'code': params.code},
+      ),
+    );
+    if (result.data == null ||
+        !result.data!.containsKey('verifyEmail') ||
+        result.data!['verifyEmail'] == null ||
+        result.data!['verifyEmail'] == false ||
+        result.hasException) {
+      throw Exception(
+        "There was a propblem, please make sure you're write the code correct, or resend the code.",
+      );
+    }
+    return result.data!['verifyEmail'];
+  }
+
+  @override
   Future<bool> resetPassword({required ResetPasswordParams params}) async {
     final result = await _client.mutate(
       MutationOptions(
-        document: gql(Queries.resetPassword),
+        document: gql(Queries.resetPasswordMutation),
         variables: params.toJson(),
       ),
     );
@@ -123,8 +151,30 @@ class AuthDataSourceImpl extends AuthDataSource {
   }
 
   @override
-  Future<UserTokensModel> refreshToken({required String refreshToken}) {
-    // TODO: implement refreshToken
-    throw UnimplementedError();
+  @override
+  Future<UserTokensModel> refreshToken({required String refreshToken}) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(Queries.refreshTokenMutation),
+        variables: {"token": refreshToken},
+        fetchPolicy: FetchPolicy.noCache,
+      ),
+    );
+
+    if (result.hasException || result.data == null) {
+      throw Exception("Refresh token failed");
+    }
+
+    return UserTokensModel.fromJson(result.data!['refreshToken']);
+  }
+
+  @override
+  Future<void> resendVerficationCode({required String email}) async {
+    await _client.mutate(
+      MutationOptions(
+        document: gql(Queries.resendVerificationMutation),
+        variables: {"email": email},
+      ),
+    );
   }
 }

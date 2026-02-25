@@ -37,3 +37,8 @@ Future<UserTokensModel> returnTokensFromSecureDB() async {
   }
   return userTokensModel;
 }
+
+Future<void> saveTokens(UserTokensModel userTokensModel) async {
+  var tokens = JsonEncoder().convert(userTokensModel.toJson());
+  await SecureStorage.writeData(key: tokensKey, value: tokens);
+}

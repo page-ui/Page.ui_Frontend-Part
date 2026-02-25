@@ -1,8 +1,4 @@
-import 'dart:convert';
-
 import 'package:dartz/dartz.dart';
-import 'package:pageui/core/constants/constants.dart';
-import 'package:pageui/core/database/cache/secure_storage.dart';
 import 'package:pageui/core/errors/failure.dart';
 import 'package:pageui/core/network/network_info.dart';
 import 'package:pageui/features/auth/data/data_source/auth_data_source.dart';
@@ -27,7 +23,6 @@ class AuthRepoImpl extends AuthRepo {
         return Left(NetworkFailure.error());
       }
       final userTokensModel = await dataSource.login(params: param);
-      await saveTokens(userTokensModel);
       return Right(userTokensModel);
     } on Exception catch (e) {
       if (e is ServerFailure) {
@@ -35,15 +30,11 @@ class AuthRepoImpl extends AuthRepo {
       }
       return Left(
         ServerFailure(
-          message: "Login failed. Please check your credentials and try again.",
+          message:
+              "Operation failed. Please check your credentials and try again.",
         ),
       );
     }
-  }
-
-  Future<void> saveTokens(UserTokensModel userTokensModel) async {
-    var tokens = JsonEncoder().convert(userTokensModel.toJson());
-    await SecureStorage.writeData(key: tokensKey, value: tokens);
   }
 
   @override
@@ -99,6 +90,23 @@ class AuthRepoImpl extends AuthRepo {
   }
 
   @override
+  Future<Either<Failure, bool>> emailVerfication({
+    required VerifyResetCodeParams params,
+  }) async {
+    try {
+      final response = await dataSource.emailVerfication(params: params);
+      return Right(response);
+    } catch (e) {
+      return Left(
+        ServerFailure(
+          message:
+              "There was a propblem, please make sure you're write the code correct, or resend the code.",
+        ),
+      );
+    }
+  }
+
+  @override
   Future<Either<Failure, void>> changePassword({
     required ResetPasswordParams params,
   }) async {
@@ -108,6 +116,35 @@ class AuthRepoImpl extends AuthRepo {
     } catch (e) {
       return Left(
         ServerFailure(message: "Failed to change password. Please try again."),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserTokensModel>> refreshToken({
+    required String refreshToken,
+  }) async {
+    try {
+      final res = await dataSource.refreshToken(refreshToken: refreshToken);
+      await saveTokens(res);
+      return Right(res);
+    } catch (e) {
+      return Left(
+        ServerFailure(message: "There was an error. Please try again."),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> resendVerficationCode({
+    required String email,
+  }) async {
+    try {
+      await dataSource.resendVerficationCode(email: email);
+      return Right(1);
+    } catch (e) {
+      return Left(
+        ServerFailure(message: "There was an error. Please try again."),
       );
     }
   }

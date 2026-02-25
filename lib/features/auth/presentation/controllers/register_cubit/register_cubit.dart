@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:pageui/features/auth/data/repos/auth_repo_impl.dart';
-import 'package:pageui/features/auth/domain/params/login_params.dart';
 import 'package:pageui/features/auth/domain/params/register_params.dart';
 
 part 'register_state.dart';
@@ -18,17 +17,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         emit(RegisterFailure(message: failure.message));
       },
       (user) async {
-        final login = await authRepoImpl.login(
-          param: LoginParams(email: params.email, password: params.password),
-        );
-        login.fold(
-          (failure) {
-            emit(RegisterFailure(message: failure.message));
-          },
-          (user) {
-            emit(RegisterSuccess());
-          },
-        );
+        emit(RegisterSuccess());
       },
     );
   }

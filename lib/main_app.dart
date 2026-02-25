@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pageui/config/routes/on_generate_routes.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_images.dart';
@@ -17,19 +18,24 @@ class PageDotUi extends StatelessWidget {
           image: AssetImage(Assets.assetsImagesMainBackground),
         ),
       ),
-      child: MaterialApp(
-        initialRoute: SplashView.routeName,
-        onGenerateRoute: AppRoutes.onGenerateRoute,
-        title: 'Page.ui',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          scaffoldBackgroundColor: AppColors.transparent,
-          fontFamily: fontName,
+      child: ScreenUtilInit(
+        designSize: const Size(1920, 1080),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        child: MaterialApp(
+          initialRoute: SplashView.routeName,
+          onGenerateRoute: AppRoutes.onGenerateRoute,
+          title: 'Page.ui',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            scaffoldBackgroundColor: AppColors.transparent,
+            fontFamily: fontName,
+          ),
+          builder: (context, child) {
+            AppTextStyles.init(context);
+            return child ?? const SizedBox();
+          },
         ),
-        builder: (context, child) {
-          AppTextStyles.init(context);
-          return child ?? const SizedBox();
-        },
       ),
     );
   }

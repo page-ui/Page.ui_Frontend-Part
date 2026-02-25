@@ -21,10 +21,41 @@ class Queries {
     mutation VerifyCode($email: String!, $code: String!) {
       verifyResetCode(email: $email, code: $code)
     }
-  ''';
-  static String resetPassword = r'''
+    ''';
+  static String resetPasswordMutation = r'''
     mutation ResetPassword($input: ResetPasswordInput!) {
     resetPassword(input: $input)
     }
-  ''';
+    ''';
+  static String refreshTokenMutation = r'''
+    mutation Refresh($token: String!) {
+      refreshToken(refreshToken: $token) {
+        accessToken
+        refreshToken
+      }
+    }
+    ''';
+
+  static String emailVerficationMutation = r'''
+    mutation VerifyEmail($email: String!, $code: String!) {
+      verifyEmail(email: $email, code: $code)
+    }
+    ''';
+
+  static String resendVerificationMutation = r'''
+    mutation ResendVerification($email: String!) {
+      resendVerification(email: $email)
+    }
+    ''';
+
+  static String signOutMutation = r'''
+    mutation SignOut($refreshToken: String!) {
+    signOut(refreshToken: $refreshToken)
+  }
+    ''';
+  static String deleteAccountMutation = r'''
+    mutation DeleteAccount {
+    deleteAccount
+  }
+    ''';
 }

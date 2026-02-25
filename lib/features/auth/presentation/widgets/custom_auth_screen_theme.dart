@@ -5,6 +5,7 @@ import 'package:pageui/core/custom_widget/custom_divider.dart';
 import 'package:pageui/core/custom_widget/dots.dart';
 import 'package:pageui/core/custom_widget/logo_widget.dart';
 import 'package:pageui/core/custom_widget/scramb_animated_title_text.dart';
+import 'package:pageui/core/enum/screen_type.dart';
 
 class CustomAuthScreenTheme extends StatelessWidget {
   const CustomAuthScreenTheme({
@@ -23,11 +24,11 @@ class CustomAuthScreenTheme extends StatelessWidget {
         double maxWidth;
         double maxHeight = 2000;
         bool isMobile = false;
-        if (constraints.maxWidth > 1200) {
+        if (context.isDesktop) {
           maxWidth = 500;
-        } else if (constraints.maxWidth > 800) {
+        } else if (context.isTablet) {
           maxWidth = 500;
-        } else if (constraints.maxWidth < 500) {
+        } else if (context.isMobile) {
           maxWidth = double.infinity;
           maxHeight = MediaQuery.sizeOf(context).height;
           isMobile = true;
