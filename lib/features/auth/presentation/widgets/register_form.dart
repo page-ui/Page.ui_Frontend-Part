@@ -14,8 +14,13 @@ import 'package:pageui/features/auth/presentation/widgets/have_an_account_widget
 import 'package:pageui/features/auth/presentation/widgets/password_text_form_field.dart';
 
 class RegisterForm extends StatefulWidget {
-  const RegisterForm({super.key, required this.onChangeLoadingValue});
+  const RegisterForm({
+    super.key,
+    required this.onChangeLoadingValue,
+    required this.onRegister,
+  });
   final void Function(bool)? onChangeLoadingValue;
+  final void Function(RegisterParams) onRegister;
 
   @override
   State<RegisterForm> createState() => _RegisterFormState();
@@ -125,8 +130,8 @@ class _RegisterFormState extends State<RegisterForm> {
                   if (formKey.currentState!.validate()) {
                     if (_confirmpasswordController.text ==
                         _passwordController.text) {
-                      context.read<RegisterCubit>().register(
-                        params: RegisterParams(
+                      widget.onRegister(
+                        RegisterParams(
                           email: _emailController.text,
                           password: _passwordController.text,
                           userName: _nameController.text,

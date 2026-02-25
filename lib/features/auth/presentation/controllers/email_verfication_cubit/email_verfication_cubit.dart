@@ -6,19 +6,19 @@ import 'package:pageui/features/auth/domain/params/verify_reset_code_params.dart
 
 part 'email_verfication_state.dart';
 
-class EmailVerficationCubit extends Cubit<EmailVerficationState> {
-  EmailVerficationCubit(this.authRepoImpl) : super(EmailVerficationInitial());
+class EmailVerificationCubit extends Cubit<EmailVerficationState> {
+  EmailVerificationCubit(this.authRepoImpl) : super(EmailVerficationInitial());
   final AuthRepoImpl authRepoImpl;
 
   Future<void> verifyResetCode({
     required VerifyResetCodeParams params,
     required String password,
   }) async {
-    emit(EmailVerficationLoading());
+    emit(EmailVerificationLoading());
     final result = await authRepoImpl.emailVerfication(params: params);
     result.fold(
       (failure) {
-        emit(EmailVerficationFailure(message: failure.message));
+        emit(EmailVerificationFailure(message: failure.message));
       },
       (res) async {
         final login = await authRepoImpl.login(
@@ -26,10 +26,10 @@ class EmailVerficationCubit extends Cubit<EmailVerficationState> {
         );
         login.fold(
           (failure) {
-            emit(EmailVerficationFailure(message: failure.message));
+            emit(EmailVerificationFailure(message: failure.message));
           },
           (user) {
-            emit(EmailVerficationSuccess());
+            emit(EmailVerificationnSuccess());
           },
         );
       },
@@ -37,11 +37,11 @@ class EmailVerficationCubit extends Cubit<EmailVerficationState> {
   }
 
   Future<void> resendTheVerficationCode({required String email}) async {
-    emit(EmailVerficationLoading());
+    emit(EmailVerificationLoading());
     final result = await authRepoImpl.resendVerficationCode(email: email);
     result.fold(
       (l) {
-        emit(EmailVerficationFailure(message: l.message));
+        emit(EmailVerificationFailure(message: l.message));
       },
       (r) {
         emit(ResendTheCodeSuccess());

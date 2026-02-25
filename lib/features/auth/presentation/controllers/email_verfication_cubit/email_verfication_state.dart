@@ -5,14 +5,14 @@ sealed class EmailVerficationState {}
 
 final class EmailVerficationInitial extends EmailVerficationState {}
 
-final class EmailVerficationFailure extends EmailVerficationState {
+final class EmailVerificationFailure extends EmailVerficationState {
   final String message;
 
-  EmailVerficationFailure({required this.message});
+  EmailVerificationFailure({required this.message});
 }
 
-final class EmailVerficationLoading extends EmailVerficationState {}
+final class EmailVerificationLoading extends EmailVerficationState {}
 
-final class EmailVerficationSuccess extends EmailVerficationState {}
+final class EmailVerificationnSuccess extends EmailVerficationState {}
 
 final class ResendTheCodeSuccess extends EmailVerficationState {}

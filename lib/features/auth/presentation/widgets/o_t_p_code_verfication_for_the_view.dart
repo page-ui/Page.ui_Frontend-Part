@@ -11,17 +11,21 @@ import 'package:pageui/features/auth/presentation/controllers/email_verfication_
 import 'package:pageui/features/auth/presentation/widgets/resend_the_verfication_code_button.dart';
 import 'package:pageui/features/auth/presentation/widgets/verify_o_t_p_widget.dart';
 
-class OTPCodeVerficationForTheView extends StatefulWidget {
-  const OTPCodeVerficationForTheView({super.key, required this.param});
-
+class EmailVerficationForm extends StatefulWidget {
+  const EmailVerficationForm({
+    super.key,
+    required this.param,
+    required this.onChangeLoadingValue,
+    required this.onPressed,
+  });
+  final void Function(bool)? onChangeLoadingValue;
+  final void Function(VerifyResetCodeParams) onPressed;
   final LoginParams param;
   @override
-  State<OTPCodeVerficationForTheView> createState() =>
-      _OTPCodeVerficationForTheViewState();
+  State<EmailVerficationForm> createState() => _EmailVerficationFormState();
 }
 
-class _OTPCodeVerficationForTheViewState
-    extends State<OTPCodeVerficationForTheView> {
+class _EmailVerficationFormState extends State<EmailVerficationForm> {
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   GlobalKey<FormState> formKeyCodeVerify = GlobalKey<FormState>();
   bool isLoading = false;
@@ -49,17 +53,19 @@ class _OTPCodeVerficationForTheViewState
         overflow: TextOverflow.clip,
       ),
     );
-    return BlocListener<EmailVerficationCubit, EmailVerficationState>(
+    return BlocListener<EmailVerificationCubit, EmailVerficationState>(
       listener: (context, state) {
-        if (state is EmailVerficationSuccess) {
+        if (state is EmailVerificationnSuccess) {
           setState(() {
             isLoading = false;
+            widget.onChangeLoadingValue!(isLoading);
           });
           showWebSnackBar(context: context, message: 'OTP Verified.');
           AppRoutes.pushHomeView(context);
-        } else if (state is EmailVerficationFailure) {
+        } else if (state is EmailVerificationFailure) {
           setState(() {
             isLoading = false;
+            widget.onChangeLoadingValue!(isLoading);
           });
           showWebSnackBar(
             context: context,
@@ -67,12 +73,17 @@ class _OTPCodeVerficationForTheViewState
             backgroundColor: AppColors.red,
             textColor: AppColors.white,
           );
-        } else if (state is EmailVerficationLoading) {
+        } else if (state is EmailVerificationLoading) {
           setState(() {
             isLoading = true;
+            widget.onChangeLoadingValue!(isLoading);
           });
         } else if (state is ResendTheCodeSuccess) {
           showWebSnackBar(context: context, message: 'Check Your Email.');
+          setState(() {
+            isLoading = false;
+            widget.onChangeLoadingValue!(isLoading);
+          });
         }
       },
       child: Form(
@@ -92,7 +103,7 @@ class _OTPCodeVerficationForTheViewState
             const SizedBox(height: 30),
             ResendTheVerficationCodeButton(
               onPressed: () {
-                context.read<EmailVerficationCubit>().resendTheVerficationCode(
+                context.read<EmailVerificationCubit>().resendTheVerficationCode(
                   email: widget.param.email,
                 );
               },
@@ -115,12 +126,11 @@ class _OTPCodeVerficationForTheViewState
                 }
                 if (formKeyCodeVerify.currentState!.validate()) {
                   FocusScope.of(context).unfocus();
-                  context.read<EmailVerficationCubit>().verifyResetCode(
-                    params: VerifyResetCodeParams(
+                  widget.onPressed(
+                    VerifyResetCodeParams(
                       email: widget.param.email,
                       code: controllers.map((e) => e.text).join(),
                     ),
-                    password: widget.param.password,
                   );
                   formKeyCodeVerify.currentState!.reset();
                 } else {

@@ -4,7 +4,6 @@ import 'package:pageui/config/routes/on_generate_routes.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/custom_widget/custom_button.dart';
 import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
-import 'package:pageui/features/auth/domain/params/login_params.dart';
 import 'package:pageui/features/auth/presentation/controllers/login_cubit/login_cubit.dart';
 import 'package:pageui/features/auth/presentation/widgets/auth_text_form_field.dart';
 import 'package:pageui/features/auth/presentation/widgets/custom_row_auth.dart';
@@ -14,8 +13,14 @@ import 'package:pageui/features/auth/presentation/widgets/forget_password_widget
 import 'package:pageui/features/auth/presentation/widgets/password_text_form_field.dart';
 
 class LoginViewForm extends StatefulWidget {
-  LoginViewForm({super.key, required this.onChangeLoadingValue});
+  LoginViewForm({
+    super.key,
+    required this.onChangeLoadingValue,
+    required this.onLogin,
+  });
   final void Function(bool)? onChangeLoadingValue;
+  final void Function(String email, String password) onLogin;
+
   @override
   State<LoginViewForm> createState() => _LoginViewFormState();
 }
@@ -83,11 +88,9 @@ class _LoginViewFormState extends State<LoginViewForm> {
                 title: 'Login',
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    context.read<LoginCubit>().login(
-                      params: LoginParams(
-                        email: _emailController.text,
-                        password: _passwordController.text,
-                      ),
+                    widget.onLogin(
+                      _emailController.text,
+                      _passwordController.text,
                     );
                     FocusScope.of(context).unfocus();
                   } else {

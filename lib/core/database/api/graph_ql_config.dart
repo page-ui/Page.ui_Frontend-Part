@@ -68,7 +68,7 @@ class GraphQLConfig {
   }
 }
 
-Future<void> initializeAuth() async {
+Future<void> initializeAuth({required GraphQLConfig graph}) async {
   final token = await returnTokensFromSecureDB();
 
   GraphQLConfig.accessToken = token.accessToken;

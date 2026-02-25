@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pageui/core/helpers/setup_service_locator_getit.dart';
 import 'package:pageui/features/auth/data/repos/auth_repo_impl.dart';
+import 'package:pageui/features/auth/domain/params/register_params.dart';
 import 'package:pageui/features/auth/presentation/controllers/register_cubit/register_cubit.dart';
 import 'package:pageui/features/auth/presentation/widgets/register_form.dart';
 
@@ -14,7 +15,22 @@ class RegisterViewBody extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           RegisterCubit(authRepoImpl: getit.get<AuthRepoImpl>()),
-      child: RegisterForm(onChangeLoadingValue: onChangeLoadingValue),
+      child: Builder(
+        builder: (context) {
+          return RegisterForm(
+            onChangeLoadingValue: onChangeLoadingValue,
+            onRegister: (RegisterParams params) {
+              context.read<RegisterCubit>().register(
+                params: RegisterParams(
+                  email: params.email,
+                  password: params.password,
+                  userName: params.userName,
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
