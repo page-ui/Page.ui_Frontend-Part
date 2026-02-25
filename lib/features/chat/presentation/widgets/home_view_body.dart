@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pageui/core/enum/screen_type.dart';
 import 'package:pageui/features/chat/presentation/widgets/chat_panel.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_animated_container_for_the_home_panel.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_panel_for_mobile_mode.dart';
@@ -21,11 +22,11 @@ class _HomeViewBodyState extends State<HomeViewBody> {
   final double leftWidth = 260;
   final double rightWidth = 290;
 
-  void _handleOpenningDrawers(double width) {
+  void _handleOpenningDrawers() {
     String currentMode;
-    if (width < 760)
+    if (context.isMobile)
       currentMode = "mobile";
-    else if (width < 1200)
+    else if (context.isTablet)
       currentMode = "tablet";
     else
       currentMode = "desktop";
@@ -65,13 +66,12 @@ class _HomeViewBodyState extends State<HomeViewBody> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        _handleOpenningDrawers(constraints.maxWidth);
+    return Builder(
+      builder: (_) {
+        _handleOpenningDrawers();
 
-        bool isMobile = constraints.maxWidth < 760;
-        bool isTablet =
-            constraints.maxWidth >= 760 && constraints.maxWidth < 1200;
+        bool isMobile = context.isMobile;
+        bool isTablet = context.isTablet;
 
         return Scaffold(
           appBar: HomeAppbar(),
