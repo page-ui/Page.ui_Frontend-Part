@@ -11,8 +11,8 @@ abstract class AuthDataSource {
   Future<UserTokensModel> login({required LoginParams params});
   Future<bool> register({required RegisterParams params});
   Future<bool> forgotPasswordRequest({required String email});
-  Future<bool> resetPassword({required ResetPasswordParams params});
   Future<UserTokensModel> refreshToken({required String refreshToken});
+  Future<bool> resetPassword({required ResetPasswordParams params});
   Future<String> verifyResetCode({required VerifyResetCodeParams params});
   Future<bool> emailVerfication({required VerifyResetCodeParams params});
   Future<void> resendVerficationCode({required String email});
