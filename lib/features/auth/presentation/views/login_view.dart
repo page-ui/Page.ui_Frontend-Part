@@ -18,7 +18,7 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomModalProgressHud(
-        isLoading: isLoading,
+        isLoading: true,
         child: CustomAuthScreenTheme(
           viewTitle: 'Login',
           child: LoginViewBody(
