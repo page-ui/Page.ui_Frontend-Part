@@ -61,7 +61,7 @@ class _EmailVerficationFormState extends State<EmailVerficationForm> {
             widget.onChangeLoadingValue!(isLoading);
           });
           showWebSnackBar(context: context, message: 'OTP Verified.');
-          AppRoutes.pushHomeView(context);
+          AppRoutes.pushTrainView(context);
         } else if (state is EmailVerificationFailure) {
           setState(() {
             isLoading = false;
