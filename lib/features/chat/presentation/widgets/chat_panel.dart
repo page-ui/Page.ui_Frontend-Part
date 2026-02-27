@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_icons.dart';
+import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
 
 class ChatPanel extends StatelessWidget {
@@ -22,7 +23,10 @@ class ChatPanel extends StatelessWidget {
                   SizedBox(width: 8),
                   Text(
                     "Chat Prompt",
-                    style: TextStyle(color: AppColors.white, letterSpacing: 2),
+                    style: AppTextStyles.bodyLarge!.copyWith(
+                      color: AppColors.white,
+                      letterSpacing: 2,
+                    ),
                   ),
                   SizedBox(width: 70),
                   CustomButtonIconForPanels(
