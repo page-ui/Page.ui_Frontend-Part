@@ -21,25 +21,17 @@ class CustomAnimatedContainerForTheHomePanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       margin: EdgeInsets.only(
-        top: 16,
-        bottom: 10,
-        right: isLeft ? 0 : 8,
-        left: isLeft ? 8 : 0,
+        top: 28,
+        bottom: 20,
+        right: isLeft ? 0 : 20,
+        left: isLeft ? 20 : 0,
       ),
       padding: EdgeInsets.all(isOpen ? 0 : 6),
       decoration: BoxDecoration(
         borderRadius: AppBorders.xxxxs,
         shape: BoxShape.rectangle,
-        color: AppColors.anotherGray,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primaryColor.withValues(alpha: 0.5),
-            blurRadius: 20,
-            spreadRadius: 2,
-            blurStyle: BlurStyle.outer,
-          ),
-        ],
-        border: Border.all(color: AppColors.grey, width: 1),
+        color: AppColors.anotherGray.withValues(alpha: 0.6),
+        border: Border.all(color: AppColors.darkGrey, width: 0.5),
       ),
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,

@@ -17,26 +17,26 @@ class HomeViewBody extends StatefulWidget {
 class _HomeViewBodyState extends State<HomeViewBody> {
   bool isLeftOpen = false;
   bool isRightOpen = false;
-  String _lastMode = "";
+  ScreenType? _lastMode;
 
   final double leftWidth = 260;
   final double rightWidth = 290;
 
   void _handleOpenningDrawers() {
-    String currentMode;
+    ScreenType currentMode;
     if (context.isMobile)
-      currentMode = "mobile";
+      currentMode = ScreenType.mobile;
     else if (context.isTablet)
-      currentMode = "tablet";
+      currentMode = ScreenType.tablet;
     else
-      currentMode = "desktop";
+      currentMode = ScreenType.desktop;
 
     if (_lastMode != currentMode) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
-          if (currentMode == "tablet") {
+          if (currentMode == ScreenType.tablet) {
             isLeftOpen = false;
-          } else if (currentMode == "mobile") {
+          } else if (currentMode == ScreenType.mobile) {
             isLeftOpen = false;
             isRightOpen = false;
           }
@@ -46,19 +46,19 @@ class _HomeViewBodyState extends State<HomeViewBody> {
     }
   }
 
-  onPressedLeftButton({required bool isMobile, required bool isTablet}) {
+  onPressedLeftButton({required BuildContext context}) {
     setState(() {
       isLeftOpen = !isLeftOpen;
-      if ((isTablet || isMobile) && isLeftOpen) {
+      if ((context.isTablet || context.isMobile) && isLeftOpen) {
         isRightOpen = false;
       }
     });
   }
 
-  onPressedRightButton({required bool isMobile, required bool isTablet}) {
+  onPressedRightButton({required BuildContext context}) {
     setState(() {
       isRightOpen = !isRightOpen;
-      if ((isTablet || isMobile) && isRightOpen) {
+      if ((context.isTablet || context.isMobile) && isRightOpen) {
         isLeftOpen = false;
       }
     });
@@ -71,7 +71,6 @@ class _HomeViewBodyState extends State<HomeViewBody> {
         _handleOpenningDrawers();
 
         bool isMobile = context.isMobile;
-        bool isTablet = context.isTablet;
 
         return Scaffold(
           appBar: HomeAppbar(),
@@ -86,54 +85,35 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                       isOpen: isLeftOpen,
                       width: leftWidth,
                       onPressed: () {
-                        onPressedLeftButton(
-                          isMobile: isMobile,
-                          isTablet: isTablet,
-                        );
+                        onPressedLeftButton(context: context);
                       },
                       child: HistoryPanel(
                         onPressed: () {
-                          onPressedLeftButton(
-                            isMobile: isMobile,
-                            isTablet: isTablet,
-                          );
+                          onPressedLeftButton(context: context);
                         },
                       ),
                     ),
 
                   UIFrame(
                     onLeftButtonPressed: () {
-                      onPressedLeftButton(
-                        isMobile: isMobile,
-                        isTablet: isTablet,
-                      );
+                      onPressedLeftButton(context: context);
                     },
                     onRightButtonPressed: () {
-                      onPressedRightButton(
-                        isMobile: isMobile,
-                        isTablet: isTablet,
-                      );
+                      onPressedRightButton(context: context);
                     },
-                    isMobile: isMobile,
                   ),
                   if (!isMobile)
                     CustomAnimatedContainerForTheHomePanel(
                       child: ChatPanel(
                         onPressed: () {
-                          onPressedRightButton(
-                            isMobile: isMobile,
-                            isTablet: isTablet,
-                          );
+                          onPressedRightButton(context: context);
                         },
                       ),
                       isLeft: false,
                       width: rightWidth,
                       isOpen: isRightOpen,
                       onPressed: () {
-                        onPressedRightButton(
-                          isMobile: isMobile,
-                          isTablet: isTablet,
-                        );
+                        onPressedRightButton(context: context);
                       },
                     ),
                 ],
@@ -144,10 +124,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                   width: leftWidth,
                   panel: HistoryPanel(
                     onPressed: () {
-                      onPressedLeftButton(
-                        isMobile: isMobile,
-                        isTablet: isTablet,
-                      );
+                      onPressedLeftButton(context: context);
                     },
                   ),
                   onClose: () => setState(() => isLeftOpen = false),
@@ -158,10 +135,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                   width: rightWidth,
                   panel: ChatPanel(
                     onPressed: () {
-                      onPressedRightButton(
-                        isMobile: isMobile,
-                        isTablet: isTablet,
-                      );
+                      onPressedRightButton(context: context);
                     },
                   ),
                   onClose: () => setState(() => isRightOpen = false),

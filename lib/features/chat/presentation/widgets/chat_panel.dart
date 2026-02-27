@@ -10,26 +10,30 @@ class ChatPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(10),
-      child: Align(
-        alignment: AlignmentGeometry.topCenter,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              Icon(AppIcons.arrowForward, size: 12, color: AppColors.white),
-              SizedBox(width: 8),
-              Text(
-                "Chat Interface",
-                style: TextStyle(color: AppColors.white, letterSpacing: 2),
+      child: Column(
+        children: [
+          Align(
+            alignment: AlignmentGeometry.topCenter,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  Icon(AppIcons.arrowForward, size: 12, color: AppColors.white),
+                  SizedBox(width: 8),
+                  Text(
+                    "Chat Prompt",
+                    style: TextStyle(color: AppColors.white, letterSpacing: 2),
+                  ),
+                  SizedBox(width: 70),
+                  CustomButtonIconForPanels(
+                    isLeftPanel: true,
+                    onPressed: onPressed,
+                  ),
+                ],
               ),
-              SizedBox(width: 58),
-              CustomButtonIconForPanels(
-                isLeftPanel: true,
-                onPressed: onPressed,
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

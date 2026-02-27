@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pageui/config/themes/app_colors.dart';
+import 'package:pageui/core/enum/screen_type.dart';
 
 class CustomCliLoadingIndicator extends StatefulWidget {
   const CustomCliLoadingIndicator({
@@ -65,7 +67,7 @@ class _CustomCliLoadingIndicatorState extends State<CustomCliLoadingIndicator> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 350,
+      width: context.isMobile ? 1000.w : 650.w,
       decoration: BoxDecoration(
         color: AppColors.black,
         borderRadius: BorderRadius.circular(8),
@@ -80,12 +82,14 @@ class _CustomCliLoadingIndicatorState extends State<CustomCliLoadingIndicator> {
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTerminalHeader(),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 ..._logs.map(
                   (log) => Padding(
@@ -94,7 +98,7 @@ class _CustomCliLoadingIndicatorState extends State<CustomCliLoadingIndicator> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Row(
+                Wrap(
                   children: [
                     Text(progressBar, style: _terminalStyle()),
                     const SizedBox(width: 10),
@@ -129,11 +133,6 @@ class _CustomCliLoadingIndicatorState extends State<CustomCliLoadingIndicator> {
       ),
       child: Row(
         children: [
-          _dot(Colors.redAccent),
-          const SizedBox(width: 6),
-          _dot(Colors.amberAccent),
-          const SizedBox(width: 6),
-          _dot(Colors.greenAccent),
           const Expanded(
             child: Text(
               "bash — service_monitor.sh",
@@ -143,8 +142,16 @@ class _CustomCliLoadingIndicatorState extends State<CustomCliLoadingIndicator> {
                 fontSize: 11,
                 fontFamily: 'monospace',
               ),
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
+
+          _dot(AppColors.amber),
+          const SizedBox(width: 6),
+          _dot(AppColors.greenAccent),
+          const SizedBox(width: 6),
+          _dot(Colors.redAccent),
         ],
       ),
     );

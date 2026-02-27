@@ -15,7 +15,7 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       automaticallyImplyLeading: false,
       toolbarHeight: 45,
-      backgroundColor: AppColors.spaceBlack,
+      backgroundColor: AppColors.anotherGray.withValues(alpha: 0.8),
       title: Row(
         children: [
           Container(

@@ -27,7 +27,7 @@ class HomePanelOnClosed extends StatelessWidget {
             isLeftPanel ? "History" : "Chat",
             style: AppTextStyles.bodyLarge!.copyWith(
               letterSpacing: 8,
-              color: AppColors.white,
+              color: AppColors.primaryColor,
             ),
           ),
         ),

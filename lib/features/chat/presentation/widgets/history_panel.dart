@@ -19,10 +19,10 @@ class HistoryPanel extends StatelessWidget {
               Icon(AppIcons.arrowForward, size: 12, color: AppColors.white),
               SizedBox(width: 8),
               Text(
-                "Prompt History",
+                "History",
                 style: TextStyle(color: AppColors.white, letterSpacing: 2),
               ),
-              SizedBox(width: 30),
+              SizedBox(width: 90),
               CustomButtonIconForPanels(
                 isLeftPanel: false,
                 onPressed: onPressed,

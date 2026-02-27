@@ -8,9 +8,10 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: AppColors.black,
-      body: HomeViewBody(),
+    return Scaffold(
+      backgroundColor: AppColors.black.withValues(alpha: 0.8),
+      extendBody: true,
+      body: const HomeViewBody(),
     );
   }
 }

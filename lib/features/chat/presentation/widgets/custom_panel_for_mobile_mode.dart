@@ -21,7 +21,7 @@ class CustomPanelForMobileMode extends StatelessWidget {
           onTap: onClose,
           child: Container(
             decoration: BoxDecoration(
-              color: AppColors.black.withValues(alpha: 0.6),
+              color: AppColors.black.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -32,7 +32,10 @@ class CustomPanelForMobileMode extends StatelessWidget {
           bottom: 0,
           child: SizedBox(
             width: width,
-            child: ColoredBox(color: AppColors.anotherGray, child: panel),
+            child: ColoredBox(
+              color: AppColors.anotherGray.withValues(alpha: 0.8),
+              child: panel,
+            ),
           ),
         ),
       ],
