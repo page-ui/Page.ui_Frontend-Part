@@ -6,7 +6,6 @@ import 'package:pageui/main_app.dart';
 void main() {
   // CacheHelper cacheHelper = CacheHelper();
   // cacheHelper.init();
-  // initializeAuth();
   SecureStorage.init();
   setUpServiceLocator();
   runApp(const PageDotUi());

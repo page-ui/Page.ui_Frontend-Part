@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:pageui/config/themes/app_colors.dart';
+import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_cubit.dart';
+import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_state.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
 
 class UIFrameBody extends StatelessWidget {
@@ -34,8 +38,51 @@ class UIFrameBody extends StatelessWidget {
             ],
           ),
         ),
-        Center(
-          child: Text("Main Content", style: TextStyle(color: AppColors.white)),
+        Expanded(
+          child: BlocBuilder<SendMessageCubit, SendMessageState>(
+            builder: (context, state) {
+              if (state is SendMessageInitial || state is MessagesLoading) {
+                return Center(
+                  child: Text(
+                    "Main Content",
+                    style: TextStyle(color: AppColors.white),
+                  ),
+                );
+              }
+
+              // TODO: Render iframe with generated UI using HtmlElementView
+              // when backend returns the UI render ID.
+              // For now, show placeholder indicating the frame is ready.
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.web_rounded,
+                      size: 48,
+                      color: AppColors.primaryColor.withValues(alpha: 0.4),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'UI Preview',
+                      style: TextStyle(
+                        color: AppColors.white.withValues(alpha: 0.7),
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Generated UI will render here',
+                      style: TextStyle(
+                        color: AppColors.lightGray.withValues(alpha: 0.4),
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ],
     );

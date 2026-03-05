@@ -4,6 +4,7 @@ import 'package:pageui/config/routes/on_generate_routes.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/core/constants/constants.dart';
+import 'package:pageui/core/database/api/graph_ql_config.dart';
 import 'package:pageui/features/auth/data/model/user_tokens_model.dart';
 import 'package:pageui/features/auth/presentation/views/login_view.dart';
 
@@ -26,6 +27,8 @@ class _SplashViewState extends State<SplashView> {
 
   void _navigateToNextPage() async {
     UserTokensModel userTokenModel = await returnTokensFromSecureDB();
+    GraphQLConfig.accessToken = userTokenModel.accessToken;
+    GraphQLConfig.refreshToken = userTokenModel.refreshToken;
     Future.delayed(const Duration(milliseconds: 4500), () {
       userTokenModel.isEmpty()
           ? AppRoutes.pushNamedAndRemoveAll(context, LoginView.routeName)

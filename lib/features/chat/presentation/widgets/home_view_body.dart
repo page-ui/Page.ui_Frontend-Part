@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/enum/screen_type.dart';
+import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
+import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
+import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_cubit.dart';
 import 'package:pageui/features/chat/presentation/widgets/chat_panel.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_animated_container_for_the_home_panel.dart';
+import 'package:pageui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_panel_for_mobile_mode.dart';
 import 'package:pageui/features/chat/presentation/widgets/history_panel.dart';
 import 'package:pageui/features/chat/presentation/widgets/home_appbar.dart';
+import 'package:pageui/features/chat/presentation/widgets/landing_page.dart';
 import 'package:pageui/features/chat/presentation/widgets/u_i_frame.dart';
 
 class HomeViewBody extends StatefulWidget {
@@ -64,87 +72,146 @@ class _HomeViewBodyState extends State<HomeViewBody> {
     });
   }
 
+  void _onCreateChat() {
+    print('DEBUG: HomeViewBody._onCreateChat called');
+    context.read<ChatHomeCubit>().createChat(name: 'New Chat');
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Builder(
-      builder: (_) {
-        _handleOpenningDrawers();
-
-        bool isMobile = context.isMobile;
-
-        return Scaffold(
-          appBar: HomeAppbar(),
-          body: Stack(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (!isMobile)
-                    CustomAnimatedContainerForTheHomePanel(
-                      isLeft: true,
-                      isOpen: isLeftOpen,
-                      width: leftWidth,
-                      onPressed: () {
-                        onPressedLeftButton(context: context);
-                      },
-                      child: HistoryPanel(
-                        onPressed: () {
-                          onPressedLeftButton(context: context);
-                        },
-                      ),
-                    ),
-
-                  UIFrame(
-                    onLeftButtonPressed: () {
-                      onPressedLeftButton(context: context);
-                    },
-                    onRightButtonPressed: () {
-                      onPressedRightButton(context: context);
-                    },
-                  ),
-                  if (!isMobile)
-                    CustomAnimatedContainerForTheHomePanel(
-                      child: ChatPanel(
-                        onPressed: () {
-                          onPressedRightButton(context: context);
-                        },
-                      ),
-                      isLeft: false,
-                      width: rightWidth,
-                      isOpen: isRightOpen,
-                      onPressed: () {
-                        onPressedRightButton(context: context);
-                      },
-                    ),
-                ],
-              ),
-
-              if (isMobile && isLeftOpen)
-                CustomPanelForMobileMode(
-                  width: leftWidth,
-                  panel: HistoryPanel(
-                    onPressed: () {
-                      onPressedLeftButton(context: context);
-                    },
-                  ),
-                  onClose: () => setState(() => isLeftOpen = false),
-                ),
-
-              if (isMobile && isRightOpen)
-                CustomPanelForMobileMode(
-                  width: rightWidth,
-                  panel: ChatPanel(
-                    onPressed: () {
-                      onPressedRightButton(context: context);
-                    },
-                  ),
-                  onClose: () => setState(() => isRightOpen = false),
-                  isRight: true,
-                ),
-            ],
-          ),
-        );
+    return BlocListener<ChatHomeCubit, ChatHomeState>(
+      listener: (context, state) {
+        if (state is ChatHomeActive) {
+          context.read<SendMessageCubit>().loadMessages(chatId: state.chat.id);
+        }
       },
+      child: Builder(
+        builder: (_) {
+          _handleOpenningDrawers();
+          bool isMobile = context.isMobile;
+
+          return Scaffold(
+            appBar: const HomeAppbar(),
+            body: BlocBuilder<ChatHomeCubit, ChatHomeState>(
+              builder: (context, homeState) {
+                return Stack(
+                  children: [
+                    if (isMobile && isLeftOpen)
+                      CustomPanelForMobileMode(
+                        width: leftWidth,
+                        panel: HistoryPanel(
+                          onPressed: () {
+                            onPressedLeftButton(context: context);
+                          },
+                        ),
+                        onClose: () => setState(() => isLeftOpen = false),
+                      ),
+                    Row(
+                      children: [
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Visibility(
+                            visible: isMobile && !isLeftOpen ? true : false,
+                            child: CustomButtonIconForPanels(
+                              isLeftPanel: true,
+                              onPressed: () =>
+                                  onPressedLeftButton(context: context),
+                            ),
+                          ),
+                        ),
+                        if (!isMobile)
+                          CustomAnimatedContainerForTheHomePanel(
+                            isLeft: true,
+                            isOpen: isLeftOpen,
+                            width: leftWidth,
+                            onPressed: () {
+                              onPressedLeftButton(context: context);
+                            },
+                            child: HistoryPanel(
+                              onPressed: () {
+                                onPressedLeftButton(context: context);
+                              },
+                            ),
+                          ),
+                        switch (homeState) {
+                          ChatHomeInitial() => Expanded(
+                            child: LandingPage(onCreateChat: _onCreateChat),
+                          ),
+                          ChatHomeLoading() => Expanded(
+                            child: Stack(
+                              children: [
+                                LandingPage(onCreateChat: () {}),
+                                const Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          ChatHomeError(message: final msg) => Expanded(
+                            child: LandingPage(
+                              onCreateChat: _onCreateChat,
+                              errorMessage: msg,
+                            ),
+                          ),
+                          ChatHomeActive() => Stack(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  UIFrame(
+                                    onLeftButtonPressed: () {
+                                      onPressedLeftButton(context: context);
+                                    },
+                                    onRightButtonPressed: () {
+                                      onPressedRightButton(context: context);
+                                    },
+                                  ),
+                                  if (!isMobile)
+                                    CustomAnimatedContainerForTheHomePanel(
+                                      child: ChatPanel(
+                                        onPressed: () {
+                                          onPressedRightButton(
+                                            context: context,
+                                          );
+                                        },
+                                      ),
+                                      isLeft: false,
+                                      width: rightWidth,
+                                      isOpen: isRightOpen,
+                                      onPressed: () {
+                                        onPressedRightButton(context: context);
+                                      },
+                                    ),
+                                ],
+                              ),
+
+                              if (isMobile && isRightOpen)
+                                CustomPanelForMobileMode(
+                                  width: rightWidth,
+                                  panel: ChatPanel(
+                                    onPressed: () {
+                                      onPressedRightButton(context: context);
+                                    },
+                                  ),
+                                  onClose: () =>
+                                      setState(() => isRightOpen = false),
+                                  isRight: true,
+                                ),
+                            ],
+                          ),
+                        },
+                      ],
+                    ),
+                  ],
+                );
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 }
