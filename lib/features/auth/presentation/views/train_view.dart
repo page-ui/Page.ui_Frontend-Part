@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:pageui/config/routes/on_generate_routes.dart';
 
 class TrainView extends StatelessWidget {
   const TrainView({super.key});
@@ -26,7 +27,6 @@ class _SlOriginalCommandState extends State<SlOriginalCommand>
   int _pattern = 0;
   final List<_SlSmoke> _smokeStack = [];
 
-  // --- EXACT SYMBOLS FROM THE C SOURCE ---
   final List<String> _d51str = [
     r"      ====        ________                ___________ ",
     r"  _D _|  |_______/        \__I_I_____===__|_________| ",
@@ -88,10 +88,14 @@ class _SlOriginalCommandState extends State<SlOriginalCommand>
     super.initState();
     _moveController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 8), // Constant pace
+      duration: const Duration(seconds: 8),
     )..forward();
-
-    // 100ms matches the typical refresh of a telnet/terminal SL
+    _moveController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        AppRoutes.pushHomeView(context);
+      }
+    });
+    _moveController.forward();
     _ticker = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       if (!mounted) return;
       setState(() {
@@ -102,14 +106,13 @@ class _SlOriginalCommandState extends State<SlOriginalCommand>
   }
 
   void _updateSmoke() {
-    // Add smoke at the funnel position (Funnel is at index 7)
     if (_pattern % 2 == 0) {
       _smokeStack.add(_SlSmoke(x: 75, y: -15));
     }
     for (var s in _smokeStack) {
       s.age++;
-      s.y -= 10; // Rising
-      s.x += 8; // Drifting back
+      s.y -= 10;
+      s.x += 8;
     }
     _smokeStack.removeWhere((s) => s.age > 20);
   }
@@ -142,7 +145,6 @@ class _SlOriginalCommandState extends State<SlOriginalCommand>
 
           return Stack(
             children: [
-              // Exact ASCII Smoke Symbols
               ..._smokeStack.map(
                 (s) => Positioned(
                   left: x + s.x,
@@ -159,7 +161,6 @@ class _SlOriginalCommandState extends State<SlOriginalCommand>
                 ),
               ),
 
-              // Locomotive + Coal Car assembly
               Positioned(
                 left: x,
                 top: y,
