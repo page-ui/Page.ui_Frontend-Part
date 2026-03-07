@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/enum/screen_type.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
@@ -73,7 +72,6 @@ class _HomeViewBodyState extends State<HomeViewBody> {
   }
 
   void _onCreateChat() {
-    print('DEBUG: HomeViewBody._onCreateChat called');
     context.read<ChatHomeCubit>().createChat(name: 'New Chat');
   }
 
@@ -96,7 +94,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
               builder: (context, homeState) {
                 return Stack(
                   children: [
-                    if (isMobile && isLeftOpen)
+                    if (isMobile && isLeftOpen && (homeState is ChatHomeActive))
                       CustomPanelForMobileMode(
                         width: leftWidth,
                         panel: HistoryPanel(
@@ -111,7 +109,12 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                         Align(
                           alignment: Alignment.topCenter,
                           child: Visibility(
-                            visible: isMobile && !isLeftOpen ? true : false,
+                            visible:
+                                isMobile &&
+                                    !isLeftOpen &&
+                                    !(homeState is ChatHomeActive)
+                                ? true
+                                : false,
                             child: CustomButtonIconForPanels(
                               isLeftPanel: true,
                               onPressed: () =>
@@ -155,52 +158,56 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                               errorMessage: msg,
                             ),
                           ),
-                          ChatHomeActive() => Stack(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  UIFrame(
-                                    onLeftButtonPressed: () {
-                                      onPressedLeftButton(context: context);
-                                    },
-                                    onRightButtonPressed: () {
-                                      onPressedRightButton(context: context);
-                                    },
-                                  ),
-                                  if (!isMobile)
-                                    CustomAnimatedContainerForTheHomePanel(
-                                      child: ChatPanel(
+                          ChatHomeActive() => Expanded(
+                            child: Stack(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    UIFrame(
+                                      onLeftButtonPressed: () {
+                                        onPressedLeftButton(context: context);
+                                      },
+                                      onRightButtonPressed: () {
+                                        onPressedRightButton(context: context);
+                                      },
+                                    ),
+                                    if (!isMobile)
+                                      CustomAnimatedContainerForTheHomePanel(
+                                        child: ChatPanel(
+                                          onPressed: () {
+                                            onPressedRightButton(
+                                              context: context,
+                                            );
+                                          },
+                                        ),
+                                        isLeft: false,
+                                        width: rightWidth,
+                                        isOpen: isRightOpen,
                                         onPressed: () {
                                           onPressedRightButton(
                                             context: context,
                                           );
                                         },
                                       ),
-                                      isLeft: false,
-                                      width: rightWidth,
-                                      isOpen: isRightOpen,
+                                  ],
+                                ),
+
+                                if (isMobile && isRightOpen)
+                                  CustomPanelForMobileMode(
+                                    width: rightWidth,
+                                    panel: ChatPanel(
                                       onPressed: () {
                                         onPressedRightButton(context: context);
                                       },
                                     ),
-                                ],
-                              ),
-
-                              if (isMobile && isRightOpen)
-                                CustomPanelForMobileMode(
-                                  width: rightWidth,
-                                  panel: ChatPanel(
-                                    onPressed: () {
-                                      onPressedRightButton(context: context);
-                                    },
+                                    onClose: () =>
+                                        setState(() => isRightOpen = false),
+                                    isRight: true,
                                   ),
-                                  onClose: () =>
-                                      setState(() => isRightOpen = false),
-                                  isRight: true,
-                                ),
-                            ],
+                              ],
+                            ),
                           ),
                         },
                       ],
