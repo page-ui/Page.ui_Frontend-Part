@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:pageui/core/database/api/interceptors.dart';
 import 'package:pageui/core/database/api/queries.dart';
 import 'package:pageui/features/auth/data/model/user_tokens_model.dart';
 
@@ -10,7 +11,7 @@ class GraphQLConfig {
   static String? refreshToken;
 
   static HttpLink httpLink = HttpLink(uri);
-
+  static GraphQLLoggerLink loggerLink = GraphQLLoggerLink();
   static AuthLink authLink = AuthLink(
     getToken: () async {
       if (accessToken == null) return null;
@@ -38,8 +39,7 @@ class GraphQLConfig {
     },
   );
 
-  static Link link = errorLink.concat(authLink.concat(httpLink));
-
+  static Link link = Link.from([errorLink, loggerLink, authLink, httpLink]);
   static ValueNotifier<GraphQLClient> client = ValueNotifier(
     GraphQLClient(
       link: link,
@@ -53,7 +53,7 @@ class GraphQLConfig {
     final result = await client.mutate(
       MutationOptions(
         document: gql(Queries.refreshTokenMutation),
-        variables: {"token": refreshToken},
+        variables: {"token": accessToken},
         fetchPolicy: FetchPolicy.noCache,
       ),
     );

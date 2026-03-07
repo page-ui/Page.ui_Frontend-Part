@@ -58,4 +58,90 @@ class Queries {
     deleteAccount
   }
     ''';
+
+  // ─── Chat ─────────────────────────────────────────────────────────
+
+  static String createChatRoomMutation = r'''
+    mutation CreateChat($input: CreateChatInput!) {
+        createChat(input: $input) {
+          chat {
+            id
+            name
+            chatKey
+          }
+          initialMessage {
+            id
+            content
+          }
+        }
+      }
+    ''';
+
+  static String sendMessageMutation = r'''
+    mutation SendMessage($input: SendMessageInput!) {
+      sendMessage(input: $input) {
+        id
+        chatId
+        content
+        type
+        status
+        createdAt
+        attachmentUrl
+      }
+    }
+    ''';
+
+  static String chatRoomsQuery = r'''
+    query GetChats($first: Int, $after: String) {
+      chats(first: $first, after: $after) {
+        nodes {
+          id
+          name
+          createdAt
+          updatedAt
+        }
+        pageInfo { hasNextPage endCursor }
+        totalCount
+      }
+    }
+    ''';
+
+  static String searchChatRoomsQuery = r'''
+    query SearchChatRooms($name: String!, $first: Int) {
+      searchChatRooms(name: $name, first: $first) {
+        nodes {
+          id
+          name
+          createdAt
+          updatedAt
+        }
+        totalCount
+      }
+    }
+    ''';
+
+  static String chatMessagesQuery = r'''
+    query ChatMessages($chatId: UUID!, $first: Int, $after: String) {
+      chatMessages(chatId: $chatId, first: $first, after: $after) {
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+        edges {
+          node {
+            id
+            chatId
+            senderId
+            content
+            type
+            status
+            createdAt
+            attachmentUrl
+            isDeleted
+          }
+        }
+        totalCount
+      }
+    }
+    ''';
 }
