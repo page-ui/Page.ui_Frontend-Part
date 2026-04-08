@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pageui/features/chat/data/data_source/upload_service.dart';
-import 'package:pageui/features/chat/domain/entities/message_entity.dart';
 import 'package:pageui/features/chat/domain/params/send_message_params.dart';
 import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
 import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_state.dart';
@@ -18,55 +17,6 @@ class SendMessageCubit extends Cubit<SendMessageState> {
     : _chatRepo = chatRepo,
       _uploadService = uploadService ?? UploadService(),
       super(const SendMessageInitial());
-
-  Future<bool> loadMessages({required String chatId}) async {
-    final previousState = state;
-    emit(const MessagesLoading());
-    final result = await _chatRepo.getMessages(chatId: chatId, first: 20);
-    return result.fold(
-      (failure) {
-        emit(
-          SendMessageError(
-            message: failure.message,
-            previousMessages: _currentMessages(previousState),
-          ),
-        );
-        return false;
-      },
-      (data) {
-        emit(
-          MessagesLoaded(
-            messages: data.messages,
-            hasNextPage: data.hasNextPage,
-            endCursor: data.endCursor,
-          ),
-        );
-        return true;
-      },
-    );
-  }
-
-  Future<void> loadMoreMessages({required String chatId}) async {
-    final current = state;
-    if (current is! MessagesLoaded || !current.hasNextPage) return;
-
-    final result = await _chatRepo.getMessages(
-      chatId: chatId,
-      first: 20,
-      after: current.endCursor,
-    );
-
-    result.fold(
-      (_) {},
-      (data) => emit(
-        MessagesLoaded(
-          messages: [...current.messages, ...data.messages],
-          hasNextPage: data.hasNextPage,
-          endCursor: data.endCursor,
-        ),
-      ),
-    );
-  }
 
   void setImageData({
     required Uint8List bytes,
@@ -87,70 +37,36 @@ class SendMessageCubit extends Cubit<SendMessageState> {
   bool hasImage() => _imageBytes != null;
 
   Future<bool> sendMessage({required SendMessageParams params}) async {
-    final current = state;
-
-    if (current is MessagesLoaded) {
-      emit(current.copyWith(isSending: true));
-    }
+    emit(const SendMessageLoading());
 
     try {
       if (_imageBytes != null && _imageFileName != null) {
-        await _uploadService.uploadAndSendImage(
+        final newMessage = await _uploadService.uploadAndSendImage(
           fileBytes: _imageBytes!,
           fileName: _imageFileName!,
           contentType: _imageContentType ?? 'image/png',
           chatId: params.chatId,
         );
         clearImageData();
-        if (current is MessagesLoaded) {
-          emit(current.copyWith(isSending: false));
-        }
+        emit(SendMessageSuccess(message: newMessage));
         return true;
       } else {
         final result = await _chatRepo.sendMessage(params: params);
         return result.fold(
           (failure) {
-            emit(
-              SendMessageError(
-                message: failure.message,
-                previousMessages: _currentMessages(current),
-              ),
-            );
+            emit(SendMessageError(message: failure.message));
             return false;
           },
           (newMessage) {
-            final updatedMessages = [..._currentMessages(current), newMessage];
-
-            emit(
-              MessagesLoaded(
-                messages: updatedMessages,
-                hasNextPage: current is MessagesLoaded
-                    ? current.hasNextPage
-                    : false,
-                endCursor: current is MessagesLoaded ? current.endCursor : null,
-              ),
-            );
+            emit(SendMessageSuccess(message: newMessage));
             return true;
           },
         );
       }
     } catch (e) {
-      emit(
-        SendMessageError(
-          message: e.toString(),
-          previousMessages: _currentMessages(current),
-        ),
-      );
+      emit(SendMessageError(message: e.toString()));
       return false;
     }
-  }
-
-  List<MessageEntity> _currentMessages(SendMessageState current) {
-    return switch (current) {
-      MessagesLoaded s => s.messages,
-      SendMessageError s => s.previousMessages,
-      _ => const [],
-    };
   }
 
   void reset() {

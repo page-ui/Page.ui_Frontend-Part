@@ -26,12 +26,4 @@ abstract class ChatRepo {
   Future<Either<Failure, MessageEntity>> sendMessage({
     required SendMessageParams params,
   });
-
-  Future<
-    Either<
-      Failure,
-      ({List<MessageEntity> messages, bool hasNextPage, String? endCursor})
-    >
-  >
-  getMessages({required String chatId, required int first, String? after});
 }

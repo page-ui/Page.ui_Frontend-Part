@@ -78,27 +78,4 @@ class ChatRepoImpl extends ChatRepo {
       return Left(ServerFailure(message: 'Failed to send message.'));
     }
   }
-
-  @override
-  Future<
-    Either<
-      Failure,
-      ({List<MessageEntity> messages, bool hasNextPage, String? endCursor})
-    >
-  >
-  getMessages({required String chatId,required int first , String? after}) async {
-    try {
-      if (!await networkInfo.isConnected) {
-        return Left(NetworkFailure.error());
-      }
-      final result = await dataSource.getMessages(
-        chatId: chatId,
-        first: first,
-        after: after,
-      );
-      return Right(result);
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to load messages.'));
-    }
-  }
 }

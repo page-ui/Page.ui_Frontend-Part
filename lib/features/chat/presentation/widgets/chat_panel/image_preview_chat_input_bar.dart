@@ -4,7 +4,6 @@ import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_icons.dart';
 import 'package:pageui/core/constants/borders.dart';
 import 'package:pageui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
-import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_cubit.dart';
 
 class ImagePreviewChatInputBar extends StatelessWidget {
   const ImagePreviewChatInputBar({super.key});
@@ -68,7 +67,6 @@ class ImagePreviewChatInputBar extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   context.read<PickFileCubit>().removeImage();
-                  context.read<SendMessageCubit>().clearImageData();
                 },
                 child: Icon(AppIcons.close, size: 18),
               ),

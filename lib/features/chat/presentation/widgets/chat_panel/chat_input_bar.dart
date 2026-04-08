@@ -4,41 +4,28 @@ import 'package:pageui/core/constants/borders.dart';
 import 'package:pageui/features/chat/presentation/widgets/chat_panel/image_preview_chat_input_bar.dart';
 import 'package:pageui/features/chat/presentation/widgets/chat_panel/pick_image_button.dart';
 
-class ChatInputBar extends StatefulWidget {
+class ChatInputBar extends StatelessWidget {
   const ChatInputBar({
     super.key,
+    required this.controller,
+    required this.focusNode,
     required this.onSend,
     required this.isSending,
     required this.hasSelectedImage,
     this.onImagePick,
   });
 
+  final TextEditingController controller;
+  final FocusNode focusNode;
   final void Function(String message) onSend;
   final bool isSending;
   final bool hasSelectedImage;
   final void Function()? onImagePick;
 
-  @override
-  State<ChatInputBar> createState() => _ChatInputBarState();
-}
-
-class _ChatInputBarState extends State<ChatInputBar> {
-  final _controller = TextEditingController();
-  final _focusNode = FocusNode();
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _focusNode.dispose();
-    super.dispose();
-  }
-
   void _handleSend() {
-    final text = _controller.text.trim();
-    if ((text.isEmpty && !widget.hasSelectedImage) || widget.isSending) return;
-    widget.onSend(text);
-    _controller.clear();
-    _focusNode.requestFocus();
+    final text = controller.text.trim();
+    if ((text.isEmpty && !hasSelectedImage) || isSending) return;
+    onSend(text);
   }
 
   @override
@@ -55,16 +42,16 @@ class _ChatInputBarState extends State<ChatInputBar> {
       ),
       child: Column(
         children: [
-          ImagePreviewChatInputBar(),
+          const ImagePreviewChatInputBar(),
           Row(
             children: [
-              PickImageButton(onImagePicked: widget.onImagePick),
+              PickImageButton(onImagePicked: onImagePick),
               const SizedBox(width: 6),
               Expanded(
                 child: TextField(
-                  controller: _controller,
-                  focusNode: _focusNode,
-                  enabled: !widget.isSending,
+                  controller: controller,
+                  focusNode: focusNode,
+                  enabled: !isSending,
                   style: TextStyle(
                     color: AppColors.white.withValues(alpha: 0.9),
                     fontSize: 14,
@@ -92,14 +79,14 @@ class _ChatInputBarState extends State<ChatInputBar> {
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 decoration: BoxDecoration(
-                  color: widget.isSending
+                  color: isSending
                       ? AppColors.primaryColor.withValues(alpha: 0.3)
                       : AppColors.primaryColor.withValues(alpha: 0.8),
                   borderRadius: AppBorders.xxxxs,
                 ),
                 child: IconButton(
-                  onPressed: widget.isSending ? null : _handleSend,
-                  icon: widget.isSending
+                  onPressed: isSending ? null : _handleSend,
+                  icon: isSending
                       ? SizedBox(
                           width: 18,
                           height: 18,

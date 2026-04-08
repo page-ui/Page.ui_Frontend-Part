@@ -8,44 +8,18 @@ final class SendMessageInitial extends SendMessageState {
   const SendMessageInitial();
 }
 
-final class MessagesLoading extends SendMessageState {
-  const MessagesLoading();
+final class SendMessageLoading extends SendMessageState {
+  const SendMessageLoading();
 }
 
-final class MessagesLoaded extends SendMessageState {
-  final List<MessageEntity> messages;
-  final bool hasNextPage;
-  final String? endCursor;
-  final bool isSending;
+final class SendMessageSuccess extends SendMessageState {
+  final MessageEntity message;
 
-  const MessagesLoaded({
-    required this.messages,
-    required this.hasNextPage,
-    this.endCursor,
-    this.isSending = false,
-  });
-
-  MessagesLoaded copyWith({
-    List<MessageEntity>? messages,
-    bool? hasNextPage,
-    String? endCursor,
-    bool? isSending,
-  }) {
-    return MessagesLoaded(
-      messages: messages ?? this.messages,
-      hasNextPage: hasNextPage ?? this.hasNextPage,
-      endCursor: endCursor ?? this.endCursor,
-      isSending: isSending ?? this.isSending,
-    );
-  }
+  const SendMessageSuccess({required this.message});
 }
 
 final class SendMessageError extends SendMessageState {
   final String message;
-  final List<MessageEntity> previousMessages;
 
-  const SendMessageError({
-    required this.message,
-    this.previousMessages = const [],
-  });
+  const SendMessageError({required this.message});
 }

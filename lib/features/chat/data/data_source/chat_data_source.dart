@@ -18,9 +18,6 @@ abstract class ChatDataSource {
   });
 
   Future<MessageModel> sendMessage({required SendMessageParams params});
-
-  Future<({List<MessageModel> messages, bool hasNextPage, String? endCursor})>
-  getMessages({required String chatId, required int first, String? after});
 }
 
 class ChatDataSourceImpl extends ChatDataSource {
@@ -124,44 +121,6 @@ class ChatDataSourceImpl extends ChatDataSource {
 
     return MessageModel.fromJson(
       result.data!['createMessage'] as Map<String, dynamic>,
-    );
-  }
-
-  @override
-  Future<({List<MessageModel> messages, bool hasNextPage, String? endCursor})>
-  getMessages({
-    required String chatId,
-    required int first,
-    String? after,
-  }) async {
-    final result = await _client.query(
-      QueryOptions(
-        document: gql(Queries.chatMessagesQuery),
-        variables: {
-          'chatId': chatId,
-          'first': first,
-          if (after != null) 'after': after,
-        },
-        fetchPolicy: FetchPolicy.networkOnly,
-      ),
-    );
-
-    if (result.hasException || result.data?['messages'] == null) {
-      throw Exception('Failed to load messages.');
-    }
-
-    final data = result.data!['messages'] as Map<String, dynamic>;
-    final pageInfo = data['pageInfo'] as Map<String, dynamic>;
-    final nodes = data['nodes'] as List;
-
-    final messages = nodes
-        .map((node) => MessageModel.fromJson(node as Map<String, dynamic>))
-        .toList();
-
-    return (
-      messages: messages,
-      hasNextPage: pageInfo['hasNextPage'] as bool,
-      endCursor: pageInfo['endCursor'] as String?,
     );
   }
 }
