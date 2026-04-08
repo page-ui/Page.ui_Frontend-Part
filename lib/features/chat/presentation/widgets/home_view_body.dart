@@ -7,14 +7,14 @@ import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
 import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_cubit.dart';
-import 'package:pageui/features/chat/presentation/widgets/chat_panel.dart';
+import 'package:pageui/features/chat/presentation/widgets/chat_panel/chat_panel.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_animated_container_for_the_home_panel.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_panel_for_mobile_mode.dart';
-import 'package:pageui/features/chat/presentation/widgets/history_panel.dart';
-import 'package:pageui/features/chat/presentation/widgets/home_appbar.dart';
+import 'package:pageui/features/chat/presentation/widgets/history_panel/history_panel.dart';
+import 'package:pageui/features/chat/presentation/widgets/ui_frame/home_appbar.dart';
 import 'package:pageui/features/chat/presentation/widgets/landing_page.dart';
-import 'package:pageui/features/chat/presentation/widgets/u_i_frame.dart';
+import 'package:pageui/features/chat/presentation/widgets/ui_frame/u_i_frame.dart';
 
 class HomeViewBody extends StatefulWidget {
   const HomeViewBody({super.key});

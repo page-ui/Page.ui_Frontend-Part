@@ -8,9 +8,9 @@ import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_history_cubit/chat_history_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_history_cubit/chat_history_state.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
-import 'package:pageui/features/chat/presentation/widgets/chat_room.dart';
-import 'package:pageui/features/chat/presentation/widgets/chat_rooms_loading_indecators.dart';
-import 'package:pageui/features/chat/presentation/widgets/panel_scrollbar.dart';
+import 'package:pageui/features/chat/presentation/widgets/history_panel/chat_room.dart';
+import 'package:pageui/features/chat/presentation/widgets/history_panel/chat_rooms_loading_indecators.dart';
+import 'package:pageui/core/helpers/panel_scrollbar.dart';
 
 class ListOfChatRooms extends StatefulWidget {
   const ListOfChatRooms({

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pageui/features/chat/presentation/widgets/chat_input_builder.dart';
-import 'package:pageui/features/chat/presentation/widgets/chat_panel_header.dart';
-import 'package:pageui/features/chat/presentation/widgets/load_messages_builder.dart';
+import 'package:pageui/features/chat/presentation/widgets/chat_panel/chat_input_builder.dart';
+import 'package:pageui/features/chat/presentation/widgets/chat_panel/chat_panel_header.dart';
+import 'package:pageui/features/chat/presentation/widgets/chat_panel/load_messages_builder.dart';
 
 class ChatPanel extends StatelessWidget {
   const ChatPanel({super.key, required this.onPressed});

@@ -7,7 +7,7 @@ import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/ch
 import 'package:pageui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_state.dart';
-import 'package:pageui/features/chat/presentation/widgets/chat_input_bar.dart';
+import 'package:pageui/features/chat/presentation/widgets/chat_panel/chat_input_bar.dart';
 
 class ChatInputBuilder extends StatelessWidget {
   const ChatInputBuilder({super.key});

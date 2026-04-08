@@ -19,7 +19,7 @@ class PickFileCubit extends Cubit<PickFileState> {
 
     final file = imageFile.files.first;
 
-    final allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    final allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
 
     if (file.extension == null ||
         !allowedExtensions.contains(file.extension!.toLowerCase())) {
@@ -37,13 +37,10 @@ class PickFileCubit extends Cubit<PickFileState> {
     return true;
   }
 
-  /// Returns the picked image bytes
   Uint8List? get imageBytes => image?.files.first.bytes;
 
-  /// Returns the picked image file name
   String? get imageFileName => image?.files.first.name;
 
-  /// Returns the picked image content type
   String? get imageContentType => _getContentType(image?.files.first.extension);
 
   String? _getContentType(String? extension) {
@@ -53,8 +50,6 @@ class PickFileCubit extends Cubit<PickFileState> {
         return 'image/jpeg';
       case 'png':
         return 'image/png';
-      case 'gif':
-        return 'image/gif';
       case 'webp':
         return 'image/webp';
       default:

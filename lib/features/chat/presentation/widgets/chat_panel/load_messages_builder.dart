@@ -4,7 +4,7 @@ import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_state.dart';
-import 'package:pageui/features/chat/presentation/widgets/message_bubble.dart';
+import 'package:pageui/features/chat/presentation/widgets/chat_panel/message_bubble.dart';
 
 class LoadMessagesBuilder extends StatelessWidget {
   const LoadMessagesBuilder({
