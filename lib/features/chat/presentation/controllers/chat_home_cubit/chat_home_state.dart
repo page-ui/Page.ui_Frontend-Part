@@ -2,6 +2,13 @@ import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
 
 sealed class ChatHomeState {
   const ChatHomeState();
+
+  ChatEntity? get selectedChat => switch (this) {
+    ChatHomeActive(:final chat) => chat,
+    ChatHomeLoading(:final previousChat) => previousChat,
+    ChatHomeError(:final previousChat) => previousChat,
+    ChatHomeInitial() => null,
+  };
 }
 
 final class ChatHomeInitial extends ChatHomeState {
@@ -9,7 +16,8 @@ final class ChatHomeInitial extends ChatHomeState {
 }
 
 final class ChatHomeLoading extends ChatHomeState {
-  const ChatHomeLoading();
+  final ChatEntity? previousChat;
+  const ChatHomeLoading({this.previousChat});
 }
 
 final class ChatHomeActive extends ChatHomeState {
@@ -19,5 +27,7 @@ final class ChatHomeActive extends ChatHomeState {
 
 final class ChatHomeError extends ChatHomeState {
   final String message;
-  const ChatHomeError({required this.message});
+  final ChatEntity? previousChat;
+
+  const ChatHomeError({required this.message, this.previousChat});
 }

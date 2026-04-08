@@ -2,7 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pageui/config/themes/app_icons.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_history_cubit/chat_history_cubit.dart';
+import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
+import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
 import 'package:pageui/features/chat/presentation/widgets/history_panel_header.dart';
 import 'package:pageui/features/chat/presentation/widgets/history_search_text_field.dart';
 import 'package:pageui/features/chat/presentation/widgets/list_of_chat_rooms.dart';
@@ -27,6 +30,13 @@ class _HistoryPanelBodyState extends State<HistoryPanelBody> {
   }
 
   @override
+  void dispose() {
+    _debounce?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
@@ -34,14 +44,38 @@ class _HistoryPanelBodyState extends State<HistoryPanelBody> {
         children: [
           HistoryPanelHeader(widget: widget),
           const SizedBox(height: 8),
-          HistorySearchTextField(
-            onSearch: _onSearchChanged,
-            searchController: _searchController,
+          Row(
+            children: [
+              BlocBuilder<ChatHomeCubit, ChatHomeState>(
+                builder: (context, state) {
+                  return AbsorbPointer(
+                    absorbing: state is ChatHomeLoading,
+                    child: IconButton(
+                      onPressed: () async {
+                        await context.read<ChatHomeCubit>().createChat(
+                          name: 'New Chat',
+                        );
+                        await context.read<ChatHistoryCubit>().loadChats();
+                      },
+                      icon: Icon(AppIcons.plus),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(width: 2),
+              Expanded(
+                child: HistorySearchTextField(
+                  onSearch: _onSearchChanged,
+                  searchController: _searchController,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 12),
           ListOfChatRooms(
             searchController: _searchController,
             debounce: _debounce,
+            onChatSelected: widget.onPressed,
           ),
         ],
       ),

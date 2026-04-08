@@ -40,7 +40,7 @@ final class ChatHistoryLoaded extends ChatHistoryState {
   }
 }
 
-final class ChatHistoryError extends ChatHistoryState {
+final class ChatHistoryFailure extends ChatHistoryState {
   final String message;
-  const ChatHistoryError({required this.message});
+  const ChatHistoryFailure({required this.message});
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_icons.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
@@ -13,43 +12,46 @@ class LandingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            AppIcons.chatBubble,
-            size: 64,
-            color: AppColors.primaryColor.withValues(alpha: 0.6),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            'Welcome to Page.ui',
-            style: AppTextStyles.headlineSmall?.copyWith(
-              color: AppColors.white,
-              letterSpacing: 1.5,
+    return Container(
+      color: AppColors.black,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              AppIcons.chatBubble,
+              size: 64,
+              color: AppColors.primaryColor.withValues(alpha: 0.6),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Start a conversation to generate UI',
-            style: AppTextStyles.bodyLarge?.copyWith(
-              color: AppColors.lightGray.withValues(alpha: 0.7),
-            ),
-          ),
-          const SizedBox(height: 32),
-          _CreateChatButton(onPressed: onCreateChat),
-          if (errorMessage != null) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
             Text(
-              errorMessage!,
-              style: AppTextStyles.bodyMedium?.copyWith(
-                color: AppColors.lightRed,
+              'Welcome to Page.ui',
+              style: AppTextStyles.headlineSmall?.copyWith(
+                color: AppColors.white,
+                letterSpacing: 1.5,
               ),
-              textAlign: TextAlign.center,
             ),
+            const SizedBox(height: 8),
+            Text(
+              'Start a conversation to generate UI',
+              style: AppTextStyles.bodyLarge?.copyWith(
+                color: AppColors.lightGray.withValues(alpha: 0.7),
+              ),
+            ),
+            const SizedBox(height: 32),
+            _CreateChatButton(onPressed: onCreateChat),
+            if (errorMessage != null) ...[
+              const SizedBox(height: 16),
+              Text(
+                errorMessage!,
+                style: AppTextStyles.bodyMedium?.copyWith(
+                  color: AppColors.lightRed,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

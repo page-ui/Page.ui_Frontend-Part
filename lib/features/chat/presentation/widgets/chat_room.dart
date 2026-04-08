@@ -12,12 +12,11 @@ class ChatRoom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 6),
-          width: double.infinity,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Material(
+        color: Colors.transparent,
+        child: Ink(
           decoration: BoxDecoration(
             color: AppColors.black.withValues(alpha: 0.8),
             borderRadius: AppBorders.xxxs,
@@ -26,52 +25,58 @@ class ChatRoom extends StatelessWidget {
               width: 1.2,
             ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                RichText(
-                  maxLines: 3,
-                  text: TextSpan(
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: AppBorders.xxxs,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WidgetSpan(
-                        alignment: PlaceholderAlignment.middle,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 4),
-                          child: Icon(
-                            AppIcons.arrowForward,
-                            size: 12,
-                            color: AppColors.lightGray,
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4, right: 8),
+                        child: Icon(
+                          AppIcons.arrowForward,
+                          size: 12,
+                          color: AppColors.lightGray,
                         ),
                       ),
-                      TextSpan(
-                        text: chat.name,
-                        style: TextStyle(
-                          color: AppColors.lightGray.withOpacity(0.9),
+                      Expanded(
+                        child: Text(
+                          chat.name,
+                          maxLines: 3,
                           overflow: TextOverflow.ellipsis,
-                          fontSize: 14,
-                          height: 1.5,
+                          style: TextStyle(
+                            color: AppColors.lightGray.withValues(alpha: 0.9),
+                            fontSize: 14,
+                            height: 1.5,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Text(
-                      _formatDateTime(chat.createdAt ?? DateTime.now()),
-                      style: TextStyle(
-                        color: AppColors.white.withOpacity(0.5),
-                        fontSize: 12,
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          _formatDateTime(chat.createdAt ?? DateTime.now()),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: AppColors.white.withValues(alpha: 0.5),
+                            fontSize: 12,
+                          ),
+                        ),
                       ),
-                    ),
-                    const Spacer(),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -8,12 +8,12 @@ class ChatHistoryCubit extends Cubit<ChatHistoryState> {
   ChatHistoryCubit({required ChatRepo chatRepo})
     : _chatRepo = chatRepo,
       super(const ChatHistoryInitial());
-  int first = 10;
+  int first = 15;
   Future<void> loadChats() async {
     emit(const ChatHistoryLoading());
     final result = await _chatRepo.getChats(first: first);
     result.fold(
-      (failure) => emit(ChatHistoryError(message: failure.message)),
+      (failure) => emit(ChatHistoryFailure(message: failure.message)),
       (data) => emit(
         ChatHistoryLoaded(
           chats: data.chats,
@@ -59,13 +59,9 @@ class ChatHistoryCubit extends Cubit<ChatHistoryState> {
     emit(const ChatHistoryLoading());
     final result = await _chatRepo.searchChats(name: query, first: first);
     result.fold(
-      (failure) => emit(ChatHistoryError(message: failure.message)),
+      (failure) => emit(ChatHistoryFailure(message: failure.message)),
       (data) => emit(
-        ChatHistoryLoaded(
-          chats: data.chats,
-          hasNextPage: false,
-          endCursor: null,
-        ),
+        ChatHistoryLoaded(chats: data, hasNextPage: false, endCursor: null),
       ),
     );
   }

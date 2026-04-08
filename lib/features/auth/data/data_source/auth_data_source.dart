@@ -11,7 +11,6 @@ abstract class AuthDataSource {
   Future<UserTokensModel> login({required LoginParams params});
   Future<bool> register({required RegisterParams params});
   Future<bool> forgotPasswordRequest({required String email});
-  Future<UserTokensModel> refreshToken({required String refreshToken});
   Future<bool> resetPassword({required ResetPasswordParams params});
   Future<String> verifyResetCode({required VerifyResetCodeParams params});
   Future<bool> emailVerfication({required VerifyResetCodeParams params});
@@ -150,23 +149,7 @@ class AuthDataSourceImpl extends AuthDataSource {
     return result.data!['resetPassword'];
   }
 
-  @override
-  @override
-  Future<UserTokensModel> refreshToken({required String refreshToken}) async {
-    final result = await _client.mutate(
-      MutationOptions(
-        document: gql(Queries.refreshTokenMutation),
-        variables: {"token": refreshToken},
-        fetchPolicy: FetchPolicy.noCache,
-      ),
-    );
 
-    if (result.hasException || result.data == null) {
-      throw Exception("Refresh token failed");
-    }
-
-    return UserTokensModel.fromJson(result.data!['refreshToken']);
-  }
 
   @override
   Future<void> resendVerficationCode({required String email}) async {

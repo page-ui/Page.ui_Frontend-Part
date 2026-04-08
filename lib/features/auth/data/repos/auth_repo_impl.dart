@@ -123,20 +123,6 @@ class AuthRepoImpl extends AuthRepo {
     }
   }
 
-  @override
-  Future<Either<Failure, UserTokensModel>> refreshToken({
-    required String refreshToken,
-  }) async {
-    try {
-      final res = await dataSource.refreshToken(refreshToken: refreshToken);
-      await saveTokens(res);
-      return Right(res);
-    } catch (e) {
-      return Left(
-        ServerFailure(message: "There was an error. Please try again."),
-      );
-    }
-  }
 
   @override
   Future<Either<Failure, void>> resendVerficationCode({

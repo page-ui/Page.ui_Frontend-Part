@@ -41,4 +41,8 @@ class AppIcons {
   // static final IconData lightMode = Icons.light_mode_rounded;
   static final IconData search = FontAwesomeIcons.magnifyingGlass;
   static final IconData file = Icons.attach_file_rounded;
+  static final IconData plus = FontAwesomeIcons.plus;
+
+  static final IconData close = Icons.close;
+  static final IconData image = Icons.image;
 }

@@ -1,9 +1,11 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_it/get_it.dart';
+import 'package:pageui/core/database/api/graph_ql_config.dart';
 import 'package:pageui/core/network/network_info.dart';
 import 'package:pageui/features/auth/data/data_source/auth_data_source.dart';
 import 'package:pageui/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:pageui/features/chat/data/data_source/chat_data_source.dart';
+import 'package:pageui/features/chat/data/data_source/upload_service.dart';
 import 'package:pageui/features/chat/data/repos/chat_repo_impl.dart';
 import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_history_cubit/chat_history_cubit.dart';
@@ -13,6 +15,9 @@ import 'package:pageui/features/chat/presentation/controllers/send_message_cubit
 final getit = GetIt.instance;
 
 setUpServiceLocator() {
+  // Initialize REST client with refresh token support
+  GraphQLConfig.initializeRestClient();
+
   // ─── Network ────────────────────────────────────────────────────
   getit.registerLazySingleton<NetworkInfo>(
     () => NetworkInfoImpl(Connectivity()),
@@ -29,6 +34,7 @@ setUpServiceLocator() {
 
   // ─── Chat ───────────────────────────────────────────────────────
   getit.registerLazySingleton<ChatDataSource>(() => ChatDataSourceImpl());
+  getit.registerLazySingleton<UploadService>(() => UploadService());
   getit.registerLazySingleton<ChatRepo>(
     () => ChatRepoImpl(
       dataSource: getit.get<ChatDataSource>(),
@@ -44,6 +50,9 @@ setUpServiceLocator() {
     () => ChatHistoryCubit(chatRepo: getit.get<ChatRepo>()),
   );
   getit.registerFactory<SendMessageCubit>(
-    () => SendMessageCubit(chatRepo: getit.get<ChatRepo>()),
+    () => SendMessageCubit(
+      chatRepo: getit.get<ChatRepo>(),
+      uploadService: getit.get<UploadService>(),
+    ),
   );
 }

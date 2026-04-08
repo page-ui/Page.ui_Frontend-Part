@@ -1,7 +1,9 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pageui/config/themes/app_colors.dart';
+import 'package:pageui/core/enum/screen_type.dart';
 import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_history_cubit/chat_history_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_history_cubit/chat_history_state.dart';
@@ -15,9 +17,11 @@ class ListOfChatRooms extends StatefulWidget {
     super.key,
     required this.searchController,
     this.debounce,
+    this.onChatSelected,
   });
   final TextEditingController searchController;
   final Timer? debounce;
+  final VoidCallback? onChatSelected;
   @override
   State<ListOfChatRooms> createState() => _ListOfChatRoomsState();
 }
@@ -27,6 +31,10 @@ class _ListOfChatRoomsState extends State<ListOfChatRooms> {
 
   void _onChatSelected(ChatEntity chat) {
     context.read<ChatHomeCubit>().selectChat(chat: chat);
+
+    if (context.isMobile || context.isTablet) {
+      widget.onChatSelected?.call();
+    }
   }
 
   @override
@@ -38,8 +46,6 @@ class _ListOfChatRoomsState extends State<ListOfChatRooms> {
   @override
   void dispose() {
     _scrollController.dispose();
-    widget.searchController.dispose();
-    widget.debounce?.cancel();
     super.dispose();
   }
 
@@ -59,7 +65,7 @@ class _ListOfChatRoomsState extends State<ListOfChatRooms> {
             return ChatRoomsLoadingIndecators();
           }
 
-          if (state is ChatHistoryError) {
+          if (state is ChatHistoryFailure) {
             return Center(
               child: Text(
                 state.message,
@@ -89,7 +95,7 @@ class _ListOfChatRoomsState extends State<ListOfChatRooms> {
               controller: _scrollController,
               child: ListView.builder(
                 controller: _scrollController,
-                padding: const EdgeInsets.only(right: 12),
+                padding: const EdgeInsets.only(right: 16),
                 itemCount: state.chats.length + (state.isLoadingMore ? 1 : 0),
                 itemBuilder: (context, index) {
                   if (index == state.chats.length) {

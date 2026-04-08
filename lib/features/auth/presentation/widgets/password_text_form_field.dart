@@ -23,7 +23,7 @@ class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
       controller: widget.controller,
       style: AppTextStyles.bodyMedium!.copyWith(color: AppColors.white),
       cursorColor: AppColors.primaryColor,
-      mouseCursor: SystemMouseCursors.click,
+      // mouseCursor: SystemMouseCursors.click,
       obscureText: isSecure,
       obscuringCharacter: "*",
 
