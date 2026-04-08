@@ -9,11 +9,13 @@ class ChatInputBar extends StatefulWidget {
     super.key,
     required this.onSend,
     required this.isSending,
+    required this.hasSelectedImage,
     this.onImagePick,
   });
 
   final void Function(String message) onSend;
   final bool isSending;
+  final bool hasSelectedImage;
   final void Function()? onImagePick;
 
   @override
@@ -33,7 +35,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
 
   void _handleSend() {
     final text = _controller.text.trim();
-    if (text.isEmpty || widget.isSending) return;
+    if ((text.isEmpty && !widget.hasSelectedImage) || widget.isSending) return;
     widget.onSend(text);
     _controller.clear();
     _focusNode.requestFocus();

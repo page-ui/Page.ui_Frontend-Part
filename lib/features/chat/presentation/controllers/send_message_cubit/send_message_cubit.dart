@@ -19,18 +19,30 @@ class SendMessageCubit extends Cubit<SendMessageState> {
       _uploadService = uploadService ?? UploadService(),
       super(const SendMessageInitial());
 
-  Future<void> loadMessages({required String chatId}) async {
+  Future<bool> loadMessages({required String chatId}) async {
+    final previousState = state;
     emit(const MessagesLoading());
     final result = await _chatRepo.getMessages(chatId: chatId, first: 20);
-    result.fold(
-      (failure) => emit(SendMessageError(message: failure.message)),
-      (data) => emit(
-        MessagesLoaded(
-          messages: data.messages,
-          hasNextPage: data.hasNextPage,
-          endCursor: data.endCursor,
-        ),
-      ),
+    return result.fold(
+      (failure) {
+        emit(
+          SendMessageError(
+            message: failure.message,
+            previousMessages: _currentMessages(previousState),
+          ),
+        );
+        return false;
+      },
+      (data) {
+        emit(
+          MessagesLoaded(
+            messages: data.messages,
+            hasNextPage: data.hasNextPage,
+            endCursor: data.endCursor,
+          ),
+        );
+        return true;
+      },
     );
   }
 
@@ -74,7 +86,7 @@ class SendMessageCubit extends Cubit<SendMessageState> {
 
   bool hasImage() => _imageBytes != null;
 
-  Future<void> sendMessage({required SendMessageParams params}) async {
+  Future<bool> sendMessage({required SendMessageParams params}) async {
     final current = state;
 
     if (current is MessagesLoaded) {
@@ -82,61 +94,67 @@ class SendMessageCubit extends Cubit<SendMessageState> {
     }
 
     try {
-      MessageEntity? message;
-
       if (_imageBytes != null && _imageFileName != null) {
-        // Upload image and send message with attachment
         await _uploadService.uploadAndSendImage(
           fileBytes: _imageBytes!,
           fileName: _imageFileName!,
           contentType: _imageContentType ?? 'image/png',
           chatId: params.chatId,
         );
-        await loadMessages(chatId: params.chatId);
-        return;
+        clearImageData();
+        if (current is MessagesLoaded) {
+          emit(current.copyWith(isSending: false));
+        }
+        return true;
       } else {
         final result = await _chatRepo.sendMessage(params: params);
-        result.fold(
+        return result.fold(
           (failure) {
             emit(
               SendMessageError(
                 message: failure.message,
-                previousMessages: current is MessagesLoaded
-                    ? current.messages
-                    : const [],
+                previousMessages: _currentMessages(current),
               ),
             );
-            return;
+            return false;
           },
           (newMessage) {
-            message = newMessage;
+            final updatedMessages = [..._currentMessages(current), newMessage];
+
+            emit(
+              MessagesLoaded(
+                messages: updatedMessages,
+                hasNextPage: current is MessagesLoaded
+                    ? current.hasNextPage
+                    : false,
+                endCursor: current is MessagesLoaded ? current.endCursor : null,
+              ),
+            );
+            return true;
           },
         );
       }
-
-      List<MessageEntity>? updatedMessages = current is MessagesLoaded
-          ? [...current.messages, ?message]
-          : [?message];
-      emit(
-        MessagesLoaded(
-          messages: updatedMessages,
-          hasNextPage: current is MessagesLoaded ? current.hasNextPage : false,
-          endCursor: current is MessagesLoaded ? current.endCursor : null,
-        ),
-      );
     } catch (e) {
       emit(
         SendMessageError(
           message: e.toString(),
-          previousMessages: current is MessagesLoaded
-              ? current.messages
-              : const [],
+          previousMessages: _currentMessages(current),
         ),
       );
+      return false;
     }
   }
 
+  List<MessageEntity> _currentMessages(SendMessageState current) {
+    return switch (current) {
+      MessagesLoaded s => s.messages,
+      SendMessageError s => s.previousMessages,
+      _ => const [],
+    };
+  }
+
   void reset() {
+    clearImageData();
     emit(const SendMessageInitial());
   }
 }

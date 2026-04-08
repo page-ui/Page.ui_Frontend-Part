@@ -3,27 +3,9 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:pageui/core/database/api/graph_ql_config.dart';
 import 'package:pageui/features/chat/data/data_source/chat_data_source.dart';
+import 'package:pageui/features/chat/data/models/message_model.dart';
+import 'package:pageui/features/chat/data/models/upload_result_model.dart';
 import 'package:pageui/features/chat/domain/params/send_message_params.dart';
-
-class UploadResult {
-  final String uploadUrl;
-  final String downloadUrl;
-  final String fileName;
-
-  UploadResult({
-    required this.uploadUrl,
-    required this.downloadUrl,
-    required this.fileName,
-  });
-
-  factory UploadResult.fromJson(Map<String, dynamic> json) {
-    return UploadResult(
-      uploadUrl: json['uploadUrl'] as String,
-      downloadUrl: json['downloadUrl'] as String,
-      fileName: json['fileName'] as String,
-    );
-  }
-}
 
 class UploadService {
   static const String _presignEndpoint = '/api/Upload/presign';
@@ -32,7 +14,7 @@ class UploadService {
 
   UploadService({Dio? client}) : _client = client ?? GraphQLConfig.restClient;
 
-  Future<UploadResult> getPresignedUrl(String originalFileName) async {
+  Future<UploadResultModel> getPresignedUrl(String originalFileName) async {
     final baseUri = Uri.parse(GraphQLConfig.uri);
     final presignUri = baseUri.replace(
       path: _presignEndpoint,
@@ -43,14 +25,12 @@ class UploadService {
       final response = await _client.get(presignUri.toString());
 
       if (response.statusCode != 200) {
-        throw Exception(
-          'Failed to get presigned upload URL (Status: ${response.statusCode})',
-        );
+        throw Exception('Failed to get presigned upload URL)');
       }
 
-      return UploadResult.fromJson(response.data as Map<String, dynamic>);
-    } on DioException catch (e) {
-      throw Exception('Failed to get presigned upload URL: ${e.message}');
+      return UploadResultModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException {
+      throw Exception('Failed to get presigned upload UR');
     }
   }
 
@@ -76,16 +56,14 @@ class UploadService {
       );
 
       if (response.statusCode != 200 && response.statusCode != 204) {
-        throw Exception(
-          'Failed to upload file (Status: ${response.statusCode})',
-        );
+        throw Exception('Failed to upload file ');
       }
-    } on DioException catch (e) {
-      throw Exception('Failed to upload file: ${e.message}');
+    } on DioException {
+      throw Exception('Failed to upload file');
     }
   }
 
-  Future<void> sendImageMessage({
+  Future<MessageModel> sendImageMessage({
     required String chatId,
     required String downloadUrl,
     String content = 'image',
@@ -97,10 +75,10 @@ class UploadService {
     );
 
     final dataSource = ChatDataSourceImpl();
-    await dataSource.sendMessage(params: params);
+    return dataSource.sendMessage(params: params);
   }
 
-  Future<void> uploadAndSendImage({
+  Future<MessageModel> uploadAndSendImage({
     required Uint8List fileBytes,
     required String fileName,
     required String contentType,
@@ -112,7 +90,7 @@ class UploadService {
       fileBytes: fileBytes,
       contentType: contentType,
     );
-    await sendImageMessage(
+    return sendImageMessage(
       chatId: chatId,
       downloadUrl: presignResult.downloadUrl,
     );

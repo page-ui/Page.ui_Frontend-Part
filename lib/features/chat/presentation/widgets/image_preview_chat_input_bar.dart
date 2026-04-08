@@ -4,6 +4,7 @@ import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_icons.dart';
 import 'package:pageui/core/constants/borders.dart';
 import 'package:pageui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
+import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_cubit.dart';
 
 class ImagePreviewChatInputBar extends StatelessWidget {
   const ImagePreviewChatInputBar({super.key});
@@ -17,6 +18,7 @@ class ImagePreviewChatInputBar extends StatelessWidget {
         }
 
         final file = state.image.files.first;
+        final fileBytes = file.bytes;
 
         return Container(
           width: double.infinity,
@@ -27,20 +29,47 @@ class ImagePreviewChatInputBar extends StatelessWidget {
             borderRadius: AppBorders.xxxxs,
           ),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(AppIcons.image, size: 16),
-              const SizedBox(width: 6),
+              ClipRRect(
+                borderRadius: AppBorders.xxxxs,
+                child: Container(
+                  width: 56,
+                  height: 56,
+                  color: AppColors.black.withValues(alpha: 0.12),
+                  child: fileBytes == null
+                      ? Icon(AppIcons.image, size: 18)
+                      : Image.memory(fileBytes, fit: BoxFit.cover),
+                ),
+              ),
+              const SizedBox(width: 8),
 
               Expanded(
-                child: Text(
-                  file.name,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      file.name,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Ready to send',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: AppColors.black.withValues(alpha: 0.65),
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
               GestureDetector(
-                onTap: () => context.read<PickFileCubit>().removeImage(),
+                onTap: () {
+                  context.read<PickFileCubit>().removeImage();
+                  context.read<SendMessageCubit>().clearImageData();
+                },
                 child: Icon(AppIcons.close, size: 18),
               ),
             ],

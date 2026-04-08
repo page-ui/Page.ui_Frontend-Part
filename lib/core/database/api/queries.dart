@@ -130,11 +130,14 @@ mutation CreateMessage($input: CreateMessageInput!) {
         messages(chatId: $chatId, first: $first, after: $after) {
           nodes {
             id
+            chatId
             content
             senderId
             type
+            status
             createdAt
             attachmentUrl
+            isDeleted
           }
           pageInfo {
             hasNextPage

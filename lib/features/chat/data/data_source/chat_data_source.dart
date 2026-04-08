@@ -152,10 +152,10 @@ class ChatDataSourceImpl extends ChatDataSource {
 
     final data = result.data!['messages'] as Map<String, dynamic>;
     final pageInfo = data['pageInfo'] as Map<String, dynamic>;
-    final edges = data['edges'] as List;
+    final nodes = data['nodes'] as List;
 
-    final messages = edges
-        .map((e) => MessageModel.fromJson(e['node'] as Map<String, dynamic>))
+    final messages = nodes
+        .map((node) => MessageModel.fromJson(node as Map<String, dynamic>))
         .toList();
 
     return (

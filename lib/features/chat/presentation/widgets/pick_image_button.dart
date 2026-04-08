@@ -19,8 +19,10 @@ class PickImageButton extends StatelessWidget {
           allowMultiple: false,
           type: FileType.image,
         );
-        context.read<PickFileCubit>().pickImage(imageFile: image);
-        if (image != null && onImagePicked != null) {
+        final picked = context.read<PickFileCubit>().pickImage(
+          imageFile: image,
+        );
+        if (picked && onImagePicked != null) {
           onImagePicked!();
         }
       },

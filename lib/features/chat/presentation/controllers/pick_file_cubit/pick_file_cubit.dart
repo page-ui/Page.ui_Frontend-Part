@@ -11,10 +11,10 @@ class PickFileCubit extends Cubit<PickFileState> {
 
   FilePickerResult? image;
 
-  void pickImage({required FilePickerResult? imageFile}) {
+  bool pickImage({required FilePickerResult? imageFile}) {
     if (imageFile == null || imageFile.files.isEmpty) {
       emit(PickFileFailure(message: 'No file was selected. Please try again.'));
-      return;
+      return false;
     }
 
     final file = imageFile.files.first;
@@ -24,16 +24,17 @@ class PickFileCubit extends Cubit<PickFileState> {
     if (file.extension == null ||
         !allowedExtensions.contains(file.extension!.toLowerCase())) {
       emit(PickFileFailure(message: 'Only image files are allowed.'));
-      return;
+      return false;
     }
 
     if (file.size > 5 * 1024 * 1024) {
       emit(PickFileFailure(message: 'The file is larger than 5 MB.'));
-      return;
+      return false;
     }
 
     image = imageFile;
     emit(PickFileSuccess(imageFile));
+    return true;
   }
 
   /// Returns the picked image bytes

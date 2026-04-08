@@ -33,44 +33,59 @@ class ChatInputBuilder extends StatelessWidget {
           return wasSending != isSending;
         },
         builder: (context, state) {
+          final pickFileCubit = context.watch<PickFileCubit>();
           final isSending = state is MessagesLoaded && state.isSending;
-          final pickFileCubit = context.read<PickFileCubit>();
+          final sendMessageCubit = context.read<SendMessageCubit>();
           return ChatInputBar(
             isSending: isSending,
+            hasSelectedImage: pickFileCubit.isImagePicked(),
             onSend: (message) {
-              final homeState = context.read<ChatHomeCubit>().state;
-              final selectedChat = homeState.selectedChat;
-              if (selectedChat != null) {
-                context.read<SendMessageCubit>().sendMessage(
-                  params: SendMessageParams(
-                    chatId: selectedChat.id,
-                    content: message,
-                  ),
-                );
-              }
-            },
-            onImagePick: () {
               final homeState = context.read<ChatHomeCubit>().state;
               final selectedChat = homeState.selectedChat;
               if (selectedChat == null) return;
 
+              if (pickFileCubit.imageBytes != null &&
+                  pickFileCubit.imageFileName != null &&
+                  pickFileCubit.imageContentType != null) {
+                sendMessageCubit.setImageData(
+                  bytes: pickFileCubit.imageBytes!,
+                  fileName: pickFileCubit.imageFileName!,
+                  contentType: pickFileCubit.imageContentType!,
+                );
+
+                sendMessageCubit
+                    .sendMessage(
+                      params: SendMessageParams(
+                        chatId: selectedChat.id,
+                        content: message.isEmpty ? 'image' : message,
+                      ),
+                    )
+                    .then((success) {
+                      if (success) {
+                        pickFileCubit.removeImage();
+                      }
+                    });
+                return;
+              }
+
+              sendMessageCubit.sendMessage(
+                params: SendMessageParams(
+                  chatId: selectedChat.id,
+                  content: message,
+                ),
+              );
+            },
+            onImagePick: () {
               if (pickFileCubit.imageBytes == null ||
                   pickFileCubit.imageFileName == null ||
                   pickFileCubit.imageContentType == null) {
                 return;
               }
 
-              context.read<SendMessageCubit>().setImageData(
+              sendMessageCubit.setImageData(
                 bytes: pickFileCubit.imageBytes!,
                 fileName: pickFileCubit.imageFileName!,
                 contentType: pickFileCubit.imageContentType!,
-              );
-
-              context.read<SendMessageCubit>().sendMessage(
-                params: SendMessageParams(
-                  chatId: selectedChat.id,
-                  content: 'image',
-                ),
               );
             },
           );
