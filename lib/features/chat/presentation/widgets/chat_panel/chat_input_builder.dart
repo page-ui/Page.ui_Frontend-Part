@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
+import 'package:pageui/core/helpers/setup_service_locator_getit.dart';
 import 'package:pageui/features/chat/domain/params/send_message_params.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
@@ -29,8 +30,11 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => PickFileCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => PickFileCubit()),
+        BlocProvider(create: (context) => getit.get<SendMessageCubit>()),
+      ],
       child: BlocListener<SendMessageCubit, SendMessageState>(
         listener: (context, state) {
           final pickFileCubit = context.read<PickFileCubit>();

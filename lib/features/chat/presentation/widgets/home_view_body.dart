@@ -99,10 +99,6 @@ class _HomeViewBodyState extends State<HomeViewBody> {
             textColor: AppColors.white,
           );
         }
-
-        // if (state is ChatHomeActive) {
-        //   context.read<ChatMessagesCubit>().openChat(chatId: state.chat.id);
-        // }
       },
       builder: (context, homeState) {
         _handleOpenningDrawers();
