@@ -2,9 +2,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:pageui/core/database/api/graph_ql_config.dart';
-import 'package:pageui/features/chat/data/data_source/chat_data_source.dart';
 import 'package:pageui/features/chat/data/models/upload_result_model.dart';
-import 'package:pageui/features/chat/domain/params/send_message_params.dart';
 
 class UploadService {
   static const String _presignEndpoint = '/api/Upload/presign';
@@ -13,7 +11,21 @@ class UploadService {
 
   UploadService({Dio? client}) : _client = client ?? GraphQLConfig.restClient;
 
-  Future<UploadResultModel> getPresignedUrl(String originalFileName) async {
+  Future<String> upload({
+    required Uint8List fileBytes,
+    required String fileName,
+    required String contentType,
+  }) async {
+    final presignResult = await _getPresignedUrl(fileName);
+    await _uploadBinary(
+      uploadUrl: presignResult.uploadUrl,
+      fileBytes: fileBytes,
+      contentType: contentType,
+    );
+    return presignResult.downloadUrl;
+  }
+
+  Future<UploadResultModel> _getPresignedUrl(String originalFileName) async {
     final baseUri = Uri.parse(GraphQLConfig.uri);
     final presignUri = baseUri.replace(
       path: _presignEndpoint,
@@ -33,7 +45,7 @@ class UploadService {
     }
   }
 
-  Future<void> uploadBinary({
+  Future<void> _uploadBinary({
     required String uploadUrl,
     required Uint8List fileBytes,
     required String contentType,
@@ -64,38 +76,5 @@ class UploadService {
     } on DioException {
       throw Exception('Failed to upload file');
     }
-  }
-
-  Future<void> sendImageMessage({
-    required String chatId,
-    required String downloadUrl,
-    String content = 'image',
-  }) async {
-    final params = SendMessageParams(
-      chatId: chatId,
-      content: content,
-      attachmentUrl: downloadUrl,
-    );
-
-    final dataSource = ChatDataSourceImpl();
-    await dataSource.sendMessage(params: params);
-  }
-
-  Future<void> uploadAndSendImage({
-    required Uint8List fileBytes,
-    required String fileName,
-    required String contentType,
-    required String chatId,
-  }) async {
-    final presignResult = await getPresignedUrl(fileName);
-    await uploadBinary(
-      uploadUrl: presignResult.uploadUrl,
-      fileBytes: fileBytes,
-      contentType: contentType,
-    );
-    await sendImageMessage(
-      chatId: chatId,
-      downloadUrl: presignResult.downloadUrl,
-    );
   }
 }

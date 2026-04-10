@@ -40,22 +40,24 @@ class SendMessageCubit extends Cubit<SendMessageState> {
     emit(const SendMessageLoading());
 
     try {
+      SendMessageParams finalParams = params;
+
       if (_imageBytes != null && _imageFileName != null) {
-        await _uploadService.uploadAndSendImage(
+        final downloadUrl = await _uploadService.upload(
           fileBytes: _imageBytes!,
           fileName: _imageFileName!,
           contentType: _imageContentType ?? 'image/png',
-          chatId: params.chatId,
         );
+
+        finalParams = params.copyWith(attachmentUrl: downloadUrl);
         clearImageData();
-        emit(const SendMessageSuccess());
-      } else {
-        final result = await _chatRepo.sendMessage(params: params);
-        result.fold(
-          (failure) => emit(SendMessageError(message: failure.message)),
-          (_) => emit(const SendMessageSuccess()),
-        );
       }
+
+      final result = await _chatRepo.sendMessage(params: finalParams);
+      result.fold(
+        (failure) => emit(SendMessageError(message: failure.message)),
+        (_) => emit(const SendMessageSuccess()),
+      );
     } catch (e) {
       emit(SendMessageError(message: e.toString()));
     }
