@@ -3,7 +3,6 @@ import 'package:pageui/core/errors/failure.dart';
 import 'package:pageui/core/network/network_info.dart';
 import 'package:pageui/features/chat/data/data_source/chat_data_source.dart';
 import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
-import 'package:pageui/features/chat/domain/entities/message_entity.dart';
 import 'package:pageui/features/chat/domain/params/create_chat_params.dart';
 import 'package:pageui/features/chat/domain/params/send_message_params.dart';
 import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
@@ -65,15 +64,15 @@ class ChatRepoImpl extends ChatRepo {
   }
 
   @override
-  Future<Either<Failure, MessageEntity>> sendMessage({
+  Future<Either<Failure, void>> sendMessage({
     required SendMessageParams params,
   }) async {
     try {
       if (!await networkInfo.isConnected) {
         return Left(NetworkFailure.error());
       }
-      final message = await dataSource.sendMessage(params: params);
-      return Right(message);
+      await dataSource.sendMessage(params: params);
+      return Right(null);
     } catch (e) {
       return Left(ServerFailure(message: 'Failed to send message.'));
     }

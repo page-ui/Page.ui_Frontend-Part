@@ -11,6 +11,13 @@ class PickFileCubit extends Cubit<PickFileState> {
 
   FilePickerResult? image;
 
+  static const _mimeTypes = <String, String>{
+    'jpg': 'image/jpeg',
+    'jpeg': 'image/jpeg',
+    'png': 'image/png',
+    'webp': 'image/webp',
+  };
+
   bool pickImage({required FilePickerResult? imageFile}) {
     if (imageFile == null || imageFile.files.isEmpty) {
       emit(PickFileFailure(message: 'No file was selected. Please try again.'));
@@ -19,7 +26,7 @@ class PickFileCubit extends Cubit<PickFileState> {
 
     final file = imageFile.files.first;
 
-    final allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+    const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
 
     if (file.extension == null ||
         !allowedExtensions.contains(file.extension!.toLowerCase())) {
@@ -41,25 +48,9 @@ class PickFileCubit extends Cubit<PickFileState> {
 
   String? get imageFileName => image?.files.first.name;
 
-  String? get imageContentType => _getContentType(image?.files.first.extension);
+  String? get imageContentType => _mimeTypes[image?.files.first.extension?.toLowerCase()] ?? 'image/png';
 
-  String? _getContentType(String? extension) {
-    switch (extension?.toLowerCase()) {
-      case 'jpg':
-      case 'jpeg':
-        return 'image/jpeg';
-      case 'png':
-        return 'image/png';
-      case 'webp':
-        return 'image/webp';
-      default:
-        return 'image/png';
-    }
-  }
-
-  bool isImagePicked() {
-    return image == null ? false : true;
-  }
+  bool get isImagePicked => image != null;
 
   void removeImage() {
     image = null;

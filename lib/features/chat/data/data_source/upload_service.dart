@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:pageui/core/database/api/graph_ql_config.dart';
 import 'package:pageui/features/chat/data/data_source/chat_data_source.dart';
-import 'package:pageui/features/chat/data/models/message_model.dart';
 import 'package:pageui/features/chat/data/models/upload_result_model.dart';
 import 'package:pageui/features/chat/domain/params/send_message_params.dart';
 
@@ -25,12 +24,12 @@ class UploadService {
       final response = await _client.get(presignUri.toString());
 
       if (response.statusCode != 200) {
-        throw Exception('Failed to get presigned upload URL)');
+        throw Exception('Failed to get presigned upload URL');
       }
 
       return UploadResultModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException {
-      throw Exception('Failed to get presigned upload UR');
+      throw Exception('Failed to get presigned upload URL');
     }
   }
 
@@ -39,10 +38,14 @@ class UploadService {
     required Uint8List fileBytes,
     required String contentType,
   }) async {
+    if (uploadUrl.isEmpty) {
+      throw Exception('Upload URL cannot be empty');
+    }
+    if (fileBytes.isEmpty) {
+      throw Exception('File bytes cannot be empty');
+    }
+
     try {
-      // Use a fresh Dio instance to avoid sending the Authorization header
-      // from the restClient interceptor, which causes a 400 Bad Request
-      // when interacting with presigned S3 URLs.
       final uploadClient = Dio();
       final response = await uploadClient.put(
         uploadUrl,
@@ -56,14 +59,14 @@ class UploadService {
       );
 
       if (response.statusCode != 200 && response.statusCode != 204) {
-        throw Exception('Failed to upload file ');
+        throw Exception('Failed to upload file');
       }
     } on DioException {
       throw Exception('Failed to upload file');
     }
   }
 
-  Future<MessageModel> sendImageMessage({
+  Future<void> sendImageMessage({
     required String chatId,
     required String downloadUrl,
     String content = 'image',
@@ -75,10 +78,10 @@ class UploadService {
     );
 
     final dataSource = ChatDataSourceImpl();
-    return dataSource.sendMessage(params: params);
+    await dataSource.sendMessage(params: params);
   }
 
-  Future<MessageModel> uploadAndSendImage({
+  Future<void> uploadAndSendImage({
     required Uint8List fileBytes,
     required String fileName,
     required String contentType,
@@ -90,7 +93,7 @@ class UploadService {
       fileBytes: fileBytes,
       contentType: contentType,
     );
-    return sendImageMessage(
+    await sendImageMessage(
       chatId: chatId,
       downloadUrl: presignResult.downloadUrl,
     );

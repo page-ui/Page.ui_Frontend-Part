@@ -29,43 +29,30 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    final sendMessageCubit = context.read<SendMessageCubit>();
-
     return BlocProvider(
       create: (context) => PickFileCubit(),
-      child: MultiBlocListener(
-        listeners: [
-          BlocListener<PickFileCubit, PickFileState>(
-            listenWhen: (previous, current) =>
-                previous is PickFileSuccess && current is! PickFileSuccess,
-            listener: (context, state) {
-              sendMessageCubit.clearImageData();
-            },
-          ),
-          BlocListener<SendMessageCubit, SendMessageState>(
-            listener: (context, state) {
-              final pickFileCubit = context.read<PickFileCubit>();
+      child: BlocListener<SendMessageCubit, SendMessageState>(
+        listener: (context, state) {
+          final pickFileCubit = context.read<PickFileCubit>();
 
-              if (state is SendMessageSuccess) {
-                _controller.clear();
-                _focusNode.requestFocus();
+          if (state is SendMessageSuccess) {
+            _controller.clear();
+            _focusNode.requestFocus();
 
-                if (pickFileCubit.isImagePicked()) {
-                  pickFileCubit.removeImage();
-                }
-              }
+            if (pickFileCubit.isImagePicked) {
+              pickFileCubit.removeImage();
+            }
+          }
 
-              if (state is SendMessageError) {
-                showWebSnackBar(
-                  context: context,
-                  message: state.message,
-                  backgroundColor: AppColors.red,
-                  textColor: AppColors.white,
-                );
-              }
-            },
-          ),
-        ],
+          if (state is SendMessageError) {
+            showWebSnackBar(
+              context: context,
+              message: state.message,
+              backgroundColor: AppColors.red,
+              textColor: AppColors.white,
+            );
+          }
+        },
         child: BlocBuilder<SendMessageCubit, SendMessageState>(
           buildWhen: (prev, curr) {
             final wasSending = prev is SendMessageLoading;
@@ -80,48 +67,28 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
               controller: _controller,
               focusNode: _focusNode,
               isSending: isSending,
-              hasSelectedImage: pickFileCubit.isImagePicked(),
-              onSend: (message) {
+              hasSelectedImage: pickFileCubit.isImagePicked,
+              onSend: () {
                 final homeState = context.read<ChatHomeCubit>().state;
                 final selectedChat = homeState.selectedChat;
                 if (selectedChat == null) return;
 
-                if (pickFileCubit.imageBytes != null &&
-                    pickFileCubit.imageFileName != null &&
-                    pickFileCubit.imageContentType != null) {
-                  sendMessageCubit.setImageData(
+                final message = _controller.text.trim();
+                if (message.isEmpty && !pickFileCubit.isImagePicked) return;
+
+                if (pickFileCubit.isImagePicked) {
+                  context.read<SendMessageCubit>().setImageData(
                     bytes: pickFileCubit.imageBytes!,
                     fileName: pickFileCubit.imageFileName!,
                     contentType: pickFileCubit.imageContentType!,
                   );
-
-                  sendMessageCubit.sendMessage(
-                    params: SendMessageParams(
-                      chatId: selectedChat.id,
-                      content: message.isEmpty ? 'image' : message,
-                    ),
-                  );
-                  return;
                 }
 
-                sendMessageCubit.sendMessage(
+                context.read<SendMessageCubit>().sendMessage(
                   params: SendMessageParams(
                     chatId: selectedChat.id,
-                    content: message,
+                    content: message.isEmpty ? 'image' : message,
                   ),
-                );
-              },
-              onImagePick: () {
-                if (pickFileCubit.imageBytes == null ||
-                    pickFileCubit.imageFileName == null ||
-                    pickFileCubit.imageContentType == null) {
-                  return;
-                }
-
-                sendMessageCubit.setImageData(
-                  bytes: pickFileCubit.imageBytes!,
-                  fileName: pickFileCubit.imageFileName!,
-                  contentType: pickFileCubit.imageContentType!,
                 );
               },
             );

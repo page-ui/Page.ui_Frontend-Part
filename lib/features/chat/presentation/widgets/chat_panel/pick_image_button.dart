@@ -6,25 +6,18 @@ import 'package:pageui/config/themes/app_icons.dart';
 import 'package:pageui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
 
 class PickImageButton extends StatelessWidget {
-  const PickImageButton({super.key, this.onImagePicked});
-
-  final void Function()? onImagePicked;
+  const PickImageButton({super.key});
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () async {
-        FilePickerResult? image = await FilePicker.platform.pickFiles(
+        final image = await FilePicker.platform.pickFiles(
           withData: true,
           allowMultiple: false,
           type: FileType.image,
         );
-        final picked = context.read<PickFileCubit>().pickImage(
-          imageFile: image,
-        );
-        if (picked && onImagePicked != null) {
-          onImagePicked!();
-        }
+        context.read<PickFileCubit>().pickImage(imageFile: image);
       },
       icon: Icon(
         AppIcons.file,

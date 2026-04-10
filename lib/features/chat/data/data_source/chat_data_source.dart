@@ -2,7 +2,6 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:pageui/core/database/api/graph_ql_config.dart';
 import 'package:pageui/core/database/api/queries.dart';
 import 'package:pageui/features/chat/data/models/chat_model.dart';
-import 'package:pageui/features/chat/data/models/message_model.dart';
 import 'package:pageui/features/chat/domain/params/create_chat_params.dart';
 import 'package:pageui/features/chat/domain/params/send_message_params.dart';
 
@@ -17,7 +16,7 @@ abstract class ChatDataSource {
     required int first,
   });
 
-  Future<MessageModel> sendMessage({required SendMessageParams params});
+  Future<void> sendMessage({required SendMessageParams params});
 }
 
 class ChatDataSourceImpl extends ChatDataSource {
@@ -107,7 +106,7 @@ class ChatDataSourceImpl extends ChatDataSource {
   }
 
   @override
-  Future<MessageModel> sendMessage({required SendMessageParams params}) async {
+  Future<void> sendMessage({required SendMessageParams params}) async {
     final result = await _client.mutate(
       MutationOptions(
         document: gql(Queries.sendMessageMutation),
@@ -118,9 +117,5 @@ class ChatDataSourceImpl extends ChatDataSource {
     if (result.hasException || result.data?['createMessage'] == null) {
       throw Exception('Failed to send message.');
     }
-
-    return MessageModel.fromJson(
-      result.data!['createMessage'] as Map<String, dynamic>,
-    );
   }
 }

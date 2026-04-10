@@ -12,20 +12,17 @@ class ChatInputBar extends StatelessWidget {
     required this.onSend,
     required this.isSending,
     required this.hasSelectedImage,
-    this.onImagePick,
   });
 
   final TextEditingController controller;
   final FocusNode focusNode;
-  final void Function(String message) onSend;
+  final void Function() onSend;
   final bool isSending;
   final bool hasSelectedImage;
-  final void Function()? onImagePick;
 
   void _handleSend() {
-    final text = controller.text.trim();
-    if ((text.isEmpty && !hasSelectedImage) || isSending) return;
-    onSend(text);
+    if (isSending) return;
+    onSend();
   }
 
   @override
@@ -45,7 +42,7 @@ class ChatInputBar extends StatelessWidget {
           const ImagePreviewChatInputBar(),
           Row(
             children: [
-              PickImageButton(onImagePicked: onImagePick),
+              PickImageButton(),
               const SizedBox(width: 6),
               Expanded(
                 child: TextField(

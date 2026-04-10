@@ -1,5 +1,3 @@
-import 'package:pageui/features/chat/domain/entities/message_entity.dart';
-
 sealed class SendMessageState {
   const SendMessageState();
 }
@@ -13,9 +11,7 @@ final class SendMessageLoading extends SendMessageState {
 }
 
 final class SendMessageSuccess extends SendMessageState {
-  final MessageEntity message;
-
-  const SendMessageSuccess({required this.message});
+  const SendMessageSuccess();
 }
 
 final class SendMessageError extends SendMessageState {
