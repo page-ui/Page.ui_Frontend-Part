@@ -12,8 +12,10 @@ class CreateChatParams {
   Map<String, dynamic> toInputJson() {
     return {
       'name': name,
-      'content': content,
-      'attachmentUrl': attachmentUrl,
+      'initialUserMessage': {
+        'content': content,
+        // 'attachmentUrl': attachmentUrl,
+      },
     };
   }
 }

@@ -35,7 +35,7 @@ class _LandingPageState extends State<LandingPage> {
 
     widget.onSend(
       content: content.isEmpty ? 'image' : content,
-      attachmentUrl: null, // Will be handled by the caller or passed if already uploaded
+      attachmentUrl: null,
     );
   }
 
@@ -73,8 +73,10 @@ class _LandingPageState extends State<LandingPage> {
               ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 600),
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.black.withValues(alpha: 0.4),
                     borderRadius: AppBorders.xxxxs,
@@ -102,8 +104,9 @@ class _LandingPageState extends State<LandingPage> {
                               decoration: InputDecoration(
                                 hintText: 'Type your prompt...',
                                 hintStyle: TextStyle(
-                                  color:
-                                      AppColors.lightGray.withValues(alpha: 0.4),
+                                  color: AppColors.lightGray.withValues(
+                                    alpha: 0.4,
+                                  ),
                                   fontSize: 14,
                                 ),
                                 border: InputBorder.none,

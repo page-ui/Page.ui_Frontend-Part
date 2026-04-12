@@ -51,12 +51,9 @@ class _HistoryPanelBodyState extends State<HistoryPanelBody> {
                   return AbsorbPointer(
                     absorbing: state is ChatHomeLoading,
                     child: IconButton(
-                      onPressed: () async {
-                        await context.read<ChatHomeCubit>().createChat(
-                          name: 'New Chat',
-                          content: '',
-                        );
-                        await context.read<ChatHistoryCubit>().loadChats();
+                      onPressed: () {
+                        context.read<ChatHomeCubit>().reset();
+                        widget.onPressed?.call();
                       },
                       icon: Icon(AppIcons.plus),
                     ),
