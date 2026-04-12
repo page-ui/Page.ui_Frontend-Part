@@ -54,6 +54,7 @@ class _HistoryPanelBodyState extends State<HistoryPanelBody> {
                       onPressed: () async {
                         await context.read<ChatHomeCubit>().createChat(
                           name: 'New Chat',
+                          content: '',
                         );
                         await context.read<ChatHistoryCubit>().loadChats();
                       },

@@ -4,8 +4,12 @@ import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/enum/screen_type.dart';
 import 'package:pageui/core/helpers/custom_cli_loading_indicator.dart';
 import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
+import 'package:pageui/core/helpers/setup_service_locator_getit.dart';
+import 'package:pageui/features/chat/data/data_source/upload_service.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
+import 'package:pageui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
+import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_cubit.dart';
 import 'package:pageui/features/chat/presentation/widgets/chat_panel/chat_panel.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_animated_container_for_the_home_panel.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
@@ -72,145 +76,198 @@ class _HomeViewBodyState extends State<HomeViewBody> {
     });
   }
 
-  void _onCreateChat() {
-    context.read<ChatHomeCubit>().createChat(name: 'New Chat');
-  }
+  Future<void> _onLandingPageSend({
+    required BuildContext context,
+    required String content,
+  }) async {
+    final pickFileCubit = context.read<PickFileCubit>();
+    final chatHomeCubit = context.read<ChatHomeCubit>();
+    final uploadService = getit.get<UploadService>();
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocConsumer<ChatHomeCubit, ChatHomeState>(
-      listenWhen: (previous, current) {
-        if (current is ChatHomeError) {
-          return true;
-        }
+    String? attachmentUrl;
 
-        if (current is ChatHomeActive) {
-          return previous.selectedChat?.id != current.chat.id;
-        }
-
-        return false;
-      },
-      listener: (context, state) {
-        if (state is ChatHomeError) {
+    if (pickFileCubit.isImagePicked) {
+      try {
+        attachmentUrl = await uploadService.upload(
+          fileBytes: pickFileCubit.imageBytes!,
+          fileName: pickFileCubit.imageFileName!,
+          contentType: pickFileCubit.imageContentType!,
+        );
+      } catch (e) {
+        if (context.mounted) {
           showWebSnackBar(
             context: context,
-            message: state.message,
+            message: 'Failed to upload image: ${e.toString()}',
             backgroundColor: AppColors.red,
             textColor: AppColors.white,
           );
         }
-      },
-      builder: (context, homeState) {
-        _handleOpenningDrawers();
-        final isMobile = context.isMobile;
-        final hasSelectedChat = homeState.selectedChat != null;
+        return;
+      }
+    }
 
-        return Scaffold(
-          appBar: const HomeAppbar(),
-          body: Stack(
-            children: [
-              Row(
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Visibility(
-                      visible: isMobile && !isLeftOpen && !hasSelectedChat,
-                      child: CustomButtonIconForPanels(
-                        isLeftPanel: true,
-                        onPressed: () => onPressedLeftButton(context: context),
+    await chatHomeCubit.createChat(
+      name: 'New Chat',
+      content: content,
+      attachmentUrl: attachmentUrl,
+    );
+
+    if (context.mounted && pickFileCubit.isImagePicked) {
+      pickFileCubit.removeImage();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => PickFileCubit()),
+        BlocProvider(create: (context) => getit.get<SendMessageCubit>()),
+      ],
+      child: BlocConsumer<ChatHomeCubit, ChatHomeState>(
+        listenWhen: (previous, current) {
+          if (current is ChatHomeError) {
+            return true;
+          }
+
+          if (current is ChatHomeActive) {
+            return previous.selectedChat?.id != current.chat.id;
+          }
+
+          return false;
+        },
+        listener: (context, state) {
+          if (state is ChatHomeError) {
+            showWebSnackBar(
+              context: context,
+              message: state.message,
+              backgroundColor: AppColors.red,
+              textColor: AppColors.white,
+            );
+          }
+        },
+        builder: (context, homeState) {
+          _handleOpenningDrawers();
+          final isMobile = context.isMobile;
+          final hasSelectedChat = homeState.selectedChat != null;
+
+          return Scaffold(
+            appBar: const HomeAppbar(),
+            body: Stack(
+              children: [
+                Row(
+                  children: [
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Visibility(
+                        visible: isMobile && !isLeftOpen && !hasSelectedChat,
+                        child: CustomButtonIconForPanels(
+                          isLeftPanel: true,
+                          onPressed: () =>
+                              onPressedLeftButton(context: context),
+                        ),
                       ),
                     ),
-                  ),
-                  if (!isMobile)
-                    CustomAnimatedContainerForTheHomePanel(
-                      isLeft: true,
-                      isOpen: isLeftOpen,
-                      width: leftWidth,
-                      onPressed: () {
-                        onPressedLeftButton(context: context);
-                      },
-                      child: HistoryPanel(
+                    if (!isMobile)
+                      CustomAnimatedContainerForTheHomePanel(
+                        isLeft: true,
+                        isOpen: isLeftOpen,
+                        width: leftWidth,
                         onPressed: () {
                           onPressedLeftButton(context: context);
                         },
+                        child: HistoryPanel(
+                          onPressed: () {
+                            onPressedLeftButton(context: context);
+                          },
+                        ),
                       ),
-                    ),
-                  if (!hasSelectedChat)
-                    Expanded(child: LandingPage(onCreateChat: _onCreateChat))
-                  else
-                    Expanded(
-                      child: Stack(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              UIFrame(
-                                onLeftButtonPressed: () {
-                                  onPressedLeftButton(context: context);
-                                },
-                                onRightButtonPressed: () {
-                                  onPressedRightButton(context: context);
-                                },
-                              ),
-                              if (!isMobile)
-                                CustomAnimatedContainerForTheHomePanel(
-                                  child: ChatPanel(
+                    if (!hasSelectedChat)
+                      Expanded(
+                        child: LandingPage(
+                          onSend: ({required content, attachmentUrl}) {
+                            _onLandingPageSend(
+                              context: context,
+                              content: content,
+                            );
+                          },
+                        ),
+                      )
+                    else
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                UIFrame(
+                                  onLeftButtonPressed: () {
+                                    onPressedLeftButton(context: context);
+                                  },
+                                  onRightButtonPressed: () {
+                                    onPressedRightButton(context: context);
+                                  },
+                                ),
+                                if (!isMobile)
+                                  CustomAnimatedContainerForTheHomePanel(
+                                    child: ChatPanel(
+                                      onPressed: () {
+                                        onPressedRightButton(context: context);
+                                      },
+                                    ),
+                                    isLeft: false,
+                                    width: rightWidth,
+                                    isOpen: isRightOpen,
                                     onPressed: () {
                                       onPressedRightButton(context: context);
                                     },
                                   ),
-                                  isLeft: false,
-                                  width: rightWidth,
-                                  isOpen: isRightOpen,
+                              ],
+                            ),
+                            if (isMobile && isRightOpen)
+                              CustomPanelForMobileMode(
+                                width: rightWidth,
+                                panel: ChatPanel(
                                   onPressed: () {
                                     onPressedRightButton(context: context);
                                   },
                                 ),
-                            ],
-                          ),
-                          if (isMobile && isRightOpen)
-                            CustomPanelForMobileMode(
-                              width: rightWidth,
-                              panel: ChatPanel(
-                                onPressed: () {
-                                  onPressedRightButton(context: context);
-                                },
+                                onClose: () =>
+                                    setState(() => isRightOpen = false),
+                                isRight: true,
                               ),
-                              onClose: () =>
-                                  setState(() => isRightOpen = false),
-                              isRight: true,
-                            ),
-                        ],
+                          ],
+                        ),
                       ),
+                  ],
+                ),
+                if (isMobile && isLeftOpen)
+                  CustomPanelForMobileMode(
+                    width: leftWidth,
+                    panel: HistoryPanel(
+                      onPressed: () {
+                        onPressedLeftButton(context: context);
+                      },
                     ),
-                ],
-              ),
-              if (isMobile && isLeftOpen)
-                CustomPanelForMobileMode(
-                  width: leftWidth,
-                  panel: HistoryPanel(
-                    onPressed: () {
-                      onPressedLeftButton(context: context);
-                    },
+                    onClose: () => setState(() => isLeftOpen = false),
                   ),
-                  onClose: () => setState(() => isLeftOpen = false),
-                ),
-              if (homeState is ChatHomeLoading)
-                Positioned.fill(
-                  child: Stack(
-                    children: [
-                      const ModalBarrier(
-                        dismissible: false,
-                        color: Colors.black38,
-                      ),
-                      const Center(child: CustomCliLoadingIndicator()),
-                    ],
+                if (homeState is ChatHomeLoading)
+                  Positioned.fill(
+                    child: Stack(
+                      children: [
+                        const ModalBarrier(
+                          dismissible: false,
+                          color: Colors.black38,
+                        ),
+                        const Center(child: CustomCliLoadingIndicator()),
+                      ],
+                    ),
                   ),
-                ),
-            ],
-          ),
-        );
-      },
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

@@ -11,12 +11,20 @@ class ChatHomeCubit extends Cubit<ChatHomeState> {
     : _chatRepo = chatRepo,
       super(const ChatHomeInitial());
 
-  Future<void> createChat({required String name}) async {
+  Future<void> createChat({
+    required String name,
+    required String content,
+    String? attachmentUrl,
+  }) async {
     final currentChat = state.selectedChat;
     emit(ChatHomeLoading(previousChat: currentChat));
 
     final result = await _chatRepo.createChat(
-      params: CreateChatParams(name: name),
+      params: CreateChatParams(
+        name: name,
+        content: content,
+        attachmentUrl: attachmentUrl,
+      ),
     );
     result.fold(
       (failure) => emit(
