@@ -17,8 +17,33 @@ final class ChatMessagesLoading extends ChatMessagesState {
 final class ChatMessagesLoaded extends ChatMessagesState {
   final String chatId;
   final List<MessageEntity> messages;
+  final bool hasNextPage;
+  final String? endCursor;
+  final bool isLoadingMore;
 
-  const ChatMessagesLoaded({required this.chatId, required this.messages});
+  const ChatMessagesLoaded({
+    required this.chatId,
+    required this.messages,
+    this.hasNextPage = false,
+    this.endCursor,
+    this.isLoadingMore = false,
+  });
+
+  ChatMessagesLoaded copyWith({
+    String? chatId,
+    List<MessageEntity>? messages,
+    bool? hasNextPage,
+    String? endCursor,
+    bool? isLoadingMore,
+  }) {
+    return ChatMessagesLoaded(
+      chatId: chatId ?? this.chatId,
+      messages: messages ?? this.messages,
+      hasNextPage: hasNextPage ?? this.hasNextPage,
+      endCursor: endCursor ?? this.endCursor,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+    );
+  }
 }
 
 final class ChatMessagesError extends ChatMessagesState {

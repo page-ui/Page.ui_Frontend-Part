@@ -65,7 +65,13 @@ class ChatRepoImpl extends ChatRepo {
   }
 
   @override
-  Future<Either<Failure, List<MessageEntity>>> getMessages({
+  Future<
+    Either<
+      Failure,
+      ({List<MessageEntity> messages, bool hasNextPage, String? endCursor})
+    >
+  >
+  getMessages({
     required String chatId,
     required int first,
     String? after,
@@ -83,6 +89,11 @@ class ChatRepoImpl extends ChatRepo {
     } catch (e) {
       return Left(ServerFailure(message: 'Failed to load messages.'));
     }
+  }
+
+  @override
+  Stream<MessageEntity> subscribeToMessages({required String chatId}) {
+    return dataSource.subscribeToMessages(chatId: chatId);
   }
 
   @override

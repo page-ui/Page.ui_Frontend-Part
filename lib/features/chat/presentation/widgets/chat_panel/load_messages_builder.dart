@@ -18,9 +18,35 @@ class _LoadMessagesBuilderState extends State<LoadMessagesBuilder> {
   final ScrollController _scrollController = ScrollController();
 
   @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
   void dispose() {
+    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+
+    final state = context.read<ChatMessagesCubit>().state;
+    if (state is! ChatMessagesLoaded ||
+        state.isLoadingMore ||
+        !state.hasNextPage) {
+      return;
+    }
+
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+
+    // Trigger load when user has scrolled 70% of the way to the top (older messages)
+    if (currentScroll >= maxScroll * 0.7) {
+      context.read<ChatMessagesCubit>().loadMoreMessages(chatId: state.chatId);
+    }
   }
 
   @override
@@ -74,8 +100,23 @@ class _LoadMessagesBuilderState extends State<LoadMessagesBuilder> {
               controller: _scrollController,
               reverse: true,
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-              itemCount: messages.length,
+              itemCount: messages.length + (state.isLoadingMore ? 1 : 0),
               itemBuilder: (context, index) {
+                if (index == messages.length) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Center(
+                      child: SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ),
+                  );
+                }
                 final reversedIndex = messages.length - 1 - index;
                 return MessageBubble(message: messages[reversedIndex]);
               },

@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:pageui/core/errors/failure.dart';
 import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
 import 'package:pageui/features/chat/domain/entities/message_entity.dart';
@@ -13,34 +15,31 @@ import 'package:pageui/features/chat/presentation/widgets/chat_panel/load_messag
 
 void main() {
   testWidgets(
-    'LoadMessagesBuilder sorts messages and renders AI_RUN as assistant text',
+    'LoadMessagesBuilder renders realtime AI_RUN messages with full localhost URLs',
     (WidgetTester tester) async {
+      final controller = StreamController<MessageEntity>();
       final repo = _FakeChatRepo(
         getMessagesHandler:
             ({required chatId, required first, String? after}) async {
-              return Right([
-                MessageEntity(
-                  id: 'ai-run',
-                  chatId: chatId,
-                  senderId: '00000000-0000-0000-0000-000000000001',
-                  content:
-                      '/runs/75f377fc-2cae-4719-ab95-ff674a5f1784/preview.html',
-                  type: 'AI_RUN',
-                  status: 'sent',
-                  createdAt: DateTime.parse('2026-04-18T08:02:28.677Z'),
-                ),
-                MessageEntity(
-                  id: 'user-message',
-                  chatId: chatId,
-                  senderId: 'user-1',
-                  content: 'test',
-                  type: 'TEXT',
-                  status: 'sent',
-                  createdAt: DateTime.parse('2026-04-18T08:02:28.109Z'),
-                ),
-              ]);
+              return Right((
+                messages: [
+                  MessageEntity(
+                    id: 'user-message',
+                    chatId: chatId,
+                    senderId: 'user-1',
+                    content: 'test',
+                    type: 'TEXT',
+                    status: 'sent',
+                    createdAt: DateTime.parse('2026-04-18T08:02:28.109Z'),
+                  ),
+                ],
+                hasNextPage: false,
+                endCursor: null,
+              ));
             },
+        subscribeToMessagesHandler: ({required chatId}) => controller.stream,
       );
+      addTearDown(controller.close);
 
       await tester.pumpWidget(
         MaterialApp(
@@ -50,7 +49,7 @@ void main() {
               child: BlocProvider(
                 create: (_) =>
                     ChatMessagesCubit(chatRepo: repo)
-                      ..loadMessages(chatId: 'chat-1'),
+                      ..openChat(chatId: 'chat-1'),
                 child: const Column(children: [LoadMessagesBuilder()]),
               ),
             ),
@@ -60,19 +59,32 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(find.text('test'), findsOneWidget);
-      expect(find.text('AI_RUN'), findsOneWidget);
-      expect(
-        find.text('/runs/75f377fc-2cae-4719-ab95-ff674a5f1784/preview.html'),
-        findsNothing,
+      controller.add(
+        MessageEntity(
+          id: 'ai-run',
+          chatId: 'chat-1',
+          senderId: '00000000-0000-0000-0000-000000000001',
+          content: '/runs/75f377fc-2cae-4719-ab95-ff674a5f1784/preview.html',
+          type: 'AI_RUN',
+          status: 'sent',
+          createdAt: DateTime.parse('2026-04-18T08:02:28.677Z'),
+        ),
       );
 
+      await tester.pumpAndSettle();
+
+      const fullUrl =
+          'http://localhost/runs/75f377fc-2cae-4719-ab95-ff674a5f1784/preview.html';
+
+      expect(find.text('test'), findsOneWidget);
+      expect(find.text(fullUrl), findsOneWidget);
+
       final userMessageY = tester.getTopLeft(find.text('test')).dy;
-      final aiRunMessageY = tester.getTopLeft(find.text('AI_RUN')).dy;
+      final aiRunMessageY = tester.getTopLeft(find.text(fullUrl)).dy;
       expect(userMessageY, lessThan(aiRunMessageY));
 
       final aiRunAlignments = tester.widgetList<Align>(
-        find.ancestor(of: find.text('AI_RUN'), matching: find.byType(Align)),
+        find.ancestor(of: find.text(fullUrl), matching: find.byType(Align)),
       );
       expect(
         aiRunAlignments.any(
@@ -85,21 +97,46 @@ void main() {
 }
 
 class _FakeChatRepo implements ChatRepo {
-  _FakeChatRepo({required this.getMessagesHandler});
+  _FakeChatRepo({
+    required this.getMessagesHandler,
+    Stream<MessageEntity> Function({required String chatId})?
+    subscribeToMessagesHandler,
+  }) : _subscribeToMessagesHandler =
+           subscribeToMessagesHandler ??
+           (({required chatId}) => const Stream.empty());
 
-  final Future<Either<Failure, List<MessageEntity>>> Function({
+  final Future<
+    Either<
+      Failure,
+      ({List<MessageEntity> messages, bool hasNextPage, String? endCursor})
+    >
+  >
+  Function({
     required String chatId,
     required int first,
     String? after,
   })
   getMessagesHandler;
+  final Stream<MessageEntity> Function({required String chatId})
+  _subscribeToMessagesHandler;
 
   @override
-  Future<Either<Failure, List<MessageEntity>>> getMessages({
+  Future<
+    Either<
+      Failure,
+      ({List<MessageEntity> messages, bool hasNextPage, String? endCursor})
+    >
+  >
+  getMessages({
     required String chatId,
     required int first,
     String? after,
   }) => getMessagesHandler(chatId: chatId, first: first, after: after);
+
+  @override
+  Stream<MessageEntity> subscribeToMessages({required String chatId}) {
+    return _subscribeToMessagesHandler(chatId: chatId);
+  }
 
   @override
   Future<Either<Failure, ChatEntity>> createChat({

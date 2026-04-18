@@ -17,9 +17,13 @@ class ChatMessageContent extends StatelessWidget {
       message.attachmentUrl!.trim().isNotEmpty;
 
   String? get _displayText {
-    if (_isAiRun) return 'AI_RUN';
-
     final content = message.content.trim();
+    if (_isAiRun) {
+      if (content.isEmpty) return 'AI_RUN';
+      if (content.startsWith('/')) return 'http://localhost$content';
+      return content;
+    }
+
     if (content.isEmpty) return null;
     if (_hasImage && content.toLowerCase() == 'image') return null;
     return content;

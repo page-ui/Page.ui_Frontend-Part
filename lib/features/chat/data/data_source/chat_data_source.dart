@@ -17,11 +17,14 @@ abstract class ChatDataSource {
     required int first,
   });
 
-  Future<List<MessageModel>> getMessages({
+  Future<({List<MessageModel> messages, bool hasNextPage, String? endCursor})>
+  getMessages({
     required String chatId,
     required int first,
     String? after,
   });
+
+  Stream<MessageModel> subscribeToMessages({required String chatId});
 
   Future<void> sendMessage({required SendMessageParams params});
 }
@@ -113,7 +116,8 @@ class ChatDataSourceImpl extends ChatDataSource {
   }
 
   @override
-  Future<List<MessageModel>> getMessages({
+  Future<({List<MessageModel> messages, bool hasNextPage, String? endCursor})>
+  getMessages({
     required String chatId,
     required int first,
     String? after,
@@ -141,9 +145,10 @@ class ChatDataSourceImpl extends ChatDataSource {
     }
 
     final data = result.data!['messages'] as Map<String, dynamic>;
+    final pageInfo = data['pageInfo'] as Map<String, dynamic>;
     final nodes = (data['nodes'] as List?) ?? const [];
 
-    return nodes
+    final messages = nodes
         .map(
           (node) => MessageModel.fromJson(
             node as Map<String, dynamic>,
@@ -151,6 +156,40 @@ class ChatDataSourceImpl extends ChatDataSource {
           ),
         )
         .toList();
+
+    return (
+      messages: messages,
+      hasNextPage: pageInfo['hasNextPage'] as bool,
+      endCursor: pageInfo['endCursor'] as String?,
+    );
+  }
+
+  @override
+  Stream<MessageModel> subscribeToMessages({required String chatId}) async* {
+    final stream = _client.subscribe(
+      SubscriptionOptions(
+        document: gql(Queries.onMessageCreatedSubscription),
+        variables: {'chatId': chatId},
+      ),
+    );
+
+    await for (final result in stream) {
+      if (result.hasException) {
+        throw Exception(
+          'Failed to subscribe to messages: ${result.exception.toString()}',
+        );
+      }
+
+      final payload = result.data?['onMessageCreated'];
+      if (payload == null) {
+        continue;
+      }
+
+      yield MessageModel.fromJson(
+        payload as Map<String, dynamic>,
+        fallbackChatId: chatId,
+      );
+    }
   }
 
   @override

@@ -23,11 +23,19 @@ abstract class ChatRepo {
     required int first,
   });
 
-  Future<Either<Failure, List<MessageEntity>>> getMessages({
+  Future<
+    Either<
+      Failure,
+      ({List<MessageEntity> messages, bool hasNextPage, String? endCursor})
+    >
+  >
+  getMessages({
     required String chatId,
     required int first,
     String? after,
   });
+
+  Stream<MessageEntity> subscribeToMessages({required String chatId});
 
   Future<Either<Failure, void>> sendMessage({
     required SendMessageParams params,

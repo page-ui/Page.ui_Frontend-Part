@@ -29,6 +29,20 @@ void main() {
       );
     },
   );
+
+  test(
+    'MessageModel.fromJson maps subscription payload and preserves status',
+    () {
+      final model = MessageModel.fromJson(_subscriptionPayload);
+
+      expect(model.id, 'sub-message-1');
+      expect(model.chatId, 'chat-2');
+      expect(model.type, 'AI_RUN');
+      expect(model.status, 'delivered');
+      expect(model.content, '/runs/generated/preview.html');
+      expect(model.attachmentUrl, isNull);
+    },
+  );
 }
 
 const Map<String, dynamic> _messageNode = {
@@ -38,4 +52,16 @@ const Map<String, dynamic> _messageNode = {
   'type': 'AI_RUN',
   'createdAt': '2026-04-18T08:02:28.677Z',
   'attachmentUrl': null,
+};
+
+const Map<String, dynamic> _subscriptionPayload = {
+  'id': 'sub-message-1',
+  'chatId': 'chat-2',
+  'senderId': '00000000-0000-0000-0000-000000000001',
+  'content': '/runs/generated/preview.html',
+  'type': 'AI_RUN',
+  'createdAt': '2026-04-18T08:03:28.677Z',
+  'status': 'delivered',
+  'attachmentUrl': null,
+  'serverGeneratedId': 'server-123',
 };

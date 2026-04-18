@@ -143,4 +143,20 @@ mutation CreateMessage($input: CreateMessageInput!) {
       }
     }
   ''';
+
+  static String onMessageCreatedSubscription = r'''
+    subscription OnMessageCreated($chatId: UUID!) {
+      onMessageCreated(chatId: $chatId) {
+        id
+        chatId
+        senderId
+        content
+        type
+        createdAt
+        status
+        attachmentUrl
+        serverGeneratedId
+      }
+    }
+  ''';
 }

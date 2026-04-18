@@ -8,6 +8,7 @@ import 'package:pageui/core/helpers/setup_service_locator_getit.dart';
 import 'package:pageui/features/chat/data/data_source/upload_service.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
+import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_cubit.dart';
 import 'package:pageui/features/chat/presentation/widgets/chat_panel/chat_panel.dart';
@@ -122,6 +123,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => PickFileCubit()),
+        BlocProvider(create: (context) => getit.get<ChatMessagesCubit>()),
         BlocProvider(create: (context) => getit.get<SendMessageCubit>()),
       ],
       child: BlocConsumer<ChatHomeCubit, ChatHomeState>(

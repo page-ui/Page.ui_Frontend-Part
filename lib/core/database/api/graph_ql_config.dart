@@ -18,6 +18,13 @@ class GraphQLConfig {
   static Future<UserTokensModel?>? _ongoingRefresh;
 
   static HttpLink httpLink = HttpLink(uri);
+  static WebSocketLink webSocketLink = WebSocketLink(
+    _webSocketUri,
+    config: SocketClientConfig(
+      autoReconnect: true,
+      initialPayload: () async => _socketInitialPayload,
+    ),
+  );
   static GraphQLLoggerLink loggerLink = GraphQLLoggerLink();
   static AuthLink authLink = AuthLink(
     getToken: () async {
@@ -54,7 +61,17 @@ class GraphQLConfig {
     },
   );
 
-  static Link link = Link.from([errorLink, loggerLink, authLink, httpLink]);
+  static Link httpLinkChain = Link.from([
+    errorLink,
+    loggerLink,
+    authLink,
+    httpLink,
+  ]);
+  static Link link = Link.split(
+    (request) => request.isSubscription,
+    webSocketLink,
+    httpLinkChain,
+  );
   static ValueNotifier<GraphQLClient> client = ValueNotifier(
     GraphQLClient(
       link: link,
@@ -68,38 +85,43 @@ class GraphQLConfig {
   static void initializeRestClient() {
     final baseUri = Uri.parse(uri);
     final apiBaseUrl = baseUri.replace(path: '/api/').toString();
-    restClient = dio.Dio(dio.BaseOptions(
-      baseUrl: apiBaseUrl,
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-    ));
+    restClient = dio.Dio(
+      dio.BaseOptions(
+        baseUrl: apiBaseUrl,
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+      ),
+    );
 
-    restClient.interceptors.add(dio.InterceptorsWrapper(
-      onRequest: (options, handler) {
-        if (accessToken != null) {
-          options.headers['Authorization'] = 'Bearer $accessToken';
-        }
-        return handler.next(options);
-      },
-      onError: (error, handler) async {
-        if (error.response?.statusCode == 401 && refreshToken != null) {
-          debugPrint('REST API 401 - triggering token refresh');
-          final newTokens = await _refreshTokens();
-          if (newTokens != null) {
-            // Retry the request with new token
-            final retryOptions = error.requestOptions;
-            retryOptions.headers['Authorization'] = 'Bearer ${newTokens.accessToken}';
-            try {
-              final retryResponse = await restClient.fetch(retryOptions);
-              return handler.resolve(retryResponse);
-            } catch (_) {
-              // Retry failed, pass error through
+    restClient.interceptors.add(
+      dio.InterceptorsWrapper(
+        onRequest: (options, handler) {
+          if (accessToken != null) {
+            options.headers['Authorization'] = 'Bearer $accessToken';
+          }
+          return handler.next(options);
+        },
+        onError: (error, handler) async {
+          if (error.response?.statusCode == 401 && refreshToken != null) {
+            debugPrint('REST API 401 - triggering token refresh');
+            final newTokens = await _refreshTokens();
+            if (newTokens != null) {
+              // Retry the request with new token
+              final retryOptions = error.requestOptions;
+              retryOptions.headers['Authorization'] =
+                  'Bearer ${newTokens.accessToken}';
+              try {
+                final retryResponse = await restClient.fetch(retryOptions);
+                return handler.resolve(retryResponse);
+              } catch (_) {
+                // Retry failed, pass error through
+              }
             }
           }
-        }
-        return handler.next(error);
-      },
-    ));
+          return handler.next(error);
+        },
+      ),
+    );
   }
 
   static Future<bool> _shouldRefreshRequest({
@@ -190,6 +212,24 @@ class GraphQLConfig {
     accessToken = null;
     refreshToken = null;
     await SecureStorage.deleteData(key: tokensKey);
+  }
+
+  static String get _webSocketUri {
+    final parsedUri = Uri.parse(uri);
+    final scheme = parsedUri.scheme == 'https' ? 'wss' : 'ws';
+    return parsedUri.replace(scheme: scheme).toString();
+  }
+
+  static Map<String, dynamic> get _socketInitialPayload {
+    if (accessToken == null || accessToken!.isEmpty) {
+      return const {};
+    }
+
+    final authorization = 'Bearer $accessToken';
+    return {
+      'Authorization': authorization,
+      'headers': {'Authorization': authorization},
+    };
   }
 }
 
