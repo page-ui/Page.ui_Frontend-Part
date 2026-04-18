@@ -16,9 +16,6 @@ abstract class AuthRepo {
   Future<Either<Failure, String>> verifyResetCode({
     required VerifyResetCodeParams params,
   });
-  Future<Either<Failure, UserTokensModel>> refreshToken({
-    required String refreshToken,
-  });
   Future<Either<Failure, bool>> emailVerfication({
     required VerifyResetCodeParams params,
   });

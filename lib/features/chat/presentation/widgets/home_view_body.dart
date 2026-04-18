@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/enum/screen_type.dart';
-import 'package:pageui/features/chat/presentation/widgets/chat_panel.dart';
+import 'package:pageui/core/helpers/custom_cli_loading_indicator.dart';
+import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
+import 'package:pageui/core/helpers/setup_service_locator_getit.dart';
+import 'package:pageui/features/chat/data/data_source/upload_service.dart';
+import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
+import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
+import 'package:pageui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
+import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_cubit.dart';
+import 'package:pageui/features/chat/presentation/widgets/chat_panel/chat_panel.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_animated_container_for_the_home_panel.dart';
+import 'package:pageui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_panel_for_mobile_mode.dart';
-import 'package:pageui/features/chat/presentation/widgets/history_panel.dart';
-import 'package:pageui/features/chat/presentation/widgets/home_appbar.dart';
-import 'package:pageui/features/chat/presentation/widgets/u_i_frame.dart';
+import 'package:pageui/features/chat/presentation/widgets/history_panel/history_panel.dart';
+import 'package:pageui/features/chat/presentation/widgets/landing_page.dart';
+import 'package:pageui/features/chat/presentation/widgets/ui_frame/home_appbar.dart';
+import 'package:pageui/features/chat/presentation/widgets/ui_frame/u_i_frame.dart';
 
 class HomeViewBody extends StatefulWidget {
   const HomeViewBody({super.key});
@@ -17,26 +29,26 @@ class HomeViewBody extends StatefulWidget {
 class _HomeViewBodyState extends State<HomeViewBody> {
   bool isLeftOpen = false;
   bool isRightOpen = false;
-  String _lastMode = "";
+  ScreenType? _lastMode;
 
   final double leftWidth = 260;
   final double rightWidth = 290;
 
   void _handleOpenningDrawers() {
-    String currentMode;
+    ScreenType currentMode;
     if (context.isMobile)
-      currentMode = "mobile";
+      currentMode = ScreenType.mobile;
     else if (context.isTablet)
-      currentMode = "tablet";
+      currentMode = ScreenType.tablet;
     else
-      currentMode = "desktop";
+      currentMode = ScreenType.desktop;
 
     if (_lastMode != currentMode) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
-          if (currentMode == "tablet") {
+          if (currentMode == ScreenType.tablet) {
             isLeftOpen = false;
-          } else if (currentMode == "mobile") {
+          } else if (currentMode == ScreenType.mobile) {
             isLeftOpen = false;
             isRightOpen = false;
           }
@@ -46,131 +58,216 @@ class _HomeViewBodyState extends State<HomeViewBody> {
     }
   }
 
-  onPressedLeftButton({required bool isMobile, required bool isTablet}) {
+  onPressedLeftButton({required BuildContext context}) {
     setState(() {
       isLeftOpen = !isLeftOpen;
-      if ((isTablet || isMobile) && isLeftOpen) {
+      if ((context.isTablet || context.isMobile) && isLeftOpen) {
         isRightOpen = false;
       }
     });
   }
 
-  onPressedRightButton({required bool isMobile, required bool isTablet}) {
+  onPressedRightButton({required BuildContext context}) {
     setState(() {
       isRightOpen = !isRightOpen;
-      if ((isTablet || isMobile) && isRightOpen) {
+      if ((context.isTablet || context.isMobile) && isRightOpen) {
         isLeftOpen = false;
       }
     });
   }
 
+  Future<void> _onLandingPageSend({
+    required BuildContext context,
+    required String content,
+  }) async {
+    final pickFileCubit = context.read<PickFileCubit>();
+    final chatHomeCubit = context.read<ChatHomeCubit>();
+    final uploadService = getit.get<UploadService>();
+
+    String? attachmentUrl;
+
+    if (pickFileCubit.isImagePicked) {
+      try {
+        attachmentUrl = await uploadService.upload(
+          fileBytes: pickFileCubit.imageBytes!,
+          fileName: pickFileCubit.imageFileName!,
+          contentType: pickFileCubit.imageContentType!,
+        );
+      } catch (e) {
+        if (context.mounted) {
+          showWebSnackBar(
+            context: context,
+            message: 'Failed to upload image: ${e.toString()}',
+            backgroundColor: AppColors.red,
+            textColor: AppColors.white,
+          );
+        }
+        return;
+      }
+    }
+
+    await chatHomeCubit.createChat(
+      name: 'New Chat',
+      content: content,
+      attachmentUrl: attachmentUrl,
+    );
+
+    if (context.mounted && pickFileCubit.isImagePicked) {
+      pickFileCubit.removeImage();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Builder(
-      builder: (_) {
-        _handleOpenningDrawers();
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => PickFileCubit()),
+        BlocProvider(create: (context) => getit.get<SendMessageCubit>()),
+      ],
+      child: BlocConsumer<ChatHomeCubit, ChatHomeState>(
+        listenWhen: (previous, current) {
+          if (current is ChatHomeError) {
+            return true;
+          }
 
-        bool isMobile = context.isMobile;
-        bool isTablet = context.isTablet;
+          if (current is ChatHomeActive) {
+            return previous.selectedChat?.id != current.chat.id;
+          }
 
-        return Scaffold(
-          appBar: HomeAppbar(),
-          body: Stack(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (!isMobile)
-                    CustomAnimatedContainerForTheHomePanel(
-                      isLeft: true,
-                      isOpen: isLeftOpen,
-                      width: leftWidth,
-                      onPressed: () {
-                        onPressedLeftButton(
-                          isMobile: isMobile,
-                          isTablet: isTablet,
-                        );
-                      },
-                      child: HistoryPanel(
-                        onPressed: () {
-                          onPressedLeftButton(
-                            isMobile: isMobile,
-                            isTablet: isTablet,
-                          );
-                        },
+          return false;
+        },
+        listener: (context, state) {
+          if (state is ChatHomeError) {
+            showWebSnackBar(
+              context: context,
+              message: state.message,
+              backgroundColor: AppColors.red,
+              textColor: AppColors.white,
+            );
+          }
+        },
+        builder: (context, homeState) {
+          _handleOpenningDrawers();
+          final isMobile = context.isMobile;
+          final hasSelectedChat = homeState.selectedChat != null;
+
+          return Scaffold(
+            appBar: const HomeAppbar(),
+            body: Stack(
+              children: [
+                Row(
+                  children: [
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Visibility(
+                        visible: isMobile && !isLeftOpen && !hasSelectedChat,
+                        child: CustomButtonIconForPanels(
+                          isLeftPanel: true,
+                          onPressed: () =>
+                              onPressedLeftButton(context: context),
+                        ),
                       ),
                     ),
-
-                  UIFrame(
-                    onLeftButtonPressed: () {
-                      onPressedLeftButton(
-                        isMobile: isMobile,
-                        isTablet: isTablet,
-                      );
-                    },
-                    onRightButtonPressed: () {
-                      onPressedRightButton(
-                        isMobile: isMobile,
-                        isTablet: isTablet,
-                      );
-                    },
-                    isMobile: isMobile,
-                  ),
-                  if (!isMobile)
-                    CustomAnimatedContainerForTheHomePanel(
-                      child: ChatPanel(
+                    if (!isMobile)
+                      CustomAnimatedContainerForTheHomePanel(
+                        isLeft: true,
+                        isOpen: isLeftOpen,
+                        width: leftWidth,
                         onPressed: () {
-                          onPressedRightButton(
-                            isMobile: isMobile,
-                            isTablet: isTablet,
-                          );
+                          onPressedLeftButton(context: context);
                         },
+                        child: HistoryPanel(
+                          onPressed: () {
+                            onPressedLeftButton(context: context);
+                          },
+                        ),
                       ),
-                      isLeft: false,
-                      width: rightWidth,
-                      isOpen: isRightOpen,
+                    if (!hasSelectedChat)
+                      Expanded(
+                        child: LandingPage(
+                          onSend: ({required content, attachmentUrl}) {
+                            _onLandingPageSend(
+                              context: context,
+                              content: content,
+                            );
+                          },
+                        ),
+                      )
+                    else
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                UIFrame(
+                                  onLeftButtonPressed: () {
+                                    onPressedLeftButton(context: context);
+                                  },
+                                  onRightButtonPressed: () {
+                                    onPressedRightButton(context: context);
+                                  },
+                                ),
+                                if (!isMobile)
+                                  CustomAnimatedContainerForTheHomePanel(
+                                    child: ChatPanel(
+                                      onPressed: () {
+                                        onPressedRightButton(context: context);
+                                      },
+                                    ),
+                                    isLeft: false,
+                                    width: rightWidth,
+                                    isOpen: isRightOpen,
+                                    onPressed: () {
+                                      onPressedRightButton(context: context);
+                                    },
+                                  ),
+                              ],
+                            ),
+                            if (isMobile && isRightOpen)
+                              CustomPanelForMobileMode(
+                                width: rightWidth,
+                                panel: ChatPanel(
+                                  onPressed: () {
+                                    onPressedRightButton(context: context);
+                                  },
+                                ),
+                                onClose: () =>
+                                    setState(() => isRightOpen = false),
+                                isRight: true,
+                              ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+                if (isMobile && isLeftOpen)
+                  CustomPanelForMobileMode(
+                    width: leftWidth,
+                    panel: HistoryPanel(
                       onPressed: () {
-                        onPressedRightButton(
-                          isMobile: isMobile,
-                          isTablet: isTablet,
-                        );
+                        onPressedLeftButton(context: context);
                       },
                     ),
-                ],
-              ),
-
-              if (isMobile && isLeftOpen)
-                CustomPanelForMobileMode(
-                  width: leftWidth,
-                  panel: HistoryPanel(
-                    onPressed: () {
-                      onPressedLeftButton(
-                        isMobile: isMobile,
-                        isTablet: isTablet,
-                      );
-                    },
+                    onClose: () => setState(() => isLeftOpen = false),
                   ),
-                  onClose: () => setState(() => isLeftOpen = false),
-                ),
-
-              if (isMobile && isRightOpen)
-                CustomPanelForMobileMode(
-                  width: rightWidth,
-                  panel: ChatPanel(
-                    onPressed: () {
-                      onPressedRightButton(
-                        isMobile: isMobile,
-                        isTablet: isTablet,
-                      );
-                    },
+                if (homeState is ChatHomeLoading)
+                  Positioned.fill(
+                    child: Stack(
+                      children: [
+                        const ModalBarrier(
+                          dismissible: false,
+                          color: Colors.black38,
+                        ),
+                        const Center(child: CustomCliLoadingIndicator()),
+                      ],
+                    ),
                   ),
-                  onClose: () => setState(() => isRightOpen = false),
-                  isRight: true,
-                ),
-            ],
-          ),
-        );
-      },
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

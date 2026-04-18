@@ -15,7 +15,7 @@ class AppIcons {
   // static final IconData errorIcon = Icons.error;
   static final IconData arrowForward = Icons.arrow_forward_ios;
   static final IconData arrowBackward = Icons.arrow_back_ios;
-
+  static final IconData chatBubble = Icons.chat_bubble_outline_rounded;
   static final IconData dot = Icons.circle;
   // static final IconData visibilityOff = Icons.visibility_off;
   // static final IconData visibilityOn = Icons.visibility;
@@ -39,5 +39,10 @@ class AppIcons {
   static final IconData relationArrow = Icons.arrow_outward;
   // static final IconData darkMode = Icons.dark_mode_rounded;
   // static final IconData lightMode = Icons.light_mode_rounded;
-  // static final IconData search = FontAwesomeIcons.magnifyingGlass;
+  static final IconData search = FontAwesomeIcons.magnifyingGlass;
+  static final IconData file = Icons.attach_file_rounded;
+  static final IconData plus = FontAwesomeIcons.plus;
+
+  static final IconData close = Icons.close;
+  static final IconData image = Icons.image;
 }

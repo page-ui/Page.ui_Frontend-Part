@@ -22,7 +22,7 @@ class AuthTextFormField extends StatelessWidget {
       validator: validator,
       cursorColor: AppColors.primaryColor,
       style: AppTextStyles.bodyMedium!.copyWith(color: AppColors.white),
-      mouseCursor: SystemMouseCursors.click,
+      // mouseCursor: SystemMouseCursors.click,
       decoration: CustomInputDecorationForTextField(),
     );
   }

@@ -1,11 +1,12 @@
 import 'package:dartz/dartz.dart';
+import 'package:pageui/core/database/api/graph_ql_config.dart';
 import 'package:pageui/core/errors/failure.dart';
 import 'package:pageui/core/network/network_info.dart';
 import 'package:pageui/features/auth/data/data_source/auth_data_source.dart';
 import 'package:pageui/features/auth/data/model/user_tokens_model.dart';
 import 'package:pageui/features/auth/domain/params/login_params.dart';
-import 'package:pageui/features/auth/domain/params/reset_password.dart';
 import 'package:pageui/features/auth/domain/params/register_params.dart';
+import 'package:pageui/features/auth/domain/params/reset_password.dart';
 import 'package:pageui/features/auth/domain/params/verify_reset_code_params.dart';
 import 'package:pageui/features/auth/domain/repos/auth_repo.dart';
 
@@ -19,10 +20,12 @@ class AuthRepoImpl extends AuthRepo {
     required LoginParams param,
   }) async {
     try {
-      if (!await networkInfo.isConnected!) {
+      if (!await networkInfo.isConnected) {
         return Left(NetworkFailure.error());
       }
       final userTokensModel = await dataSource.login(params: param);
+      GraphQLConfig.accessToken = userTokensModel.accessToken;
+      GraphQLConfig.refreshToken = userTokensModel.refreshToken;
       return Right(userTokensModel);
     } on Exception catch (e) {
       if (e is ServerFailure) {
@@ -42,7 +45,7 @@ class AuthRepoImpl extends AuthRepo {
     required RegisterParams param,
   }) async {
     try {
-      if (!await networkInfo.isConnected!) {
+      if (!await networkInfo.isConnected) {
         return Left(NetworkFailure.error());
       }
       final user = await dataSource.register(params: param);
@@ -120,20 +123,6 @@ class AuthRepoImpl extends AuthRepo {
     }
   }
 
-  @override
-  Future<Either<Failure, UserTokensModel>> refreshToken({
-    required String refreshToken,
-  }) async {
-    try {
-      final res = await dataSource.refreshToken(refreshToken: refreshToken);
-      await saveTokens(res);
-      return Right(res);
-    } catch (e) {
-      return Left(
-        ServerFailure(message: "There was an error. Please try again."),
-      );
-    }
-  }
 
   @override
   Future<Either<Failure, void>> resendVerficationCode({

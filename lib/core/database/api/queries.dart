@@ -1,4 +1,5 @@
 class Queries {
+  // ─── Auth ─────────────────────────────────────────────────────────
   static String loginMutation = r'''
     mutation Login($input: LoginInput!) {
       login(input: $input) {
@@ -28,12 +29,12 @@ class Queries {
     }
     ''';
   static String refreshTokenMutation = r'''
-    mutation Refresh($token: String!) {
-      refreshToken(refreshToken: $token) {
-        accessToken
-        refreshToken
+    mutation RefreshToken($refreshToken: String!) {
+        refreshToken(refreshToken: $refreshToken) {
+          accessToken
+          refreshToken
+        }
       }
-    }
     ''';
 
   static String emailVerficationMutation = r'''
@@ -58,4 +59,88 @@ class Queries {
     deleteAccount
   }
     ''';
+
+  // ─── Chat ─────────────────────────────────────────────────────────
+
+  static String createChatRoomMutation = r'''
+    mutation CreateChat($input: CreateChatInput!) {
+        createChat(input: $input) {
+          chat {
+            id
+            name
+            chatKey
+          }
+          initialMessage {
+            id
+            content
+          }
+        }
+      }
+    ''';
+
+  static String sendMessageMutation = r'''
+mutation CreateMessage($input: CreateMessageInput!) {
+  createMessage(input: $input) {
+    id
+    chatId
+    senderId
+    content
+    type
+    status
+    createdAt
+    replyToId
+    attachmentUrl
+    serverGeneratedId
+  }
+}
+    ''';
+
+  static String chatRoomsQuery = r'''
+    query GetChats($first: Int, $after: String) {
+      chats(first: $first, after: $after) {
+        nodes {
+          id
+          name
+          createdAt
+          updatedAt
+        }
+        pageInfo { hasNextPage endCursor }
+        totalCount
+      }
+    }
+    ''';
+
+  static String searchChatQuery = r'''
+    query SearchChats($name: String!, $first: Int, $after: String) {
+      searchChats(name: $name, first: $first, after: $after) {
+        nodes {
+          id
+          name
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+      }
+    }
+    ''';
+
+  static String getMessagesQuery = r'''
+    query GetMessages($chatId: UUID!, $first: Int, $after: String) {
+      messages(chatId: $chatId, first: $first, after: $after) {
+        nodes {
+          id
+          content
+          senderId
+          type
+          createdAt
+          attachmentUrl
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+      }
+    }
+  ''';
 }

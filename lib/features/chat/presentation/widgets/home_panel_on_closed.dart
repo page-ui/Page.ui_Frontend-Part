@@ -8,9 +8,12 @@ class HomePanelOnClosed extends StatelessWidget {
     super.key,
     required this.onPressed,
     required this.isLeftPanel,
+    required this.isOpen,
   });
+
   final void Function()? onPressed;
   final bool isLeftPanel;
+  final bool isOpen;
 
   @override
   Widget build(BuildContext context) {
@@ -20,18 +23,37 @@ class HomePanelOnClosed extends StatelessWidget {
           onPressed: onPressed,
           isLeftPanel: isLeftPanel,
         ),
-        Spacer(flex: 1),
-        RotatedBox(
-          quarterTurns: isLeftPanel ? 3 : 1,
-          child: Text(
-            isLeftPanel ? "History" : "Chat",
-            style: AppTextStyles.bodyLarge!.copyWith(
-              letterSpacing: 8,
-              color: AppColors.white,
+        const Spacer(flex: 1),
+
+        AnimatedOpacity(
+          opacity: isOpen ? 0 : 1.0,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeIn,
+
+          child: AnimatedScale(
+            scale: isOpen ? 1.0 : 0.7,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.decelerate,
+
+            child: AnimatedRotation(
+              turns: isOpen ? 0.25 : 0.0,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.decelerate,
+
+              child: RotatedBox(
+                quarterTurns: isLeftPanel ? 3 : 1,
+                child: Text(
+                  isLeftPanel ? "History" : "Chat",
+                  style: AppTextStyles.headlineSmall!.copyWith(
+                    letterSpacing: 8,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+              ),
             ),
           ),
         ),
-        Spacer(flex: 2),
+        const Spacer(flex: 2),
       ],
     );
   }

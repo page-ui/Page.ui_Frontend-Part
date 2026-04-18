@@ -52,7 +52,7 @@ class _LoginViewFormState extends State<LoginViewForm> {
         if (state is LoginSuccess) {
           showWebSnackBar(context: context, message: "Login Success");
           widget.onChangeLoadingValue!(false);
-          AppRoutes.pushHomeView(context);
+          AppRoutes.pushTrainView(context);
         } else if (state is LoginFailure) {
           showWebSnackBar(context: context, message: state.message);
           widget.onChangeLoadingValue!(false);

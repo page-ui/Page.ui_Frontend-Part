@@ -4,6 +4,7 @@ import 'package:pageui/features/auth/presentation/views/email_verfication_view.d
 import 'package:pageui/features/auth/presentation/views/forget_pasword_view.dart';
 import 'package:pageui/features/auth/presentation/views/login_view.dart';
 import 'package:pageui/features/auth/presentation/views/register_view.dart';
+import 'package:pageui/features/auth/presentation/views/train_view.dart';
 import 'package:pageui/features/chat/presentation/views/home_view.dart';
 import 'package:pageui/features/intro_screens/presentation/views/splash_view.dart';
 
@@ -48,6 +49,9 @@ sealed class AppRoutes {
   static Future<void> pushHomeView(BuildContext context) =>
       pushNamedAndRemoveAll(context, HomeView.routeName);
 
+  static Future<void> pushTrainView(BuildContext context) =>
+      pushNamedAndRemoveAll(context, TrainView.routeName);
+
   static Future<void> pushForgetPasswordView(BuildContext context) =>
       pushNamed(context, ForgetPaswordView.routeName);
   static Future<void> pushEmailVerficationView(
@@ -58,6 +62,7 @@ sealed class AppRoutes {
   // Named routes map
   static final Map<String, Widget Function(BuildContext, Object?)> routes = {
     LoginView.routeName: (_, __) => const LoginView(),
+    TrainView.routeName: (_, __) => const TrainView(),
     SplashView.routeName: (_, __) => const SplashView(),
     RegisterView.routeName: (_, __) => const RegisterView(),
     ForgetPaswordView.routeName: (_, __) => const ForgetPaswordView(),

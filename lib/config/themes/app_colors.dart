@@ -6,7 +6,9 @@ sealed class AppColors {
   static const Color primaryColor = Color(0xff539062);
   static const Color mainBackgroundColor = Color(0xff0f0f0f);
   static const Color lightAmber = Color.fromARGB(255, 252, 206, 69);
+  static const Color greenAccent = Colors.greenAccent;
   // Normal colors
+  static const Color darkGreen = Color(0xFF00FF41);
   static const Color amber = Colors.amber;
   static const Color black = Colors.black;
   static const Color blue = Colors.blue;
