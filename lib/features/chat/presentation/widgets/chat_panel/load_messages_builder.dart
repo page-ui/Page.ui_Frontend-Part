@@ -43,7 +43,6 @@ class _LoadMessagesBuilderState extends State<LoadMessagesBuilder> {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.position.pixels;
 
-    // Trigger load when user has scrolled 70% of the way to the top (older messages)
     if (currentScroll >= maxScroll * 0.7) {
       context.read<ChatMessagesCubit>().loadMoreMessages(chatId: state.chatId);
     }
@@ -52,54 +51,54 @@ class _LoadMessagesBuilderState extends State<LoadMessagesBuilder> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: BlocBuilder<ChatMessagesCubit, ChatMessagesState>(
-        builder: (context, state) {
-          if (state is ChatMessagesLoading) {
-            return Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: AppColors.white.withValues(alpha: 0.8),
-              ),
-            );
-          }
-
-          if (state is ChatMessagesError) {
-            return Center(
-              child: Text(
-                state.message,
-                style: TextStyle(
-                  color: AppColors.lightGray.withValues(alpha: 0.6),
-                  fontSize: 13,
+      child: PanelScrollbar(
+        controller: _scrollController,
+        child: BlocBuilder<ChatMessagesCubit, ChatMessagesState>(
+          builder: (context, state) {
+            if (state is ChatMessagesLoading) {
+              return Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: AppColors.white.withValues(alpha: 0.8),
                 ),
-                textAlign: TextAlign.center,
-              ),
-            );
-          }
+              );
+            }
 
-          if (state is! ChatMessagesLoaded) {
-            return const SizedBox.shrink();
-          }
-
-          final messages = _sortMessages(state.messages);
-
-          if (messages.isEmpty) {
-            return Center(
-              child: Text(
-                'Messages will appear here',
-                style: TextStyle(
-                  color: AppColors.lightGray.withValues(alpha: 0.5),
-                  fontSize: 14,
+            if (state is ChatMessagesError) {
+              return Center(
+                child: Text(
+                  state.message,
+                  style: TextStyle(
+                    color: AppColors.lightGray.withValues(alpha: 0.6),
+                    fontSize: 13,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-            );
-          }
+              );
+            }
 
-          return PanelScrollbar(
-            controller: _scrollController,
-            child: ListView.builder(
+            if (state is! ChatMessagesLoaded) {
+              return const SizedBox.shrink();
+            }
+
+            final messages = _sortMessages(state.messages);
+
+            if (messages.isEmpty) {
+              return Center(
+                child: Text(
+                  'Messages will appear here',
+                  style: TextStyle(
+                    color: AppColors.lightGray.withValues(alpha: 0.5),
+                    fontSize: 14,
+                  ),
+                ),
+              );
+            }
+
+            return ListView.builder(
               controller: _scrollController,
               reverse: true,
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+              padding: const EdgeInsets.only(top: 4, bottom: 8, right: 16),
               itemCount: messages.length + (state.isLoadingMore ? 1 : 0),
               itemBuilder: (context, index) {
                 if (index == messages.length) {
@@ -120,9 +119,9 @@ class _LoadMessagesBuilderState extends State<LoadMessagesBuilder> {
                 final reversedIndex = messages.length - 1 - index;
                 return MessageBubble(message: messages[reversedIndex]);
               },
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
