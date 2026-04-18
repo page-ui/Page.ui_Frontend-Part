@@ -124,4 +124,23 @@ mutation CreateMessage($input: CreateMessageInput!) {
       }
     }
     ''';
+
+  static String getMessagesQuery = r'''
+    query GetMessages($chatId: UUID!, $first: Int, $after: String) {
+      messages(chatId: $chatId, first: $first, after: $after) {
+        nodes {
+          id
+          content
+          senderId
+          type
+          createdAt
+          attachmentUrl
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+      }
+    }
+  ''';
 }

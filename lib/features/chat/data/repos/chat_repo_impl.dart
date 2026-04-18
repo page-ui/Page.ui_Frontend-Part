@@ -3,6 +3,7 @@ import 'package:pageui/core/errors/failure.dart';
 import 'package:pageui/core/network/network_info.dart';
 import 'package:pageui/features/chat/data/data_source/chat_data_source.dart';
 import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
+import 'package:pageui/features/chat/domain/entities/message_entity.dart';
 import 'package:pageui/features/chat/domain/params/create_chat_params.dart';
 import 'package:pageui/features/chat/domain/params/send_message_params.dart';
 import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
@@ -60,6 +61,27 @@ class ChatRepoImpl extends ChatRepo {
       return Right(result);
     } catch (e) {
       return Left(ServerFailure(message: 'Failed to search chats.'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<MessageEntity>>> getMessages({
+    required String chatId,
+    required int first,
+    String? after,
+  }) async {
+    try {
+      if (!await networkInfo.isConnected) {
+        return Left(NetworkFailure.error());
+      }
+      final result = await dataSource.getMessages(
+        chatId: chatId,
+        first: first,
+        after: after,
+      );
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(message: 'Failed to load messages.'));
     }
   }
 

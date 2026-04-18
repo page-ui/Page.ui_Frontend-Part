@@ -1,41 +1,49 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pageui/features/chat/domain/entities/message_entity.dart';
+import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
 
-// class ChatMessagesCubit extends Cubit<ChatMessagesState> {
-//   final Map<String, List<MessageEntity>> _messagesByChatId = {};
-//   String? _activeChatId;
+class ChatMessagesCubit extends Cubit<ChatMessagesState> {
+  ChatMessagesCubit({required ChatRepo chatRepo})
+    : _chatRepo = chatRepo,
+      super(const ChatMessagesInitial());
 
-//   ChatMessagesCubit() : super(const ChatMessagesInitial());
+  static const int _pageSize = 15;
 
-//   void openChat({required String chatId}) {
-//     _activeChatId = chatId;
-//     // emit(ChatMessagesLoaded(messages: _messagesForChat(chatId)));
-//   }
+  final ChatRepo _chatRepo;
 
-  // void appendMessage({required MessageEntity message}) {
-  //   final messages = List<MessageEntity>.from(
-  //     _messagesByChatId[message.chatId] ?? const [],
-  //   );
-  //   final alreadyExists = messages.any((existing) => existing.id == message.id);
+  String? _activeChatId;
+  int _requestId = 0;
 
-  //   if (!alreadyExists) {
-  //     messages.add(message);
-  //     _messagesByChatId[message.chatId] = messages;
-  //   }
+  Future<void> loadMessages({required String chatId}) async {
+    _activeChatId = chatId;
+    final requestId = ++_requestId;
 
-  //   if (_activeChatId == message.chatId) {
-  //     emit(ChatMessagesLoaded(messages: _messagesForChat(message.chatId)));
-  //   }
-  // }
+    emit(ChatMessagesLoading(chatId: chatId));
 
-  // List<MessageEntity> _messagesForChat(String chatId) {
-  //   return List.unmodifiable(_messagesByChatId[chatId] ?? const []);
-  // }
+    final result = await _chatRepo.getMessages(
+      chatId: chatId,
+      first: _pageSize,
+    );
 
-  // void reset() {
-  //   _messagesByChatId.clear();
-  //   _activeChatId = null;
-  //   emit(const ChatMessagesInitial());
-  // }
-// }
+    if (requestId != _requestId || _activeChatId != chatId) {
+      return;
+    }
+
+    result.fold(
+      (failure) =>
+          emit(ChatMessagesError(chatId: chatId, message: failure.message)),
+      (messages) => emit(
+        ChatMessagesLoaded(
+          chatId: chatId,
+          messages: List.unmodifiable(messages),
+        ),
+      ),
+    );
+  }
+
+  void reset() {
+    _activeChatId = null;
+    _requestId++;
+    emit(const ChatMessagesInitial());
+  }
+}

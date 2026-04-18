@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/constants/borders.dart';
 import 'package:pageui/features/chat/domain/entities/message_entity.dart';
@@ -10,9 +9,11 @@ class MessageBubble extends StatelessWidget {
 
   final MessageEntity message;
 
+  bool get _isAssistantMessage => message.type.trim().toUpperCase() == 'AI_RUN';
+
   @override
   Widget build(BuildContext context) {
-    final isUser = message.senderId != null;
+    final isUser = !_isAssistantMessage;
 
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,

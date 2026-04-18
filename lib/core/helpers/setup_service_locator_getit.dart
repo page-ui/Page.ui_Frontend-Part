@@ -10,6 +10,7 @@ import 'package:pageui/features/chat/data/repos/chat_repo_impl.dart';
 import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_history_cubit/chat_history_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
+import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_cubit.dart';
 
 final getit = GetIt.instance;
@@ -48,6 +49,9 @@ setUpServiceLocator() {
   );
   getit.registerFactory<ChatHistoryCubit>(
     () => ChatHistoryCubit(chatRepo: getit.get<ChatRepo>()),
+  );
+  getit.registerFactory<ChatMessagesCubit>(
+    () => ChatMessagesCubit(chatRepo: getit.get<ChatRepo>()),
   );
   getit.registerFactory<SendMessageCubit>(
     () => SendMessageCubit(

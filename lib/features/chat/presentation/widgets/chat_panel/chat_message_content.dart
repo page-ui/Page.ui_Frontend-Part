@@ -9,14 +9,20 @@ class ChatMessageContent extends StatelessWidget {
 
   final MessageEntity message;
 
-  bool get _hasImage =>
-      message.attachmentUrl != null && message.attachmentUrl!.trim().isNotEmpty;
+  bool get _isAiRun => message.type.trim().toUpperCase() == 'AI_RUN';
 
-  bool get _showText {
+  bool get _hasImage =>
+      !_isAiRun &&
+      message.attachmentUrl != null &&
+      message.attachmentUrl!.trim().isNotEmpty;
+
+  String? get _displayText {
+    if (_isAiRun) return 'AI_RUN';
+
     final content = message.content.trim();
-    if (content.isEmpty) return false;
-    if (_hasImage && content.toLowerCase() == 'image') return false;
-    return true;
+    if (content.isEmpty) return null;
+    if (_hasImage && content.toLowerCase() == 'image') return null;
+    return content;
   }
 
   @override
@@ -24,12 +30,13 @@ class ChatMessageContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _ChatMessageImage(
-          imageUrl: message.attachmentUrl,
-          heroTag: 'chat-image-${message.id}',
-        ),
-        if (_hasImage && _showText) const SizedBox(height: 8),
-        _ChatMessageText(content: _showText ? message.content : null),
+        if (!_isAiRun)
+          _ChatMessageImage(
+            imageUrl: message.attachmentUrl,
+            heroTag: 'chat-image-${message.id}',
+          ),
+        if (_hasImage && _displayText != null) const SizedBox(height: 8),
+        _ChatMessageText(content: _displayText),
       ],
     );
   }

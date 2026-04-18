@@ -2,6 +2,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:pageui/core/database/api/graph_ql_config.dart';
 import 'package:pageui/core/database/api/queries.dart';
 import 'package:pageui/features/chat/data/models/chat_model.dart';
+import 'package:pageui/features/chat/data/models/message_model.dart';
 import 'package:pageui/features/chat/domain/params/create_chat_params.dart';
 import 'package:pageui/features/chat/domain/params/send_message_params.dart';
 
@@ -14,6 +15,12 @@ abstract class ChatDataSource {
   Future<List<ChatModel>> searchChats({
     required String name,
     required int first,
+  });
+
+  Future<List<MessageModel>> getMessages({
+    required String chatId,
+    required int first,
+    String? after,
   });
 
   Future<void> sendMessage({required SendMessageParams params});
@@ -103,6 +110,47 @@ class ChatDataSourceImpl extends ChatDataSource {
         .toList();
 
     return chats;
+  }
+
+  @override
+  Future<List<MessageModel>> getMessages({
+    required String chatId,
+    required int first,
+    String? after,
+  }) async {
+    final result = await _client.query(
+      QueryOptions(
+        document: gql(Queries.getMessagesQuery),
+        variables: {
+          'chatId': chatId,
+          'first': first,
+          if (after != null) 'after': after,
+        },
+        fetchPolicy: FetchPolicy.networkOnly,
+      ),
+    );
+
+    if (result.hasException) {
+      throw Exception(
+        'Failed to load messages: ${result.exception.toString()}',
+      );
+    }
+
+    if (result.data?['messages'] == null) {
+      throw Exception('Failed to load messages. Server returned no data.');
+    }
+
+    final data = result.data!['messages'] as Map<String, dynamic>;
+    final nodes = (data['nodes'] as List?) ?? const [];
+
+    return nodes
+        .map(
+          (node) => MessageModel.fromJson(
+            node as Map<String, dynamic>,
+            fallbackChatId: chatId,
+          ),
+        )
+        .toList();
   }
 
   @override
