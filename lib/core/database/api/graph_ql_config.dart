@@ -17,14 +17,50 @@ class GraphQLConfig {
   static String? refreshToken;
   static Future<UserTokensModel?>? _ongoingRefresh;
 
-  static HttpLink httpLink = HttpLink(uri);
-  static WebSocketLink webSocketLink = WebSocketLink(
-    _webSocketUri,
-    config: SocketClientConfig(
-      autoReconnect: true,
-      initialPayload: () async => _socketInitialPayload,
-    ),
+  //! WebSocket Configration
+  static WebSocketLink? _webSocketLink;
+  static WebSocketLink get webSocketLink {
+    return _webSocketLink ??= WebSocketLink(
+      _webSocketUri,
+      subProtocol: GraphQLProtocol.graphqlTransportWs,
+      config: SocketClientConfig(
+        autoReconnect: true,
+        initialPayload: () async => _webSocketTokens,
+      ),
+    );
+  }
+
+  static String get _webSocketUri {
+    final parsedUri = Uri.parse(uri);
+    final scheme = parsedUri.scheme == 'https' ? 'wss' : 'ws';
+    return parsedUri.replace(scheme: scheme).toString();
+  }
+
+  static Map<String, dynamic> get _webSocketTokens {
+    if (accessToken == null || accessToken!.isEmpty) {
+      return const {};
+    }
+    return {'Authorization': 'Bearer $accessToken'};
+  }
+
+  static Future<void> disconnectWebSocket() async {
+    final link = _webSocketLink;
+    if (link == null) return;
+    _webSocketLink = null;
+    try {
+      await link.dispose();
+    } catch (_) {
+      // Ignore: dispose may throw if the socket is already closed.
+    }
+  }
+  
+  static Link get link => Link.split(
+    (request) => request.isSubscription,
+    webSocketLink,
+    httpLinkChain,
   );
+  //! GraphQL Links
+  static HttpLink httpLink = HttpLink(uri);
   static GraphQLLoggerLink loggerLink = GraphQLLoggerLink();
   static AuthLink authLink = AuthLink(
     getToken: () async {
@@ -35,18 +71,18 @@ class GraphQLConfig {
 
   static ErrorLink errorLink = ErrorLink(
     onGraphQLError: (request, forward, response) async* {
-      debugPrint('onGraphQLError fired');
-      debugPrint('errors: ${response.errors}');
-      debugPrint('refreshToken in memory: $refreshToken');
+      log('onGraphQLError fired');
+      log('errors: ${response.errors}');
+      log('refreshToken in memory: $refreshToken');
 
       if (!await _shouldRefreshRequest(request: request, response: response)) {
         yield response;
         return;
       }
-      debugPrint('starting refresh...');
+      log('starting refresh...');
 
       final newTokens = await _refreshTokens();
-      debugPrint('refresh result: ${newTokens?.accessToken}');
+      log('refresh result: ${newTokens?.accessToken}');
 
       if (newTokens == null) {
         yield response;
@@ -56,7 +92,7 @@ class GraphQLConfig {
       final retriedRequest = request.withContextEntry(
         const _AuthRetryContext(hasRetried: true),
       );
-      debugPrint('retrying original request...');
+      log('retrying original request...');
       yield* forward(retriedRequest);
     },
   );
@@ -67,19 +103,49 @@ class GraphQLConfig {
     authLink,
     httpLink,
   ]);
-  static Link link = Link.split(
-    (request) => request.isSubscription,
-    webSocketLink,
-    httpLinkChain,
-  );
-  static ValueNotifier<GraphQLClient> client = ValueNotifier(
+
+
+  static Future<bool> _shouldRefreshRequest({
+    required Request request,
+    required Response response,
+  }) async {
+    UserTokensModel tokens = await returnTokensFromSecureDB();
+    refreshToken = tokens.refreshToken;
+    accessToken = tokens.accessToken;
+
+    log('operation: ${request.operation.operationName}');
+    log('errors for auth check: ${response.errors}');
+    log('stored refresh token: ${tokens.refreshToken}');
+    if (refreshToken == null || refreshToken!.isEmpty) {
+      return false;
+    }
+
+    if (request.operation.operationName == 'RefreshToken') {
+      return false;
+    }
+
+    final retryContext = request.context.entry<_AuthRetryContext>();
+    if (retryContext?.hasRetried == true) {
+      return false;
+    }
+
+    return response.errors?.any(
+          (error) => error.extensions?['code'] == 'AUTH_NOT_AUTHENTICATED',
+        ) ==
+        true;
+  }
+
+  static final ValueNotifier<GraphQLClient> client = ValueNotifier(
     GraphQLClient(
-      link: link,
+      link: Link.split(
+        (request) => request.isSubscription,
+        _LazyLink(() => webSocketLink),
+        httpLinkChain,
+      ),
       cache: GraphQLCache(store: InMemoryStore()),
     ),
   );
 
-  /// REST API client with refresh token support
   static late final dio.Dio restClient;
 
   static void initializeRestClient() {
@@ -103,10 +169,9 @@ class GraphQLConfig {
         },
         onError: (error, handler) async {
           if (error.response?.statusCode == 401 && refreshToken != null) {
-            debugPrint('REST API 401 - triggering token refresh');
+            log('REST API 401 - triggering token refresh');
             final newTokens = await _refreshTokens();
             if (newTokens != null) {
-              // Retry the request with new token
               final retryOptions = error.requestOptions;
               retryOptions.headers['Authorization'] =
                   'Bearer ${newTokens.accessToken}';
@@ -124,35 +189,8 @@ class GraphQLConfig {
     );
   }
 
-  static Future<bool> _shouldRefreshRequest({
-    required Request request,
-    required Response response,
-  }) async {
-    UserTokensModel tokens = await returnTokensFromSecureDB();
-    refreshToken = tokens.refreshToken;
-    accessToken = tokens.accessToken;
+  //! Refresh Tokens
 
-    debugPrint('operation: ${request.operation.operationName}');
-    debugPrint('errors for auth check: ${response.errors}');
-    debugPrint('stored refresh token: ${tokens.refreshToken}');
-    if (refreshToken == null || refreshToken!.isEmpty) {
-      return false;
-    }
-
-    if (request.operation.operationName == 'RefreshToken') {
-      return false;
-    }
-
-    final retryContext = request.context.entry<_AuthRetryContext>();
-    if (retryContext?.hasRetried == true) {
-      return false;
-    }
-
-    return response.errors?.any(
-          (error) => error.extensions?['code'] == 'AUTH_NOT_AUTHENTICATED',
-        ) ==
-        true;
-  }
 
   static Future<UserTokensModel?> _refreshTokens() {
     final ongoingRefresh = _ongoingRefresh;
@@ -213,23 +251,15 @@ class GraphQLConfig {
     refreshToken = null;
     await SecureStorage.deleteData(key: tokensKey);
   }
+}
 
-  static String get _webSocketUri {
-    final parsedUri = Uri.parse(uri);
-    final scheme = parsedUri.scheme == 'https' ? 'wss' : 'ws';
-    return parsedUri.replace(scheme: scheme).toString();
-  }
+class _LazyLink extends Link {
+  _LazyLink(this.resolve);
+  final Link Function() resolve;
 
-  static Map<String, dynamic> get _socketInitialPayload {
-    if (accessToken == null || accessToken!.isEmpty) {
-      return const {};
-    }
-
-    final authorization = 'Bearer $accessToken';
-    return {
-      'Authorization': authorization,
-      'headers': {'Authorization': authorization},
-    };
+  @override
+  Stream<Response> request(Request request, [NextLink? forward]) {
+    return resolve().request(request, forward);
   }
 }
 

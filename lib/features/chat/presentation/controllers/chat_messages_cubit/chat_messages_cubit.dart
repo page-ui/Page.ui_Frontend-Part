@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pageui/core/database/api/graph_ql_config.dart';
 import 'package:pageui/core/helpers/app_logger.dart';
 import 'package:pageui/features/chat/domain/entities/message_entity.dart';
 import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
@@ -27,19 +28,20 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
   String? _activeChatId;
 
   Future<void> openChat({required String chatId}) async {
+    // Drop any cached state for this chat and tear down the previous
+    // subscription / websocket so opening the panel always shows fresh
+    // messages and a freshly reconnected stream.
+    await _cancelSubscription(chatId);
+    _messagesByChatId.remove(chatId);
+    _hasNextPageByChatId.remove(chatId);
+    _endCursorByChatId.remove(chatId);
+    _hydratedChatIds.remove(chatId);
+    _loadingChatIds.remove(chatId);
+    _loadingMoreChatIds.remove(chatId);
+
     _activeChatId = chatId;
     _ensureSubscription(chatId);
-
-    final hasCachedMessages = _messagesByChatId.containsKey(chatId);
-    if (hasCachedMessages || _hydratedChatIds.contains(chatId)) {
-      _emitLoaded(chatId);
-    } else {
-      emit(ChatMessagesLoading(chatId: chatId));
-    }
-
-    if (_hydratedChatIds.contains(chatId) || _loadingChatIds.contains(chatId)) {
-      return;
-    }
+    emit(ChatMessagesLoading(chatId: chatId));
 
     _loadingChatIds.add(chatId);
     final result = await _chatRepo.getMessages(
@@ -50,13 +52,6 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
 
     result.fold(
       (failure) {
-        if (_messagesByChatId[chatId]?.isNotEmpty ?? false) {
-          if (_activeChatId == chatId) {
-            _emitLoaded(chatId);
-          }
-          return;
-        }
-
         if (_activeChatId == chatId) {
           emit(ChatMessagesError(chatId: chatId, message: failure.message));
         }
@@ -75,6 +70,26 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
         }
       },
     );
+  }
+
+  /// Tear down the subscription for [chatId] and reset the websocket so the
+  /// panel is fully disconnected when closed.
+  Future<void> closeChat({required String chatId}) async {
+    await _cancelSubscription(chatId);
+    if (_activeChatId == chatId) {
+      _activeChatId = null;
+      emit(const ChatMessagesInitial());
+    }
+    if (_subscriptionsByChatId.isEmpty) {
+      await GraphQLConfig.disconnectWebSocket();
+    }
+  }
+
+  Future<void> _cancelSubscription(String chatId) async {
+    final subscription = _subscriptionsByChatId.remove(chatId);
+    if (subscription != null) {
+      await subscription.cancel();
+    }
   }
 
   Future<void> loadMessages({required String chatId}) {

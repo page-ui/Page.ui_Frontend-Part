@@ -16,6 +16,9 @@ class ChatPanel extends StatefulWidget {
 }
 
 class _ChatPanelState extends State<ChatPanel> {
+  ChatMessagesCubit? _messagesCubit;
+  String? _openedChatId;
+
   @override
   void initState() {
     super.initState();
@@ -29,7 +32,19 @@ class _ChatPanelState extends State<ChatPanel> {
     final chatId = context.read<ChatHomeCubit>().state.selectedChat?.id;
     if (chatId == null) return;
 
-    context.read<ChatMessagesCubit>().openChat(chatId: chatId);
+    _messagesCubit = context.read<ChatMessagesCubit>();
+    _openedChatId = chatId;
+    _messagesCubit!.openChat(chatId: chatId);
+  }
+
+  @override
+  void dispose() {
+    final cubit = _messagesCubit;
+    final chatId = _openedChatId;
+    if (cubit != null && chatId != null) {
+      cubit.closeChat(chatId: chatId);
+    }
+    super.dispose();
   }
 
   @override
@@ -46,7 +61,9 @@ class _ChatPanelState extends State<ChatPanel> {
       listener: (context, state) {
         final chatId = state.selectedChat?.id;
         if (chatId == null) return;
-        context.read<ChatMessagesCubit>().openChat(chatId: chatId);
+        _messagesCubit = context.read<ChatMessagesCubit>();
+        _openedChatId = chatId;
+        _messagesCubit!.openChat(chatId: chatId);
       },
       child: Padding(
         padding: const EdgeInsets.all(10),
