@@ -8,6 +8,9 @@ import 'package:pageui/features/chat/data/data_source/chat_data_source.dart';
 import 'package:pageui/features/chat/data/data_source/upload_service.dart';
 import 'package:pageui/features/chat/data/repos/chat_repo_impl.dart';
 import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
+import 'package:pageui/features/chat/domain/usecases/create_chat_usecase.dart';
+import 'package:pageui/features/chat/domain/usecases/send_message_usecase.dart';
+import 'package:pageui/features/chat/domain/usecases/upload_attachment_usecase.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_history_cubit/chat_history_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
@@ -43,9 +46,26 @@ setUpServiceLocator() {
     ),
   );
 
+  // Use cases
+  getit.registerLazySingleton<UploadAttachmentUseCase>(
+    () => UploadAttachmentUseCase(uploadService: getit.get<UploadService>()),
+  );
+  getit.registerLazySingleton<CreateChatUseCase>(
+    () => CreateChatUseCase(
+      chatRepo: getit.get<ChatRepo>(),
+      uploadAttachment: getit.get<UploadAttachmentUseCase>(),
+    ),
+  );
+  getit.registerLazySingleton<SendMessageUseCase>(
+    () => SendMessageUseCase(
+      chatRepo: getit.get<ChatRepo>(),
+      uploadAttachment: getit.get<UploadAttachmentUseCase>(),
+    ),
+  );
+
   // Chat cubits — registered as factory so each HomeView gets fresh instances
   getit.registerFactory<ChatHomeCubit>(
-    () => ChatHomeCubit(chatRepo: getit.get<ChatRepo>()),
+    () => ChatHomeCubit(createChat: getit.get<CreateChatUseCase>()),
   );
   getit.registerFactory<ChatHistoryCubit>(
     () => ChatHistoryCubit(chatRepo: getit.get<ChatRepo>()),
@@ -54,9 +74,6 @@ setUpServiceLocator() {
     () => ChatMessagesCubit(chatRepo: getit.get<ChatRepo>()),
   );
   getit.registerFactory<SendMessageCubit>(
-    () => SendMessageCubit(
-      chatRepo: getit.get<ChatRepo>(),
-      uploadService: getit.get<UploadService>(),
-    ),
+    () => SendMessageCubit(sendMessage: getit.get<SendMessageUseCase>()),
   );
 }

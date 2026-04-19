@@ -9,7 +9,7 @@ import 'package:pageui/features/chat/presentation/controllers/chat_history_cubit
 import 'package:pageui/features/chat/presentation/controllers/chat_history_cubit/chat_history_state.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
 import 'package:pageui/features/chat/presentation/widgets/history_panel/chat_room.dart';
-import 'package:pageui/features/chat/presentation/widgets/history_panel/chat_rooms_loading_indecators.dart';
+import 'package:pageui/features/chat/presentation/widgets/history_panel/chat_rooms_loading_indicators.dart';
 import 'package:pageui/core/helpers/panel_scrollbar.dart';
 
 class ListOfChatRooms extends StatefulWidget {
@@ -62,7 +62,7 @@ class _ListOfChatRoomsState extends State<ListOfChatRooms> {
       child: BlocBuilder<ChatHistoryCubit, ChatHistoryState>(
         builder: (context, state) {
           if (state is ChatHistoryLoading) {
-            return ChatRoomsLoadingIndecators();
+            return const ChatRoomsLoadingIndicators();
           }
 
           if (state is ChatHistoryFailure) {
@@ -99,7 +99,7 @@ class _ListOfChatRoomsState extends State<ListOfChatRooms> {
                 itemCount: state.chats.length + (state.isLoadingMore ? 1 : 0),
                 itemBuilder: (context, index) {
                   if (index == state.chats.length) {
-                    return ChatRoomsLoadingIndecators();
+                    return const ChatRoomsLoadingIndicators();
                   }
                   return ChatRoom(
                     chat: state.chats[index],

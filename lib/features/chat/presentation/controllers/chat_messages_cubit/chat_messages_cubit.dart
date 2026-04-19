@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pageui/core/helpers/app_logger.dart';
 import 'package:pageui/features/chat/domain/entities/message_entity.dart';
 import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
@@ -144,7 +144,20 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
             }
           },
           onError: (Object error, StackTrace stackTrace) {
-            debugPrint('Message subscription error for $chatId: $error');
+            appLogger.e(
+              'Message subscription error for $chatId',
+              error: error,
+              stackTrace: stackTrace,
+            );
+            if (_activeChatId == chatId &&
+                (_messagesByChatId[chatId]?.isEmpty ?? true)) {
+              emit(
+                ChatMessagesError(
+                  chatId: chatId,
+                  message: 'Live message stream interrupted: $error',
+                ),
+              );
+            }
           },
         );
 

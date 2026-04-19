@@ -1,37 +1,45 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
-import 'package:pageui/features/chat/domain/params/create_chat_params.dart';
-import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
+import 'package:pageui/features/chat/domain/usecases/create_chat_usecase.dart';
+import 'package:pageui/features/chat/domain/usecases/upload_attachment_usecase.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
 
 class ChatHomeCubit extends Cubit<ChatHomeState> {
-  final ChatRepo _chatRepo;
+  final CreateChatUseCase _createChat;
 
-  ChatHomeCubit({required ChatRepo chatRepo})
-    : _chatRepo = chatRepo,
+  ChatHomeCubit({required CreateChatUseCase createChat})
+    : _createChat = createChat,
       super(const ChatHomeInitial());
 
   Future<void> createChat({
     required String name,
     required String content,
-    String? attachmentUrl,
+    UploadAttachmentInput? attachment,
   }) async {
+    if (state is ChatHomeLoading) return;
     final currentChat = state.selectedChat;
     emit(ChatHomeLoading(previousChat: currentChat));
 
-    final result = await _chatRepo.createChat(
-      params: CreateChatParams(
+    try {
+      final result = await _createChat(
         name: name,
         content: content,
-        attachmentUrl: attachmentUrl,
-      ),
-    );
-    result.fold(
-      (failure) => emit(
-        ChatHomeError(message: failure.message, previousChat: currentChat),
-      ),
-      (chat) => emit(ChatHomeActive(chat: chat)),
-    );
+        attachment: attachment,
+      );
+      result.fold(
+        (failure) => emit(
+          ChatHomeError(message: failure.message, previousChat: currentChat),
+        ),
+        (chat) => emit(ChatHomeActive(chat: chat)),
+      );
+    } catch (e) {
+      emit(
+        ChatHomeError(
+          message: 'Failed to create chat: $e',
+          previousChat: currentChat,
+        ),
+      );
+    }
   }
 
   void selectChat({required ChatEntity chat}) {

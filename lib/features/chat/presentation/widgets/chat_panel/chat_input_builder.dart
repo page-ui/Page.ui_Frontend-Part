@@ -7,6 +7,8 @@ import 'package:pageui/features/chat/domain/params/send_message_params.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_cubit.dart';
+// PickFileCubit is provided by an ancestor (HomeViewBody) so input bar and
+// landing page share the same picked-image state.
 import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_state.dart';
 import 'package:pageui/features/chat/presentation/widgets/chat_panel/chat_input_bar.dart';
 
@@ -30,11 +32,8 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => PickFileCubit()),
-        BlocProvider(create: (context) => getit.get<SendMessageCubit>()),
-      ],
+    return BlocProvider(
+      create: (context) => getit.get<SendMessageCubit>(),
       child: BlocListener<SendMessageCubit, SendMessageState>(
         listener: (context, state) {
           final pickFileCubit = context.read<PickFileCubit>();

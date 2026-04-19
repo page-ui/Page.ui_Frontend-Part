@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/constants/borders.dart';
+import 'package:pageui/features/chat/domain/constants/message_types.dart';
 import 'package:pageui/features/chat/domain/entities/message_entity.dart';
 
 class ChatMessageContent extends StatelessWidget {
@@ -9,7 +10,7 @@ class ChatMessageContent extends StatelessWidget {
 
   final MessageEntity message;
 
-  bool get _isAiRun => message.type.trim().toUpperCase() == 'AI_RUN';
+  bool get _isAiRun => isAiMessageType(message.type);
 
   bool get _hasImage =>
       !_isAiRun &&
@@ -19,7 +20,7 @@ class ChatMessageContent extends StatelessWidget {
   String? get _displayText {
     final content = message.content.trim();
     if (_isAiRun) {
-      if (content.isEmpty) return 'AI_RUN';
+      if (content.isEmpty) return aiMessageType;
       if (content.startsWith('/')) return 'http://localhost$content';
       return content;
     }

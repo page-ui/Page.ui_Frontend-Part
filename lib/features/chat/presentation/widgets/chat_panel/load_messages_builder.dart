@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/helpers/panel_scrollbar.dart';
-import 'package:pageui/features/chat/domain/entities/message_entity.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
 import 'package:pageui/features/chat/presentation/widgets/chat_panel/message_bubble.dart';
@@ -81,7 +80,7 @@ class _LoadMessagesBuilderState extends State<LoadMessagesBuilder> {
               return const SizedBox.shrink();
             }
 
-            final messages = _sortMessages(state.messages);
+            final messages = state.messages;
 
             if (messages.isEmpty) {
               return Center(
@@ -126,8 +125,4 @@ class _LoadMessagesBuilderState extends State<LoadMessagesBuilder> {
     );
   }
 
-  List<MessageEntity> _sortMessages(List<MessageEntity> messages) {
-    return List<MessageEntity>.from(messages)
-      ..sort((first, second) => first.createdAt.compareTo(second.createdAt));
-  }
 }

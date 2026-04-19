@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/constants/borders.dart';
+import 'package:pageui/features/chat/domain/constants/message_types.dart';
 import 'package:pageui/features/chat/domain/entities/message_entity.dart';
 import 'package:pageui/features/chat/presentation/widgets/chat_panel/chat_message_content.dart';
 
@@ -9,7 +10,7 @@ class MessageBubble extends StatelessWidget {
 
   final MessageEntity message;
 
-  bool get _isAssistantMessage => message.type.trim().toUpperCase() == 'AI_RUN';
+  bool get _isAssistantMessage => isAiMessageType(message.type);
 
   @override
   Widget build(BuildContext context) {

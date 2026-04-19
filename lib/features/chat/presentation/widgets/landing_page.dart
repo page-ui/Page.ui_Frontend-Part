@@ -101,6 +101,7 @@ class _LandingPageState extends State<LandingPage> {
                               ),
                               maxLines: 5,
                               minLines: 1,
+                              textInputAction: TextInputAction.send,
                               decoration: InputDecoration(
                                 hintText: 'Type your prompt...',
                                 hintStyle: TextStyle(

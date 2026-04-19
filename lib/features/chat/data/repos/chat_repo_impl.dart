@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:pageui/core/errors/failure.dart';
+import 'package:pageui/core/helpers/app_logger.dart';
 import 'package:pageui/core/network/network_info.dart';
 import 'package:pageui/features/chat/data/data_source/chat_data_source.dart';
 import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
@@ -14,19 +15,26 @@ class ChatRepoImpl extends ChatRepo {
 
   ChatRepoImpl({required this.dataSource, required this.networkInfo});
 
-  @override
-  Future<Either<Failure, ChatEntity>> createChat({
-    required CreateChatParams params,
-  }) async {
+  Future<Either<Failure, T>> _guard<T>(
+    String operation,
+    Future<T> Function() action,
+  ) async {
     try {
       if (!await networkInfo.isConnected) {
         return Left(NetworkFailure.error());
       }
-      final chat = await dataSource.createChat(params: params);
-      return Right(chat);
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to create chat.'));
+      return Right(await action());
+    } catch (e, stackTrace) {
+      appLogger.e('ChatRepo.$operation failed', error: e, stackTrace: stackTrace);
+      return Left(ServerFailure(message: 'Failed to $operation: $e'));
     }
+  }
+
+  @override
+  Future<Either<Failure, ChatEntity>> createChat({
+    required CreateChatParams params,
+  }) {
+    return _guard('create chat', () => dataSource.createChat(params: params));
   }
 
   @override
@@ -36,32 +44,22 @@ class ChatRepoImpl extends ChatRepo {
       ({List<ChatEntity> chats, bool hasNextPage, String? endCursor})
     >
   >
-  getChats({required int first, String? after}) async {
-    try {
-      if (!await networkInfo.isConnected) {
-        return Left(NetworkFailure.error());
-      }
-      final result = await dataSource.getChats(first: first, after: after);
-      return Right(result);
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to load chats.'));
-    }
+  getChats({required int first, String? after}) {
+    return _guard(
+      'load chats',
+      () => dataSource.getChats(first: first, after: after),
+    );
   }
 
   @override
   Future<Either<Failure, List<ChatEntity>>> searchChats({
     required String name,
     required int first,
-  }) async {
-    try {
-      if (!await networkInfo.isConnected) {
-        return Left(NetworkFailure.error());
-      }
-      final result = await dataSource.searchChats(name: name, first: first);
-      return Right(result);
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to search chats.'));
-    }
+  }) {
+    return _guard(
+      'search chats',
+      () => dataSource.searchChats(name: name, first: first),
+    );
   }
 
   @override
@@ -75,20 +73,11 @@ class ChatRepoImpl extends ChatRepo {
     required String chatId,
     required int first,
     String? after,
-  }) async {
-    try {
-      if (!await networkInfo.isConnected) {
-        return Left(NetworkFailure.error());
-      }
-      final result = await dataSource.getMessages(
-        chatId: chatId,
-        first: first,
-        after: after,
-      );
-      return Right(result);
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to load messages.'));
-    }
+  }) {
+    return _guard(
+      'load messages',
+      () => dataSource.getMessages(chatId: chatId, first: first, after: after),
+    );
   }
 
   @override
@@ -99,15 +88,10 @@ class ChatRepoImpl extends ChatRepo {
   @override
   Future<Either<Failure, void>> sendMessage({
     required SendMessageParams params,
-  }) async {
-    try {
-      if (!await networkInfo.isConnected) {
-        return Left(NetworkFailure.error());
-      }
-      await dataSource.sendMessage(params: params);
-      return Right(null);
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to send message.'));
-    }
+  }) {
+    return _guard(
+      'send message',
+      () => dataSource.sendMessage(params: params),
+    );
   }
 }

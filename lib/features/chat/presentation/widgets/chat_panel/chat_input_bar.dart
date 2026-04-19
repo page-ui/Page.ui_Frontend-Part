@@ -49,6 +49,7 @@ class ChatInputBar extends StatelessWidget {
                   controller: controller,
                   focusNode: focusNode,
                   enabled: !isSending,
+                  textInputAction: TextInputAction.send,
                   style: TextStyle(
                     color: AppColors.white.withValues(alpha: 0.9),
                     fontSize: 14,

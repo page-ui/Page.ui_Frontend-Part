@@ -628,6 +628,69 @@ void main() {
       expect(callCount, 1);
     },
   );
+
+  test(
+    'ChatMessagesCubit emits error state when subscription stream errors and no cache',
+    () async {
+      final controller = StreamController<MessageEntity>();
+      final repo = _FakeChatRepo(
+        getMessagesHandler:
+            ({required chatId, required first, String? after}) async {
+              return Right((
+                messages: <MessageEntity>[],
+                hasNextPage: false,
+                endCursor: null,
+              ));
+            },
+        subscribeToMessagesHandler: ({required chatId}) => controller.stream,
+      );
+      addTearDown(controller.close);
+      final cubit = ChatMessagesCubit(chatRepo: repo);
+      addTearDown(cubit.close);
+
+      await cubit.openChat(chatId: 'chat-1');
+      await Future<void>.delayed(Duration.zero);
+
+      controller.addError(StateError('socket dropped'));
+      await Future<void>.delayed(Duration.zero);
+
+      expect(cubit.state, isA<ChatMessagesError>());
+      final errorState = cubit.state as ChatMessagesError;
+      expect(errorState.chatId, 'chat-1');
+      expect(errorState.message, contains('socket dropped'));
+    },
+  );
+
+  test(
+    'ChatMessagesCubit keeps loaded state when subscription errors with cached messages',
+    () async {
+      final controller = StreamController<MessageEntity>();
+      final repo = _FakeChatRepo(
+        getMessagesHandler:
+            ({required chatId, required first, String? after}) async {
+              return Right((
+                messages: [
+                  _message(id: 'message-1', chatId: chatId, content: 'Hello'),
+                ],
+                hasNextPage: false,
+                endCursor: null,
+              ));
+            },
+        subscribeToMessagesHandler: ({required chatId}) => controller.stream,
+      );
+      addTearDown(controller.close);
+      final cubit = ChatMessagesCubit(chatRepo: repo);
+      addTearDown(cubit.close);
+
+      await cubit.openChat(chatId: 'chat-1');
+      await Future<void>.delayed(Duration.zero);
+
+      controller.addError(StateError('socket dropped'));
+      await Future<void>.delayed(Duration.zero);
+
+      expect(cubit.state, isA<ChatMessagesLoaded>());
+    },
+  );
 }
 
 class _FakeChatRepo implements ChatRepo {

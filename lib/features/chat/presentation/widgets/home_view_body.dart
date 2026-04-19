@@ -5,7 +5,7 @@ import 'package:pageui/core/enum/screen_type.dart';
 import 'package:pageui/core/helpers/custom_cli_loading_indicator.dart';
 import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
 import 'package:pageui/core/helpers/setup_service_locator_getit.dart';
-import 'package:pageui/features/chat/data/data_source/upload_service.dart';
+import 'package:pageui/features/chat/domain/usecases/upload_attachment_usecase.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
@@ -83,39 +83,33 @@ class _HomeViewBodyState extends State<HomeViewBody> {
   }) async {
     final pickFileCubit = context.read<PickFileCubit>();
     final chatHomeCubit = context.read<ChatHomeCubit>();
-    final uploadService = getit.get<UploadService>();
 
-    String? attachmentUrl;
-
-    if (pickFileCubit.isImagePicked) {
-      try {
-        attachmentUrl = await uploadService.upload(
-          fileBytes: pickFileCubit.imageBytes!,
-          fileName: pickFileCubit.imageFileName!,
-          contentType: pickFileCubit.imageContentType!,
-        );
-      } catch (e) {
-        if (context.mounted) {
-          showWebSnackBar(
-            context: context,
-            message: 'Failed to upload image: ${e.toString()}',
-            backgroundColor: AppColors.red,
-            textColor: AppColors.white,
-          );
-        }
-        return;
-      }
-    }
+    final attachment = pickFileCubit.isImagePicked
+        ? UploadAttachmentInput(
+            bytes: pickFileCubit.imageBytes!,
+            fileName: pickFileCubit.imageFileName!,
+            contentType: pickFileCubit.imageContentType!,
+          )
+        : null;
 
     await chatHomeCubit.createChat(
-      name: 'New Chat',
+      name: _generateChatName(content),
       content: content,
-      attachmentUrl: attachmentUrl,
+      attachment: attachment,
     );
 
-    if (context.mounted && pickFileCubit.isImagePicked) {
+    if (!context.mounted) return;
+    if (pickFileCubit.isImagePicked) {
       pickFileCubit.removeImage();
     }
+  }
+
+  String _generateChatName(String content) {
+    final trimmed = content.trim();
+    if (trimmed.isEmpty) {
+      return 'Chat ${DateTime.now().millisecondsSinceEpoch}';
+    }
+    return trimmed.length > 40 ? '${trimmed.substring(0, 40)}…' : trimmed;
   }
 
   @override

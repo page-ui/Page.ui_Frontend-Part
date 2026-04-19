@@ -25,6 +25,7 @@ class _HistoryPanelBodyState extends State<HistoryPanelBody> {
   void _onSearchChanged(String query) {
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 400), () {
+      if (!mounted) return;
       context.read<ChatHistoryCubit>().searchChats(query: query);
     });
   }
