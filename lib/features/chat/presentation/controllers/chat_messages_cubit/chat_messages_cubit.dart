@@ -173,8 +173,6 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
             }
           },
         );
-  // TODO: review
-    subscription.cancel();
     _subscriptionsByChatId[chatId] = subscription;
   }
 
