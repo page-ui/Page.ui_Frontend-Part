@@ -22,7 +22,7 @@ class GraphQLConfig {
   static WebSocketLink get webSocketLink {
     return _webSocketLink ??= WebSocketLink(
       _webSocketUri,
-      subProtocol: GraphQLProtocol.graphqlTransportWs,
+      subProtocol: GraphQLProtocol.graphqlWs,
       config: SocketClientConfig(
         autoReconnect: true,
         initialPayload: () async => _webSocketTokens,
@@ -31,9 +31,10 @@ class GraphQLConfig {
   }
 
   static String get _webSocketUri {
-    final parsedUri = Uri.parse(uri);
-    final scheme = parsedUri.scheme == 'https' ? 'wss' : 'ws';
-    return parsedUri.replace(scheme: scheme).toString();
+    // final parsedUri = Uri.parse(uri);
+    // final scheme = parsedUri.scheme == 'https' ? 'wss' : 'ws';
+    // return parsedUri.replace(scheme: scheme).toString();
+    return 'ws://localhost/graphql?access_token=${accessToken}';
   }
 
   static Map<String, dynamic> get _webSocketTokens {
@@ -53,7 +54,7 @@ class GraphQLConfig {
       // Ignore: dispose may throw if the socket is already closed.
     }
   }
-  
+
   static Link get link => Link.split(
     (request) => request.isSubscription,
     webSocketLink,
@@ -103,7 +104,6 @@ class GraphQLConfig {
     authLink,
     httpLink,
   ]);
-
 
   static Future<bool> _shouldRefreshRequest({
     required Request request,
@@ -191,7 +191,6 @@ class GraphQLConfig {
 
   //! Refresh Tokens
 
-
   static Future<UserTokensModel?> _refreshTokens() {
     final ongoingRefresh = _ongoingRefresh;
     if (ongoingRefresh != null) {
@@ -207,7 +206,6 @@ class GraphQLConfig {
           link: httpLink,
           cache: GraphQLCache(store: InMemoryStore()),
         );
-        log("I'm here");
         log("I'm here");
         final result = await refreshClient.mutate(
           MutationOptions(
@@ -261,13 +259,6 @@ class _LazyLink extends Link {
   Stream<Response> request(Request request, [NextLink? forward]) {
     return resolve().request(request, forward);
   }
-}
-
-Future<void> initializeAuth({required GraphQLConfig graph}) async {
-  final token = await returnTokensFromSecureDB();
-
-  GraphQLConfig.accessToken = token.accessToken;
-  GraphQLConfig.refreshToken = token.refreshToken;
 }
 
 class _AuthRetryContext extends ContextEntry {

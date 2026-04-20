@@ -17,8 +17,8 @@ class UIFrame extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: AnimatedContainer(
-        margin: EdgeInsets.only(top: 28, bottom: 20, left: 20, right: 20),
-        padding: EdgeInsets.all(6),
+        margin: const EdgeInsets.only(top: 28, bottom: 20, left: 20, right: 20),
+        padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
           borderRadius: AppBorders.xxxxs,
           shape: BoxShape.rectangle,

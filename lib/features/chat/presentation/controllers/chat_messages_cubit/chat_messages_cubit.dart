@@ -72,8 +72,6 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     );
   }
 
-  /// Tear down the subscription for [chatId] and reset the websocket so the
-  /// panel is fully disconnected when closed.
   Future<void> closeChat({required String chatId}) async {
     await _cancelSubscription(chatId);
     if (_activeChatId == chatId) {
@@ -175,7 +173,8 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
             }
           },
         );
-
+  // TODO: review
+    subscription.cancel();
     _subscriptionsByChatId[chatId] = subscription;
   }
 

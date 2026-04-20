@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/features/chat/domain/constants/message_types.dart';
 import 'package:pageui/features/chat/domain/entities/message_entity.dart';
@@ -70,9 +69,10 @@ class UIFrameBody extends StatelessWidget {
     }
 
     if (latest == null) return null;
-    final content = latest.content.trim();
-    if (content.startsWith('/')) return 'http://localhost$content';
-    return content;
+    // final content = latest.content.trim();
+    // if (content.startsWith('/'))
+    return 'http://127.0.0.1/runs/a438eff8-006c-4a33-e83c-ed058546c35b/preview.html';
+    // return content;
   }
 }
 
