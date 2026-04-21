@@ -65,54 +65,49 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
             );
           }
         },
-        child: BlocBuilder<SendMessageCubit, SendMessageState>(
-          buildWhen: (prev, curr) {
-            final wasSending = prev is SendMessageLoading;
-            final isSending = curr is SendMessageLoading;
-            return wasSending != isSending;
-          },
-          builder: (context, sendState) {
-            final pickFileCubit = context.watch<PickFileCubit>();
-            final messagesState = context
-                .watch<ChatMessagesCubit>()
-                .state;
-            final isAwaitingAi =
-                messagesState is ChatMessagesLoaded &&
-                messagesState.isAwaitingAiResponse;
-            final isSending =
-                sendState is SendMessageLoading || isAwaitingAi;
-
-            return ChatInputBar(
-              controller: _controller,
-              focusNode: _focusNode,
-              isSending: isSending,
-              hasSelectedImage: pickFileCubit.isImagePicked,
-              onSend: () {
-                final homeState = context.read<ChatHomeCubit>().state;
-                final selectedChat = homeState.selectedChat;
-                if (selectedChat == null) return;
-
-                final message = _controller.text.trim();
-                if (message.isEmpty && !pickFileCubit.isImagePicked) return;
-
-                if (pickFileCubit.isImagePicked) {
-                  context.read<SendMessageCubit>().setImageData(
-                    bytes: pickFileCubit.imageBytes!,
-                    fileName: pickFileCubit.imageFileName!,
-                    contentType: pickFileCubit.imageContentType!,
-                  );
-                }
-
-                context.read<SendMessageCubit>().sendMessage(
-                  params: SendMessageParams(
-                    chatId: selectedChat.id,
-                    content: message.isEmpty ? 'image' : message,
-                  ),
+        child: BlocSelector<SendMessageCubit, SendMessageState, bool>(
+          selector: (state) => state is SendMessageLoading,
+          builder: (context, isSendLoading) {
+            return BlocSelector<ChatMessagesCubit, ChatMessagesState, bool>(
+              selector: (state) =>
+                  state is ChatMessagesLoaded && state.isAwaitingAiResponse,
+              builder: (context, isAwaitingAi) {
+                final isSending = isSendLoading || isAwaitingAi;
+                return ChatInputBar(
+                  controller: _controller,
+                  focusNode: _focusNode,
+                  isSending: isSending,
+                  onSend: () => _handleSend(context),
                 );
               },
             );
           },
         ),
+      ),
+    );
+  }
+
+  void _handleSend(BuildContext context) {
+    final homeState = context.read<ChatHomeCubit>().state;
+    final selectedChat = homeState.selectedChat;
+    if (selectedChat == null) return;
+
+    final pickFileCubit = context.read<PickFileCubit>();
+    final message = _controller.text.trim();
+    if (message.isEmpty && !pickFileCubit.isImagePicked) return;
+
+    if (pickFileCubit.isImagePicked) {
+      context.read<SendMessageCubit>().setImageData(
+        bytes: pickFileCubit.imageBytes!,
+        fileName: pickFileCubit.imageFileName!,
+        contentType: pickFileCubit.imageContentType!,
+      );
+    }
+
+    context.read<SendMessageCubit>().sendMessage(
+      params: SendMessageParams(
+        chatId: selectedChat.id,
+        content: message.isEmpty ? 'image' : message,
       ),
     );
   }

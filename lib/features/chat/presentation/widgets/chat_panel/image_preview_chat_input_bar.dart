@@ -23,7 +23,7 @@ class ImagePreviewChatInputBar extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
           margin: const EdgeInsets.only(bottom: 6),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: AppColors.lightGray,
             borderRadius: AppBorders.xxxxs,
           ),

@@ -15,7 +15,7 @@ class CustomButtonIconForPanels extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      padding: EdgeInsets.all(0),
+      padding: const EdgeInsets.all(0),
       onPressed: onPressed,
       icon: Icon(
         isLeftPanel ? AppIcons.arrowForward : AppIcons.arrowBackward,

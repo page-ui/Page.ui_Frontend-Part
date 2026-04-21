@@ -204,13 +204,12 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     }
   }
 
-  String? activeAiRunUrl() {
-    final currentState = state;
-    if (currentState is! ChatMessagesLoaded) return null;
+  String? activeAiRunUrl([ChatMessagesState? fromState]) {
+    final source = fromState ?? state;
+    if (source is! ChatMessagesLoaded) return null;
 
     final target =
-        _selectedAiMessage(currentState) ??
-        _latestAiMessage(currentState.messages);
+        _selectedAiMessage(source) ?? _latestAiMessage(source.messages);
     if (target == null) return null;
 
     final content = target.content.trim();
@@ -272,8 +271,8 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
       messagesById[message.id] = message;
     }
 
-    return messagesById.values.toList()
-      ..sort((first, second) => first.createdAt.compareTo(second.createdAt));
+    // Sorting is deferred to _emitLoaded to avoid sorting twice per update.
+    return messagesById.values.toList(growable: false);
   }
 
   void reset() {

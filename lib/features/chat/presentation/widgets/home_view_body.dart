@@ -10,7 +10,6 @@ import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/ch
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
-import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_cubit.dart';
 import 'package:pageui/features/chat/presentation/widgets/chat_panel/chat_panel.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_animated_container_for_the_home_panel.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
@@ -118,7 +117,6 @@ class _HomeViewBodyState extends State<HomeViewBody> {
       providers: [
         BlocProvider(create: (context) => PickFileCubit()),
         BlocProvider(create: (context) => getit.get<ChatMessagesCubit>()),
-        BlocProvider(create: (context) => getit.get<SendMessageCubit>()),
       ],
       child: BlocConsumer<ChatHomeCubit, ChatHomeState>(
         listenWhen: (previous, current) {
@@ -248,14 +246,14 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                     onClose: () => setState(() => isLeftOpen = false),
                   ),
                 if (homeState is ChatHomeLoading)
-                  Positioned.fill(
+                  const Positioned.fill(
                     child: Stack(
                       children: [
-                        const ModalBarrier(
+                        ModalBarrier(
                           dismissible: false,
                           color: Colors.black38,
                         ),
-                        const Center(child: CustomCliLoadingIndicator()),
+                        Center(child: CustomCliLoadingIndicator()),
                       ],
                     ),
                   ),
