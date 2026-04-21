@@ -11,7 +11,8 @@ import 'package:pageui/core/database/cache/secure_storage.dart';
 import 'package:pageui/features/auth/data/model/user_tokens_model.dart';
 
 class GraphQLConfig {
-  static String uri = 'http://localhost/graphql/';
+  static String baseURL = 'localhost/graphql/';
+  static String uri = 'http://${baseURL}';
 
   static String? accessToken;
   static String? refreshToken;
@@ -34,7 +35,7 @@ class GraphQLConfig {
     // final parsedUri = Uri.parse(uri);
     // final scheme = parsedUri.scheme == 'https' ? 'wss' : 'ws';
     // return parsedUri.replace(scheme: scheme).toString();
-    return 'ws://localhost/graphql?access_token=${accessToken}';
+    return 'ws://${baseURL}?access_token=${accessToken}';
   }
 
   static Map<String, dynamic> get _webSocketTokens {

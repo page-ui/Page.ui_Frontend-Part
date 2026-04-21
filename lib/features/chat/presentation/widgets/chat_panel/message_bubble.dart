@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/constants/borders.dart';
 import 'package:pageui/features/chat/domain/constants/message_types.dart';
 import 'package:pageui/features/chat/domain/entities/message_entity.dart';
+import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
+import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
 import 'package:pageui/features/chat/presentation/widgets/chat_panel/chat_message_content.dart';
 
 class MessageBubble extends StatelessWidget {
@@ -21,7 +24,7 @@ class MessageBubble extends StatelessWidget {
       child: Container(
         constraints: const BoxConstraints(maxWidth: 200),
         margin: const EdgeInsets.symmetric(vertical: 4),
-        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
           color: isUser
               ? AppColors.primaryColor.withValues(alpha: 0.15)
@@ -39,12 +42,21 @@ class MessageBubble extends StatelessWidget {
           children: [
             ChatMessageContent(message: message),
             const SizedBox(height: 4),
-            Text(
-              _formatTime(message.createdAt),
-              style: TextStyle(
-                color: AppColors.white.withValues(alpha: 0.4),
-                fontSize: 11,
-              ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  _formatTime(message.createdAt),
+                  style: TextStyle(
+                    color: AppColors.white.withValues(alpha: 0.4),
+                    fontSize: 11,
+                  ),
+                ),
+                if (_isAssistantMessage) ...[
+                  const SizedBox(width: 6),
+                  _PreviewUiButton(messageId: message.id),
+                ],
+              ],
             ),
           ],
         ),
@@ -56,5 +68,74 @@ class MessageBubble extends StatelessWidget {
     final hour = dateTime.hour.toString().padLeft(2, '0');
     final minute = dateTime.minute.toString().padLeft(2, '0');
     return '$hour:$minute';
+  }
+}
+
+class _PreviewUiButton extends StatelessWidget {
+  const _PreviewUiButton({required this.messageId});
+
+  final String messageId;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ChatMessagesCubit, ChatMessagesState>(
+      buildWhen: (prev, curr) {
+        String? prevSelected;
+        String? currSelected;
+        String? chatId;
+        if (prev is ChatMessagesLoaded) {
+          prevSelected = prev.selectedAiRunMessageId;
+        }
+        if (curr is ChatMessagesLoaded) {
+          currSelected = curr.selectedAiRunMessageId;
+          chatId = curr.chatId;
+        }
+        return prevSelected != currSelected || chatId == null;
+      },
+      builder: (context, state) {
+        final isSelected =
+            state is ChatMessagesLoaded &&
+            state.selectedAiRunMessageId == messageId;
+        if (state is! ChatMessagesLoaded) {
+          return const SizedBox.shrink();
+        }
+        final chatId = state.chatId;
+        return InkWell(
+          onTap: () {
+            context.read<ChatMessagesCubit>().selectAiRunMessage(
+              chatId: chatId,
+              messageId: messageId,
+            );
+          },
+          borderRadius: AppBorders.xxxxs,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  isSelected ? Icons.visibility : Icons.visibility_outlined,
+                  size: 13,
+                  color: AppColors.primaryColor.withValues(
+                    alpha: isSelected ? 1 : 0.7,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  isSelected ? 'Viewing' : 'Preview',
+                  style: TextStyle(
+                    color: AppColors.primaryColor.withValues(
+                      alpha: isSelected ? 1 : 0.8,
+                    ),
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

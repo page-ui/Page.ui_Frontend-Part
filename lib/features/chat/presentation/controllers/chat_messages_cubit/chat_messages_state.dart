@@ -20,6 +20,8 @@ final class ChatMessagesLoaded extends ChatMessagesState {
   final bool hasNextPage;
   final String? endCursor;
   final bool isLoadingMore;
+  final String? selectedAiRunMessageId;
+  final bool isAwaitingAiResponse;
 
   const ChatMessagesLoaded({
     required this.chatId,
@@ -27,6 +29,8 @@ final class ChatMessagesLoaded extends ChatMessagesState {
     this.hasNextPage = false,
     this.endCursor,
     this.isLoadingMore = false,
+    this.selectedAiRunMessageId,
+    this.isAwaitingAiResponse = false,
   });
 
   ChatMessagesLoaded copyWith({
@@ -35,6 +39,8 @@ final class ChatMessagesLoaded extends ChatMessagesState {
     bool? hasNextPage,
     String? endCursor,
     bool? isLoadingMore,
+    String? selectedAiRunMessageId,
+    bool? isAwaitingAiResponse,
   }) {
     return ChatMessagesLoaded(
       chatId: chatId ?? this.chatId,
@@ -42,6 +48,10 @@ final class ChatMessagesLoaded extends ChatMessagesState {
       hasNextPage: hasNextPage ?? this.hasNextPage,
       endCursor: endCursor ?? this.endCursor,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      selectedAiRunMessageId:
+          selectedAiRunMessageId ?? this.selectedAiRunMessageId,
+      isAwaitingAiResponse:
+          isAwaitingAiResponse ?? this.isAwaitingAiResponse,
     );
   }
 }

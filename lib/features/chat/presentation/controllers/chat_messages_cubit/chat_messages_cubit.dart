@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pageui/core/database/api/graph_ql_config.dart';
 import 'package:pageui/core/helpers/app_logger.dart';
+import 'package:pageui/features/chat/domain/constants/message_types.dart';
 import 'package:pageui/features/chat/domain/entities/message_entity.dart';
 import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
@@ -24,6 +25,8 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
   final Set<String> _hydratedChatIds = {};
   final Set<String> _loadingChatIds = {};
   final Set<String> _loadingMoreChatIds = {};
+  final Map<String, String?> _selectedAiRunByChatId = {};
+  final Set<String> _awaitingAiResponseChatIds = {};
 
   String? _activeChatId;
 
@@ -38,6 +41,8 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     _hydratedChatIds.remove(chatId);
     _loadingChatIds.remove(chatId);
     _loadingMoreChatIds.remove(chatId);
+    _selectedAiRunByChatId.remove(chatId);
+    _awaitingAiResponseChatIds.remove(chatId);
 
     _activeChatId = chatId;
     _ensureSubscription(chatId);
@@ -152,6 +157,11 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
               incoming: [message],
             );
 
+            if (isAiMessageType(message.type)) {
+              _selectedAiRunByChatId[chatId] = message.id;
+              _awaitingAiResponseChatIds.remove(chatId);
+            }
+
             if (_activeChatId == chatId) {
               _emitLoaded(chatId);
             }
@@ -162,6 +172,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
               error: error,
               stackTrace: stackTrace,
             );
+            _awaitingAiResponseChatIds.remove(chatId);
             if (_activeChatId == chatId &&
                 (_messagesByChatId[chatId]?.isEmpty ?? true)) {
               emit(
@@ -170,10 +181,26 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
                   message: 'Live message stream interrupted: $error',
                 ),
               );
+            } else if (_activeChatId == chatId) {
+              _emitLoaded(chatId);
             }
           },
         );
     _subscriptionsByChatId[chatId] = subscription;
+  }
+
+  void selectAiRunMessage({required String chatId, required String messageId}) {
+    _selectedAiRunByChatId[chatId] = messageId;
+    if (_activeChatId == chatId && _hydratedChatIds.contains(chatId)) {
+      _emitLoaded(chatId);
+    }
+  }
+
+  void markAwaitingAiResponse({required String chatId}) {
+    _awaitingAiResponseChatIds.add(chatId);
+    if (_activeChatId == chatId && _hydratedChatIds.contains(chatId)) {
+      _emitLoaded(chatId);
+    }
   }
 
   void _emitLoaded(String chatId, {bool isLoadingMore = false}) {
@@ -188,6 +215,8 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
         hasNextPage: _hasNextPageByChatId[chatId] ?? false,
         endCursor: _endCursorByChatId[chatId],
         isLoadingMore: isLoadingMore,
+        selectedAiRunMessageId: _selectedAiRunByChatId[chatId],
+        isAwaitingAiResponse: _awaitingAiResponseChatIds.contains(chatId),
       ),
     );
   }
@@ -220,6 +249,8 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     _hydratedChatIds.clear();
     _loadingChatIds.clear();
     _loadingMoreChatIds.clear();
+    _selectedAiRunByChatId.clear();
+    _awaitingAiResponseChatIds.clear();
     _activeChatId = null;
     emit(const ChatMessagesInitial());
   }

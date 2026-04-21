@@ -5,6 +5,8 @@ import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
 import 'package:pageui/core/helpers/setup_service_locator_getit.dart';
 import 'package:pageui/features/chat/domain/params/send_message_params.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
+import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
+import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
 import 'package:pageui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_cubit.dart';
 // PickFileCubit is provided by an ancestor (HomeViewBody) so input bar and
@@ -45,6 +47,13 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
             if (pickFileCubit.isImagePicked) {
               pickFileCubit.removeImage();
             }
+
+            final messagesState = context.read<ChatMessagesCubit>().state;
+            if (messagesState is ChatMessagesLoaded) {
+              context.read<ChatMessagesCubit>().markAwaitingAiResponse(
+                chatId: messagesState.chatId,
+              );
+            }
           }
 
           if (state is SendMessageError) {
@@ -62,9 +71,16 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
             final isSending = curr is SendMessageLoading;
             return wasSending != isSending;
           },
-          builder: (context, state) {
+          builder: (context, sendState) {
             final pickFileCubit = context.watch<PickFileCubit>();
-            final isSending = state is SendMessageLoading;
+            final messagesState = context
+                .watch<ChatMessagesCubit>()
+                .state;
+            final isAwaitingAi =
+                messagesState is ChatMessagesLoaded &&
+                messagesState.isAwaitingAiResponse;
+            final isSending =
+                sendState is SendMessageLoading || isAwaitingAi;
 
             return ChatInputBar(
               controller: _controller,

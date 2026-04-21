@@ -69,10 +69,9 @@ class UIFrameBody extends StatelessWidget {
     }
 
     if (latest == null) return null;
-    // final content = latest.content.trim();
-    // if (content.startsWith('/'))
-    return 'http://127.0.0.1/runs/a438eff8-006c-4a33-e83c-ed058546c35b/preview.html';
-    // return content;
+    final content = latest.content.trim();
+    if (content.startsWith('/')) return 'http://localhost$content';
+    return content;
   }
 }
 
