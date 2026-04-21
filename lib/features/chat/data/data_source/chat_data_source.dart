@@ -18,11 +18,7 @@ abstract class ChatDataSource {
   });
 
   Future<({List<MessageModel> messages, bool hasNextPage, String? endCursor})>
-  getMessages({
-    required String chatId,
-    required int first,
-    String? after,
-  });
+  getMessages({required String chatId, required int first, String? after});
 
   Stream<MessageModel> subscribeToMessages({required String chatId});
 

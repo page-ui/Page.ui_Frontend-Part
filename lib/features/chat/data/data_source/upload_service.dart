@@ -18,11 +18,17 @@ class UploadService {
   }) async {
     final presignResult = await _getPresignedUrl(fileName);
     await _uploadBinary(
-      uploadUrl: presignResult.uploadUrl,
+      uploadUrl: _resolveAgainstBase(presignResult.uploadUrl),
       fileBytes: fileBytes,
       contentType: contentType,
     );
-    return presignResult.downloadUrl;
+    return _resolveAgainstBase(presignResult.downloadUrl);
+  }
+
+  String _resolveAgainstBase(String url) {
+    final parsed = Uri.parse(url);
+    if (parsed.hasScheme) return url;
+    return Uri.parse(GraphQLConfig.uri).resolveUri(parsed).toString();
   }
 
   Future<UploadResultModel> _getPresignedUrl(String originalFileName) async {
@@ -36,12 +42,18 @@ class UploadService {
       final response = await _client.get(presignUri.toString());
 
       if (response.statusCode != 200) {
-        throw Exception('Failed to get presigned upload URL');
+        throw Exception(
+          'Failed to get presigned upload URL '
+          '(status ${response.statusCode}): ${response.data}',
+        );
       }
 
       return UploadResultModel.fromJson(response.data as Map<String, dynamic>);
-    } on DioException {
-      throw Exception('Failed to get presigned upload URL');
+    } on DioException catch (e) {
+      throw Exception(
+        'Failed to get presigned upload URL: '
+        '${e.response?.statusCode} ${e.response?.data ?? e.message}',
+      );
     }
   }
 
@@ -63,18 +75,22 @@ class UploadService {
         uploadUrl,
         data: fileBytes,
         options: Options(
-          headers: {
-            'Content-Type': contentType,
-            'Content-Length': fileBytes.length.toString(),
-          },
+          contentType: contentType,
+          headers: {Headers.contentLengthHeader: fileBytes.length},
         ),
       );
 
       if (response.statusCode != 200 && response.statusCode != 204) {
-        throw Exception('Failed to upload file');
+        throw Exception(
+          'Failed to upload file (PUT $uploadUrl, status '
+          '${response.statusCode}): ${response.data}',
+        );
       }
-    } on DioException {
-      throw Exception('Failed to upload file');
+    } on DioException catch (e) {
+      throw Exception(
+        'Failed to upload file (PUT $uploadUrl): '
+        '${e.response?.statusCode} ${e.response?.data ?? e.message}',
+      );
     }
   }
 }

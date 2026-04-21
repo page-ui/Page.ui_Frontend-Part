@@ -43,7 +43,7 @@ class UIFrameBody extends StatelessWidget {
         Expanded(
           child: BlocBuilder<ChatMessagesCubit, ChatMessagesState>(
             builder: (context, state) {
-              final url = _latestAiRunUrl(state);
+              final url = _activeAiRunUrl(state);
               if (url == null) {
                 return const _EmptyUIPreview();
               }
@@ -55,23 +55,45 @@ class UIFrameBody extends StatelessWidget {
     );
   }
 
-  String? _latestAiRunUrl(ChatMessagesState state) {
+  /// Resolves the URL of the AI message that should be previewed.
+  ///
+  /// Prefers the explicitly selected message from the cubit so tapping
+  /// "Preview" on an older message swaps the iframe. Falls back to the
+  /// most recent AI message when nothing has been selected yet.
+  String? _activeAiRunUrl(ChatMessagesState state) {
     if (state is! ChatMessagesLoaded) return null;
 
-    MessageEntity? latest;
+    final target =
+        _selectedAiMessage(state) ?? _latestAiMessage(state.messages);
+    if (target == null) return null;
+
+    final content = target.content.trim();
+    if (content.isEmpty) return null;
+    if (content.startsWith('/')) return 'http://localhost$content';
+    return content;
+  }
+
+  MessageEntity? _selectedAiMessage(ChatMessagesLoaded state) {
+    final selectedId = state.selectedAiRunMessageId;
+    if (selectedId == null) return null;
     for (final message in state.messages) {
+      if (message.id != selectedId) continue;
+      if (!isAiMessageType(message.type)) return null;
+      return message.content.trim().isEmpty ? null : message;
+    }
+    return null;
+  }
+
+  MessageEntity? _latestAiMessage(List<MessageEntity> messages) {
+    MessageEntity? latest;
+    for (final message in messages) {
       if (!isAiMessageType(message.type)) continue;
-      final content = message.content.trim();
-      if (content.isEmpty) continue;
+      if (message.content.trim().isEmpty) continue;
       if (latest == null || message.createdAt.isAfter(latest.createdAt)) {
         latest = message;
       }
     }
-
-    if (latest == null) return null;
-    final content = latest.content.trim();
-    if (content.startsWith('/')) return 'http://localhost$content';
-    return content;
+    return latest;
   }
 }
 
