@@ -148,6 +148,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
       return;
     }
 
+    // ignore: cancel_subscriptions
     final subscription = _chatRepo
         .subscribeToMessages(chatId: chatId)
         .listen(
@@ -201,6 +202,44 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     if (_activeChatId == chatId && _hydratedChatIds.contains(chatId)) {
       _emitLoaded(chatId);
     }
+  }
+
+  String? activeAiRunUrl() {
+    final currentState = state;
+    if (currentState is! ChatMessagesLoaded) return null;
+
+    final target =
+        _selectedAiMessage(currentState) ??
+        _latestAiMessage(currentState.messages);
+    if (target == null) return null;
+
+    final content = target.content.trim();
+    if (content.isEmpty) return null;
+    if (content.startsWith('/')) return 'http://localhost$content';
+    return content;
+  }
+
+  MessageEntity? _selectedAiMessage(ChatMessagesLoaded state) {
+    final selectedId = state.selectedAiRunMessageId;
+    if (selectedId == null) return null;
+    for (final message in state.messages) {
+      if (message.id != selectedId) continue;
+      if (!isAiMessageType(message.type)) return null;
+      return message.content.trim().isEmpty ? null : message;
+    }
+    return null;
+  }
+
+  MessageEntity? _latestAiMessage(List<MessageEntity> messages) {
+    MessageEntity? latest;
+    for (final message in messages) {
+      if (!isAiMessageType(message.type)) continue;
+      if (message.content.trim().isEmpty) continue;
+      if (latest == null || message.createdAt.isAfter(latest.createdAt)) {
+        latest = message;
+      }
+    }
+    return latest;
   }
 
   void _emitLoaded(String chatId, {bool isLoadingMore = false}) {
