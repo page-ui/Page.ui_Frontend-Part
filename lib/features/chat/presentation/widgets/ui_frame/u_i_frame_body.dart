@@ -42,8 +42,7 @@ class UIFrameBody extends StatelessWidget {
         ),
         Expanded(
           child: BlocSelector<ChatMessagesCubit, ChatMessagesState, String>(
-            selector: (state) =>
-                context.read<ChatMessagesCubit>().activeAiRunUrl(state) ?? '',
+            selector: (state) => state.activeAiRunUrl ?? '',
             builder: (context, url) {
               return IframeView(key: ValueKey(url), url: url);
             },

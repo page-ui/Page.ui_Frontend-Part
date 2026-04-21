@@ -1,3 +1,4 @@
+import 'package:pageui/features/chat/domain/constants/message_types.dart';
 import 'package:pageui/features/chat/domain/entities/message_entity.dart';
 
 sealed class ChatMessagesState {
@@ -61,4 +62,42 @@ final class ChatMessagesError extends ChatMessagesState {
   final String message;
 
   const ChatMessagesError({required this.chatId, required this.message});
+}
+
+extension ChatMessagesLoadedAiRun on ChatMessagesLoaded {
+  String? get activeAiRunUrl {
+    final target = _selectedAiMessage ?? _latestAiMessage;
+    if (target == null) return null;
+    final content = target.content.trim();
+    if (content.isEmpty) return null;
+    if (content.startsWith('/')) return 'http://localhost$content';
+    return content;
+  }
+
+  MessageEntity? get _selectedAiMessage {
+    final selectedId = selectedAiRunMessageId;
+    if (selectedId == null) return null;
+    for (final message in messages) {
+      if (message.id != selectedId) continue;
+      if (!isAiMessageType(message.type)) return null;
+      return message.content.trim().isEmpty ? null : message;
+    }
+    return null;
+  }
+
+  MessageEntity? get _latestAiMessage {
+    for (final message in messages.reversed) {
+      if (!isAiMessageType(message.type)) continue;
+      if (message.content.trim().isEmpty) continue;
+      return message;
+    }
+    return null;
+  }
+}
+
+extension ChatMessagesStateAiRun on ChatMessagesState {
+  String? get activeAiRunUrl {
+    final state = this;
+    return state is ChatMessagesLoaded ? state.activeAiRunUrl : null;
+  }
 }
