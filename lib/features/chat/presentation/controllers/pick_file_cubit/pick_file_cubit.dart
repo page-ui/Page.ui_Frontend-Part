@@ -9,7 +9,7 @@ part 'pick_file_state.dart';
 class PickFileCubit extends Cubit<PickFileState> {
   PickFileCubit() : super(PickFileInitial());
 
-  FilePickerResult? image;
+  static const int _maxFileBytes = 5 * 1024 * 1024;
 
   static const _mimeTypes = <String, String>{
     'jpg': 'image/jpeg',
@@ -18,6 +18,8 @@ class PickFileCubit extends Cubit<PickFileState> {
     'webp': 'image/webp',
   };
 
+  FilePickerResult? _image;
+
   bool pickImage({required FilePickerResult? imageFile}) {
     if (imageFile == null || imageFile.files.isEmpty) {
       emit(PickFileFailure(message: 'No file was selected. Please try again.'));
@@ -25,35 +27,34 @@ class PickFileCubit extends Cubit<PickFileState> {
     }
 
     final file = imageFile.files.first;
+    final ext = file.extension?.toLowerCase();
 
-    const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
-
-    if (file.extension == null ||
-        !allowedExtensions.contains(file.extension!.toLowerCase())) {
+    if (ext == null || !_mimeTypes.containsKey(ext)) {
       emit(PickFileFailure(message: 'Only image files are allowed.'));
       return false;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
+    if (file.size > _maxFileBytes) {
       emit(PickFileFailure(message: 'The file is larger than 5 MB.'));
       return false;
     }
 
-    image = imageFile;
+    _image = imageFile;
     emit(PickFileSuccess(imageFile));
     return true;
   }
 
-  Uint8List? get imageBytes => image?.files.first.bytes;
+  Uint8List? get imageBytes => _image?.files.first.bytes;
 
-  String? get imageFileName => image?.files.first.name;
+  String? get imageFileName => _image?.files.first.name;
 
-  String? get imageContentType => _mimeTypes[image?.files.first.extension?.toLowerCase()] ?? 'image/png';
+  String? get imageContentType =>
+      _mimeTypes[_image?.files.first.extension?.toLowerCase()] ?? 'image/png';
 
-  bool get isImagePicked => image != null;
+  bool get isImagePicked => _image != null;
 
   void removeImage() {
-    image = null;
+    _image = null;
     emit(PickFileInitial());
   }
 }

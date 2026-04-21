@@ -26,6 +26,7 @@ class ChatHomeCubit extends Cubit<ChatHomeState> {
         content: content,
         attachment: attachment,
       );
+      if (isClosed) return;
       result.fold(
         (failure) => emit(
           ChatHomeError(message: failure.message, previousChat: currentChat),
@@ -33,6 +34,7 @@ class ChatHomeCubit extends Cubit<ChatHomeState> {
         (chat) => emit(ChatHomeActive(chat: chat)),
       );
     } catch (e) {
+      if (isClosed) return;
       emit(
         ChatHomeError(
           message: 'Failed to create chat: $e',

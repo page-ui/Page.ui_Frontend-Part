@@ -3,15 +3,19 @@ import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_history_cubit/chat_history_state.dart';
 
 class ChatHistoryCubit extends Cubit<ChatHistoryState> {
+  static const int _pageSize = 15;
+
   final ChatRepo _chatRepo;
 
   ChatHistoryCubit({required ChatRepo chatRepo})
     : _chatRepo = chatRepo,
       super(const ChatHistoryInitial());
-  int first = 15;
+
   Future<void> loadChats() async {
+    if (state is ChatHistoryLoading) return;
     emit(const ChatHistoryLoading());
-    final result = await _chatRepo.getChats(first: first);
+    final result = await _chatRepo.getChats(first: _pageSize);
+    if (isClosed) return;
     result.fold(
       (failure) => emit(ChatHistoryFailure(message: failure.message)),
       (data) => emit(
@@ -35,9 +39,10 @@ class ChatHistoryCubit extends Cubit<ChatHistoryState> {
     emit(current.copyWith(isLoadingMore: true));
 
     final result = await _chatRepo.getChats(
-      first: first,
+      first: _pageSize,
       after: current.endCursor,
     );
+    if (isClosed) return;
 
     result.fold(
       (failure) => emit(current.copyWith(isLoadingMore: false)),
@@ -52,12 +57,11 @@ class ChatHistoryCubit extends Cubit<ChatHistoryState> {
   }
 
   Future<void> searchChats({required String query}) async {
-    if (query.isEmpty) {
-      return loadChats();
-    }
+    if (query.isEmpty) return loadChats();
 
     emit(const ChatHistoryLoading());
-    final result = await _chatRepo.searchChats(name: query, first: first);
+    final result = await _chatRepo.searchChats(name: query, first: _pageSize);
+    if (isClosed) return;
     result.fold(
       (failure) => emit(ChatHistoryFailure(message: failure.message)),
       (data) => emit(

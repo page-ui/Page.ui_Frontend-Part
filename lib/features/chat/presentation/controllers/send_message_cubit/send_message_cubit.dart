@@ -51,6 +51,7 @@ class SendMessageCubit extends Cubit<SendMessageState> {
         params: params,
         attachment: attachment,
       );
+      if (isClosed) return;
 
       result.fold(
         (failure) => emit(SendMessageError(message: failure.message)),
@@ -60,12 +61,8 @@ class SendMessageCubit extends Cubit<SendMessageState> {
         },
       );
     } catch (e) {
+      if (isClosed) return;
       emit(SendMessageError(message: e.toString()));
     }
-  }
-
-  void reset() {
-    clearImageData();
-    emit(const SendMessageInitial());
   }
 }

@@ -54,6 +54,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
       first: _pageSize,
     );
     _loadingChatIds.remove(chatId);
+    if (isClosed) return;
 
     result.fold(
       (failure) {
@@ -95,10 +96,6 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     }
   }
 
-  Future<void> loadMessages({required String chatId}) {
-    return openChat(chatId: chatId);
-  }
-
   Future<void> loadMoreMessages({required String chatId}) async {
     if (_loadingMoreChatIds.contains(chatId)) return;
 
@@ -121,6 +118,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     );
 
     _loadingMoreChatIds.remove(chatId);
+    if (isClosed) return;
 
     result.fold(
       (failure) {
@@ -153,6 +151,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
         .subscribeToMessages(chatId: chatId)
         .listen(
           (message) {
+            if (isClosed) return;
             _messagesByChatId[chatId] = _mergeMessages(
               existing: _messagesByChatId[chatId] ?? const [],
               incoming: [message],
@@ -173,6 +172,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
               error: error,
               stackTrace: stackTrace,
             );
+            if (isClosed) return;
             _awaitingAiResponseChatIds.remove(chatId);
             if (_activeChatId == chatId &&
                 (_messagesByChatId[chatId]?.isEmpty ?? true)) {
@@ -230,15 +230,12 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
   }
 
   MessageEntity? _latestAiMessage(List<MessageEntity> messages) {
-    MessageEntity? latest;
-    for (final message in messages) {
+    for (final message in messages.reversed) {
       if (!isAiMessageType(message.type)) continue;
       if (message.content.trim().isEmpty) continue;
-      if (latest == null || message.createdAt.isAfter(latest.createdAt)) {
-        latest = message;
-      }
+      return message;
     }
-    return latest;
+    return null;
   }
 
   void _emitLoaded(String chatId, {bool isLoadingMore = false}) {
@@ -273,24 +270,6 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
 
     // Sorting is deferred to _emitLoaded to avoid sorting twice per update.
     return messagesById.values.toList(growable: false);
-  }
-
-  void reset() {
-    for (final subscription in _subscriptionsByChatId.values) {
-      subscription.cancel();
-    }
-
-    _subscriptionsByChatId.clear();
-    _messagesByChatId.clear();
-    _hasNextPageByChatId.clear();
-    _endCursorByChatId.clear();
-    _hydratedChatIds.clear();
-    _loadingChatIds.clear();
-    _loadingMoreChatIds.clear();
-    _selectedAiRunByChatId.clear();
-    _awaitingAiResponseChatIds.clear();
-    _activeChatId = null;
-    emit(const ChatMessagesInitial());
   }
 
   @override
