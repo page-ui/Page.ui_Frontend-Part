@@ -24,13 +24,21 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
       _sessions.putIfAbsent(chatId, ChatSession.new);
 
   Future<void> openChat({required String chatId}) async {
-    await _cancelSubscription(chatId);
-    _sessions.remove(chatId);
-
     _activeChatId = chatId;
     final session = _session(chatId);
-    session.isLoading = true;
     _ensureSubscription(chatId);
+
+    if (session.isHydrated) {
+      _emitLoaded(chatId);
+      return;
+    }
+
+    if (session.isLoading) {
+      emit(ChatMessagesLoading(chatId: chatId));
+      return;
+    }
+
+    session.isLoading = true;
     emit(ChatMessagesLoading(chatId: chatId));
 
     final result = await _chatRepo.getMessages(
@@ -61,7 +69,6 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     await _cancelSubscription(chatId);
     if (_activeChatId == chatId) {
       _activeChatId = null;
-      emit(const ChatMessagesInitial());
     }
     final anySubLeft = _sessions.values.any((s) => s.subscription != null);
     if (!anySubLeft) {
@@ -117,9 +124,10 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
         .listen(
           (message) {
             if (isClosed) return;
+            final isNew = !session.messages.any((m) => m.id == message.id);
             session.messages = _mergeMessages(session.messages, [message]);
 
-            if (isAiMessageType(message.type)) {
+            if (isNew && isAiMessageType(message.type)) {
               session.selectedAiRunId = message.id;
               session.isAwaitingAiResponse = false;
             }

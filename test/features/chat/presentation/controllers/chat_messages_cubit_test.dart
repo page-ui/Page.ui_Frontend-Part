@@ -691,6 +691,54 @@ void main() {
       expect(cubit.state, isA<ChatMessagesLoaded>());
     },
   );
+
+  test(
+    'selectAiRunMessage updates activeAiRunUrl to the picked AI message URL',
+    () async {
+      final repo = _FakeChatRepo(
+        getMessagesHandler:
+            ({required chatId, required first, String? after}) async {
+              return Right((
+                messages: [
+                  _message(
+                    id: 'ai-old',
+                    chatId: chatId,
+                    content: '/runs/old/preview.html',
+                    type: 'AI_RUN',
+                    createdAt: DateTime.parse('2026-04-18T08:00:00Z'),
+                  ),
+                  _message(
+                    id: 'ai-new',
+                    chatId: chatId,
+                    content: '/runs/new/preview.html',
+                    type: 'AI_RUN',
+                    createdAt: DateTime.parse('2026-04-18T09:00:00Z'),
+                  ),
+                ],
+                hasNextPage: false,
+                endCursor: null,
+              ));
+            },
+      );
+      final cubit = ChatMessagesCubit(chatRepo: repo);
+      addTearDown(cubit.close);
+
+      await cubit.openChat(chatId: 'chat-1');
+      await Future<void>.delayed(Duration.zero);
+
+      expect(
+        cubit.state.activeAiRunUrl,
+        'http://localhost/runs/new/preview.html',
+      );
+
+      cubit.selectAiRunMessage(chatId: 'chat-1', messageId: 'ai-old');
+
+      expect(
+        cubit.state.activeAiRunUrl,
+        'http://localhost/runs/old/preview.html',
+      );
+    },
+  );
 }
 
 class _FakeChatRepo implements ChatRepo {
