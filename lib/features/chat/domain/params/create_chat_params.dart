@@ -14,7 +14,7 @@ class CreateChatParams {
       'name': name,
       'initialUserMessage': {
         'content': content,
-        // 'attachmentUrl': attachmentUrl,
+        'attachmentUrl': attachmentUrl,
       },
     };
   }
