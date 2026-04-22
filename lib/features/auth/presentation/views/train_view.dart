@@ -8,7 +8,7 @@ class TrainView extends StatelessWidget {
   static String routeName = "TrainView";
   @override
   Widget build(BuildContext context) {
-    return SlOriginalCommand();
+    return const SlOriginalCommand();
   }
 }
 

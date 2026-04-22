@@ -68,21 +68,21 @@ class _LoginViewFormState extends State<LoginViewForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            customRowAuth(hint: "Email"),
-            SizedBox(height: 4),
+            const customRowAuth(hint: "Email"),
+            const SizedBox(height: 4),
             AuthTextFormField(
               controller: _emailController,
               validator: EmailValidator,
             ),
-            SizedBox(height: 16),
-            customRowAuth(hint: "Password"),
-            SizedBox(height: 4),
+            const SizedBox(height: 16),
+            const customRowAuth(hint: "Password"),
+            const SizedBox(height: 4),
             PasswordTextFormField(controller: _passwordController),
-            SizedBox(height: 6),
-            DoNotHaveAnAccountWidget(),
-            SizedBox(height: 8),
-            ForgetPasswordWidget(),
-            SizedBox(height: 20),
+            const SizedBox(height: 6),
+            const DoNotHaveAnAccountWidget(),
+            const SizedBox(height: 8),
+            const ForgetPasswordWidget(),
+            const SizedBox(height: 20),
             Center(
               child: CustomButton(
                 title: 'Login',
@@ -105,7 +105,7 @@ class _LoginViewFormState extends State<LoginViewForm> {
               onTap: () {
                 AppRoutes.pushHomeView(context);
               },
-              child: Text(
+              child: const Text(
                 "Go to Home View",
                 style: TextStyle(color: AppColors.amber),
               ),

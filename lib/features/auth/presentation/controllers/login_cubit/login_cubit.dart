@@ -11,7 +11,7 @@ class LoginCubit extends Cubit<LoginState> {
   Future<void> login({required LoginParams params}) async {
     emit(LoginLoading());
     final result = await authRepoImpl.login(param: params);
-    result.fold(
+    await result.fold(
       (failure) {
         emit(LoginFailure(message: failure.message));
       },

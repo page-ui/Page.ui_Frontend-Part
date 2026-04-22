@@ -28,7 +28,7 @@ class AuthTextFormField extends StatelessWidget {
   }
 
   InputDecoration CustomInputDecorationForTextField() {
-    return InputDecoration(
+    return const InputDecoration(
       prefixIcon: Icon(AppIcons.arrowForward, size: 10),
       disabledBorder: OutlineInputBorder(
         borderRadius: AppBorders.xxxxs,

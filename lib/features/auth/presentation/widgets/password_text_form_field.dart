@@ -28,7 +28,7 @@ class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
       obscuringCharacter: "*",
 
       decoration: InputDecoration(
-        prefixIcon: Icon(AppIcons.arrowForward, size: 10),
+        prefixIcon: const Icon(AppIcons.arrowForward, size: 10),
         suffixIcon: IconButton(
           icon: Icon(
             isSecure ? AppIcons.visibilityOff : AppIcons.visibilityOn,
@@ -41,19 +41,19 @@ class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
             });
           },
         ),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderRadius: AppBorders.xxxxs,
           borderSide: BorderSide(color: AppColors.darkSurface),
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderRadius: AppBorders.xxxxs,
           borderSide: BorderSide(color: AppColors.cyan),
         ),
-        errorBorder: OutlineInputBorder(
+        errorBorder: const OutlineInputBorder(
           borderRadius: AppBorders.xxxxs,
           borderSide: BorderSide(color: AppColors.red),
         ),
-        border: OutlineInputBorder(
+        border: const OutlineInputBorder(
           borderRadius: AppBorders.xxxxs,
           borderSide: BorderSide(color: AppColors.darkGrey),
         ),

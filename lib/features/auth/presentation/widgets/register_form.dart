@@ -81,8 +81,8 @@ class _RegisterFormState extends State<RegisterForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            customRowAuth(hint: "Name"),
-            SizedBox(height: 4),
+            const customRowAuth(hint: "Name"),
+            const SizedBox(height: 4),
             AuthTextFormField(
               controller: _nameController,
               validator: (value) {
@@ -96,32 +96,32 @@ class _RegisterFormState extends State<RegisterForm> {
               },
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-            customRowAuth(hint: "Email"),
-            SizedBox(height: 4),
+            const customRowAuth(hint: "Email"),
+            const SizedBox(height: 4),
             AuthTextFormField(
               controller: _emailController,
               validator: EmailValidator,
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-            customRowAuth(hint: "Password"),
-            SizedBox(height: 4),
+            const customRowAuth(hint: "Password"),
+            const SizedBox(height: 4),
             PasswordTextFormField(controller: _passwordController),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-            customRowAuth(hint: "Confirm Password"),
-            SizedBox(height: 4),
+            const customRowAuth(hint: "Confirm Password"),
+            const SizedBox(height: 4),
             PasswordTextFormField(controller: _confirmpasswordController),
 
-            SizedBox(height: 6),
+            const SizedBox(height: 6),
 
-            HaveAnAccountWidget(),
+            const HaveAnAccountWidget(),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             Center(
               child: CustomButton(

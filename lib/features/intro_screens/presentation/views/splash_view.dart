@@ -58,7 +58,7 @@ class _SplashViewState extends State<SplashView> {
                   ],
                 ),
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               DefaultTextStyle(
                 style: AppTextStyles.titleMedium!.copyWith(
                   color: AppColors.white,

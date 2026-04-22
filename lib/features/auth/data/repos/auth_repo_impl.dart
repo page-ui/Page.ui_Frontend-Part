@@ -115,7 +115,7 @@ class AuthRepoImpl extends AuthRepo {
   }) async {
     try {
       await dataSource.resetPassword(params: params);
-      return Right(1);
+      return const Right(1);
     } catch (e) {
       return Left(
         ServerFailure(message: "Failed to change password. Please try again."),
@@ -130,7 +130,7 @@ class AuthRepoImpl extends AuthRepo {
   }) async {
     try {
       await dataSource.resendVerficationCode(email: email);
-      return Right(1);
+      return const Right(1);
     } catch (e) {
       return Left(
         ServerFailure(message: "There was an error. Please try again."),

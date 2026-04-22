@@ -90,7 +90,7 @@ class _OTPCodeVerficationState extends State<OTPCodeVerfication> {
               },
             ),
 
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             CustomButton(
               title: "VERIFY",
               onPressed: () {
@@ -121,7 +121,7 @@ class _OTPCodeVerficationState extends State<OTPCodeVerfication> {
                 }
               },
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Align(
               alignment: AlignmentGeometry.bottomLeft,
               child: Text(

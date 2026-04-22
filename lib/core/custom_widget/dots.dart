@@ -12,9 +12,9 @@ class Dots extends StatelessWidget {
     return Row(
       children: [
         Icon(icon, color: color, size: size),
-        SizedBox(width: 4),
+        const SizedBox(width: 4),
         Icon(icon, color: color, size: size),
-        SizedBox(width: 4),
+        const SizedBox(width: 4),
         Icon(icon, color: color, size: size),
       ],
     );

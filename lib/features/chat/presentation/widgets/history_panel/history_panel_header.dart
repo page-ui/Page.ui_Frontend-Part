@@ -21,7 +21,7 @@ class HistoryPanelHeader extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            Icon(AppIcons.arrowForward, size: 12, color: AppColors.white),
+            const  Icon(AppIcons.arrowForward, size: 12, color: AppColors.white),
             const SizedBox(width: 8),
             Text(
               "History Interface",

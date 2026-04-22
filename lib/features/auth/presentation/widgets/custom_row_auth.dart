@@ -10,7 +10,7 @@ class customRowAuth extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(AppIcons.arrowForward, color: AppColors.primaryColor, size: 12),
+        const Icon(AppIcons.arrowForward, color: AppColors.primaryColor, size: 12),
         Text(
           " $hint:",
           style: AppTextStyles.bodyMedium!.copyWith(

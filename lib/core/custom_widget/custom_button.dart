@@ -23,12 +23,12 @@ class CustomButton extends StatelessWidget {
             style: AppTextStyles.bodyLarge!.copyWith(color: AppColors.green),
           ),
       onPressed: onPressed,
-      style: ButtonStyle(
+      style: const ButtonStyle(
         maximumSize: WidgetStateProperty.fromMap({
-          WidgetState.any: Size(double.infinity, 50),
+          WidgetState.any: const Size(double.infinity, 50),
         }),
         minimumSize: WidgetStateProperty.fromMap({
-          WidgetState.any: Size(double.infinity, 50),
+          WidgetState.any: const Size(double.infinity, 50),
         }),
         backgroundColor: WidgetStateColor.fromMap({
           WidgetState.pressed: AppColors.spaceBlack,
@@ -36,7 +36,7 @@ class CustomButton extends StatelessWidget {
         }),
         enableFeedback: true,
         shape: WidgetStateProperty.fromMap({
-          WidgetState.any: RoundedRectangleBorder(
+          WidgetState.any: const RoundedRectangleBorder(
             borderRadius: AppBorders.xxxxs,
             side: BorderSide(color: AppColors.primaryColor),
           ),

@@ -37,7 +37,7 @@ class ImagePreviewChatInputBar extends StatelessWidget {
                   height: 56,
                   color: AppColors.black.withValues(alpha: 0.12),
                   child: fileBytes == null
-                      ? Icon(AppIcons.image, size: 18)
+                      ? const Icon(AppIcons.image, size: 18)
                       : Image.memory(fileBytes, fit: BoxFit.cover),
                 ),
               ),
@@ -68,7 +68,7 @@ class ImagePreviewChatInputBar extends StatelessWidget {
                 onTap: () {
                   context.read<PickFileCubit>().removeImage();
                 },
-                child: Icon(AppIcons.close, size: 18),
+                child: const Icon(AppIcons.close, size: 18),
               ),
             ],
           ),

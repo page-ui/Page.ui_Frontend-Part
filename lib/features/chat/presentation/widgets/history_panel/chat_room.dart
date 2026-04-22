@@ -37,8 +37,8 @@ class ChatRoom extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4, right: 8),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 4, right: 8),
                         child: Icon(
                           AppIcons.arrowForward,
                           size: 12,

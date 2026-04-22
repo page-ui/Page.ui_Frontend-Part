@@ -12,7 +12,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     emit(RegisterLoading());
     final result = await authRepoImpl.register(param: params);
 
-    result.fold(
+    await result.fold(
       (failure) {
         emit(RegisterFailure(message: failure.message));
       },

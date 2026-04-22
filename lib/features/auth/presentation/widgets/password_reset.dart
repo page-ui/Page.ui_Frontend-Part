@@ -67,11 +67,11 @@ class _PasswordResetState extends State<PasswordReset> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            customRowAuth(hint: "New Password"),
+            const customRowAuth(hint: "New Password"),
             const SizedBox(height: 4),
             PasswordTextFormField(controller: _passwordController),
             const SizedBox(height: 16),
-            customRowAuth(hint: "Confirm Password"),
+            const customRowAuth(hint: "Confirm Password"),
             const SizedBox(height: 4),
             PasswordTextFormField(controller: _confirmPasswordController),
             const SizedBox(height: 20),

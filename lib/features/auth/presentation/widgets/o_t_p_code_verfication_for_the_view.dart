@@ -109,7 +109,7 @@ class _EmailVerficationFormState extends State<EmailVerficationForm> {
               },
             ),
 
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             CustomButton(
               title: "VERIFY",
               onPressed: () {
@@ -140,7 +140,7 @@ class _EmailVerficationFormState extends State<EmailVerficationForm> {
                 }
               },
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Align(
               alignment: AlignmentGeometry.bottomLeft,
               child: Text(

@@ -5,7 +5,7 @@ import 'package:pageui/features/auth/presentation/widgets/register_view_body.dar
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
-  static final routeName = "RegisterView";
+  static const routeName = "RegisterView";
 
   @override
   State<RegisterView> createState() => _RegisterViewState();

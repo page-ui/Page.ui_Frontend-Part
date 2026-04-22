@@ -258,59 +258,61 @@ void main() {
     await controller.close();
   });
 
-  test(
-    'ChatMessagesCubit loads more messages with pagination',
-    () async {
-      final repo = _FakeChatRepo(
-        getMessagesHandler:
-            ({required chatId, required first, String? after}) async {
-              if (after == null) {
-                return Right((
-                  messages: [
-                    _message(id: 'message-1', chatId: chatId, content: 'Hello'),
-                  ],
-                  hasNextPage: true,
-                  endCursor: 'cursor-1',
-                ));
-              }
+  test('ChatMessagesCubit loads more messages with pagination', () async {
+    final repo = _FakeChatRepo(
+      getMessagesHandler:
+          ({required chatId, required first, String? after}) async {
+            if (after == null) {
               return Right((
                 messages: [
-                  _message(id: 'message-2', chatId: chatId, content: 'World'),
+                  _message(id: 'message-1', chatId: chatId, content: 'Hello'),
                 ],
-                hasNextPage: false,
-                endCursor: 'cursor-2',
+                hasNextPage: true,
+                endCursor: 'cursor-1',
               ));
-            },
-      );
-      final cubit = ChatMessagesCubit(chatRepo: repo);
-      addTearDown(cubit.close);
+            }
+            return Right((
+              messages: [
+                _message(id: 'message-2', chatId: chatId, content: 'World'),
+              ],
+              hasNextPage: false,
+              endCursor: 'cursor-2',
+            ));
+          },
+    );
+    final cubit = ChatMessagesCubit(chatRepo: repo);
+    addTearDown(cubit.close);
 
-      await cubit.openChat(chatId: 'chat-1');
-      await Future<void>.delayed(Duration.zero);
+    await cubit.openChat(chatId: 'chat-1');
+    await Future<void>.delayed(Duration.zero);
 
-      var loadedState = cubit.state as ChatMessagesLoaded;
-      expect(loadedState.messages, hasLength(1));
-      expect(loadedState.hasNextPage, true);
-      expect(loadedState.endCursor, 'cursor-1');
+    var loadedState = cubit.state as ChatMessagesLoaded;
+    expect(loadedState.messages, hasLength(1));
+    expect(loadedState.hasNextPage, true);
+    expect(loadedState.endCursor, 'cursor-1');
 
-      await cubit.loadMoreMessages(chatId: 'chat-1');
-      await Future<void>.delayed(Duration.zero);
+    await cubit.loadMoreMessages(chatId: 'chat-1');
+    await Future<void>.delayed(Duration.zero);
 
-      loadedState = cubit.state as ChatMessagesLoaded;
-      expect(loadedState.messages, hasLength(2));
-      expect(loadedState.hasNextPage, false);
-    },
-  );
+    loadedState = cubit.state as ChatMessagesLoaded;
+    expect(loadedState.messages, hasLength(2));
+    expect(loadedState.hasNextPage, false);
+  });
 
   test(
     'ChatMessagesCubit sets isLoadingMore to true during pagination',
     () async {
-      final completer = Completer<
-        Either<
-          Failure,
-          ({List<MessageEntity> messages, bool hasNextPage, String? endCursor})
-        >
-      >();
+      final completer =
+          Completer<
+            Either<
+              Failure,
+              ({
+                List<MessageEntity> messages,
+                bool hasNextPage,
+                String? endCursor,
+              })
+            >
+          >();
       final repo = _FakeChatRepo(
         getMessagesHandler:
             ({required chatId, required first, String? after}) async {
@@ -344,13 +346,15 @@ void main() {
       expect(loadedState.isLoadingMore, true);
 
       // Complete the load
-      completer.complete(Right((
-        messages: [
-          _message(id: 'message-2', chatId: 'chat-1', content: 'World'),
-        ],
-        hasNextPage: false,
-        endCursor: 'cursor-2',
-      )));
+      completer.complete(
+        Right((
+          messages: [
+            _message(id: 'message-2', chatId: 'chat-1', content: 'World'),
+          ],
+          hasNextPage: false,
+          endCursor: 'cursor-2',
+        )),
+      );
 
       await loadFuture;
       await Future<void>.delayed(Duration.zero);
@@ -366,12 +370,17 @@ void main() {
     'ChatMessagesCubit prevents concurrent loadMoreMessages calls',
     () async {
       var callCount = 0;
-      final completer = Completer<
-        Either<
-          Failure,
-          ({List<MessageEntity> messages, bool hasNextPage, String? endCursor})
-        >
-      >();
+      final completer =
+          Completer<
+            Either<
+              Failure,
+              ({
+                List<MessageEntity> messages,
+                bool hasNextPage,
+                String? endCursor,
+              })
+            >
+          >();
       final repo = _FakeChatRepo(
         getMessagesHandler:
             ({required chatId, required first, String? after}) async {
@@ -399,13 +408,15 @@ void main() {
       final loadFuture2 = cubit.loadMoreMessages(chatId: 'chat-1');
 
       // Complete the first call
-      completer.complete(Right((
-        messages: [
-          _message(id: 'message-2', chatId: 'chat-1', content: 'World'),
-        ],
-        hasNextPage: false,
-        endCursor: 'cursor-2',
-      )));
+      completer.complete(
+        Right((
+          messages: [
+            _message(id: 'message-2', chatId: 'chat-1', content: 'World'),
+          ],
+          hasNextPage: false,
+          endCursor: 'cursor-2',
+        )),
+      );
 
       await Future.wait([loadFuture1, loadFuture2]);
       await Future<void>.delayed(Duration.zero);
@@ -450,43 +461,40 @@ void main() {
     },
   );
 
-  test(
-    'ChatMessagesCubit handles pagination error gracefully',
-    () async {
-      final repo = _FakeChatRepo(
-        getMessagesHandler:
-            ({required chatId, required first, String? after}) async {
-              if (after == null) {
-                return Right((
-                  messages: [
-                    _message(id: 'message-1', chatId: chatId, content: 'Hello'),
-                  ],
-                  hasNextPage: true,
-                  endCursor: 'cursor-1',
-                ));
-              }
-              return Left(ServerFailure(message: 'Pagination failed.'));
-            },
-      );
-      final cubit = ChatMessagesCubit(chatRepo: repo);
-      addTearDown(cubit.close);
+  test('ChatMessagesCubit handles pagination error gracefully', () async {
+    final repo = _FakeChatRepo(
+      getMessagesHandler:
+          ({required chatId, required first, String? after}) async {
+            if (after == null) {
+              return Right((
+                messages: [
+                  _message(id: 'message-1', chatId: chatId, content: 'Hello'),
+                ],
+                hasNextPage: true,
+                endCursor: 'cursor-1',
+              ));
+            }
+            return Left(ServerFailure(message: 'Pagination failed.'));
+          },
+    );
+    final cubit = ChatMessagesCubit(chatRepo: repo);
+    addTearDown(cubit.close);
 
-      await cubit.openChat(chatId: 'chat-1');
-      await Future<void>.delayed(Duration.zero);
+    await cubit.openChat(chatId: 'chat-1');
+    await Future<void>.delayed(Duration.zero);
 
-      var loadedState = cubit.state as ChatMessagesLoaded;
-      expect(loadedState.messages, hasLength(1));
-      expect(loadedState.hasNextPage, true);
+    var loadedState = cubit.state as ChatMessagesLoaded;
+    expect(loadedState.messages, hasLength(1));
+    expect(loadedState.hasNextPage, true);
 
-      await cubit.loadMoreMessages(chatId: 'chat-1');
-      await Future<void>.delayed(Duration.zero);
+    await cubit.loadMoreMessages(chatId: 'chat-1');
+    await Future<void>.delayed(Duration.zero);
 
-      // Should keep existing messages on error
-      loadedState = cubit.state as ChatMessagesLoaded;
-      expect(loadedState.messages, hasLength(1));
-      expect(loadedState.isLoadingMore, false);
-    },
-  );
+    // Should keep existing messages on error
+    loadedState = cubit.state as ChatMessagesLoaded;
+    expect(loadedState.messages, hasLength(1));
+    expect(loadedState.isLoadingMore, false);
+  });
 
   test(
     'ChatMessagesCubit merges paginated messages correctly by createdAt',
@@ -558,41 +566,38 @@ void main() {
     },
   );
 
-  test(
-    'ChatMessagesCubit does not load more when endCursor is null',
-    () async {
-      var callCount = 0;
-      final repo = _FakeChatRepo(
-        getMessagesHandler:
-            ({required chatId, required first, String? after}) async {
-              callCount++;
-              return Right((
-                messages: [
-                  _message(id: 'message-1', chatId: chatId, content: 'Hello'),
-                ],
-                hasNextPage: true,
-                // Server returns hasNextPage true but no cursor
-                endCursor: null,
-              ));
-            },
-      );
-      final cubit = ChatMessagesCubit(chatRepo: repo);
-      addTearDown(cubit.close);
+  test('ChatMessagesCubit does not load more when endCursor is null', () async {
+    var callCount = 0;
+    final repo = _FakeChatRepo(
+      getMessagesHandler:
+          ({required chatId, required first, String? after}) async {
+            callCount++;
+            return Right((
+              messages: [
+                _message(id: 'message-1', chatId: chatId, content: 'Hello'),
+              ],
+              hasNextPage: true,
+              // Server returns hasNextPage true but no cursor
+              endCursor: null,
+            ));
+          },
+    );
+    final cubit = ChatMessagesCubit(chatRepo: repo);
+    addTearDown(cubit.close);
 
-      await cubit.openChat(chatId: 'chat-1');
-      await Future<void>.delayed(Duration.zero);
+    await cubit.openChat(chatId: 'chat-1');
+    await Future<void>.delayed(Duration.zero);
 
-      var loadedState = cubit.state as ChatMessagesLoaded;
-      expect(loadedState.hasNextPage, true);
-      expect(loadedState.endCursor, isNull);
+    var loadedState = cubit.state as ChatMessagesLoaded;
+    expect(loadedState.hasNextPage, true);
+    expect(loadedState.endCursor, isNull);
 
-      await cubit.loadMoreMessages(chatId: 'chat-1');
-      await Future<void>.delayed(Duration.zero);
+    await cubit.loadMoreMessages(chatId: 'chat-1');
+    await Future<void>.delayed(Duration.zero);
 
-      // Should not make another API call since endCursor is null
-      expect(callCount, 1);
-    },
-  );
+    // Should not make another API call since endCursor is null
+    expect(callCount, 1);
+  });
 
   test(
     'ChatMessagesCubit does not load more before initial hydration',
@@ -636,7 +641,7 @@ void main() {
       final repo = _FakeChatRepo(
         getMessagesHandler:
             ({required chatId, required first, String? after}) async {
-              return Right((
+              return const Right((
                 messages: <MessageEntity>[],
                 hasNextPage: false,
                 endCursor: null,
@@ -756,11 +761,7 @@ class _FakeChatRepo implements ChatRepo {
       ({List<MessageEntity> messages, bool hasNextPage, String? endCursor})
     >
   >
-  Function({
-    required String chatId,
-    required int first,
-    String? after,
-  })
+  Function({required String chatId, required int first, String? after})
   getMessagesHandler;
   final Stream<MessageEntity> Function({required String chatId})
   _subscribeToMessagesHandler;
@@ -773,11 +774,8 @@ class _FakeChatRepo implements ChatRepo {
       ({List<MessageEntity> messages, bool hasNextPage, String? endCursor})
     >
   >
-  getMessages({
-    required String chatId,
-    required int first,
-    String? after,
-  }) => getMessagesHandler(chatId: chatId, first: first, after: after);
+  getMessages({required String chatId, required int first, String? after}) =>
+      getMessagesHandler(chatId: chatId, first: first, after: after);
 
   @override
   Stream<MessageEntity> subscribeToMessages({required String chatId}) {

@@ -13,7 +13,7 @@ class ForgetPaswordViewBody extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           ForgetPasswordCubit(authRepoImpl: getit.get<AuthRepoImpl>()),
-      child: ForgetPaswordViewForm(),
+      child: const ForgetPaswordViewForm(),
     );
   }
 }

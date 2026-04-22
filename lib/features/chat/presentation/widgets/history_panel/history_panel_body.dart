@@ -56,7 +56,7 @@ class _HistoryPanelBodyState extends State<HistoryPanelBody> {
                         context.read<ChatHomeCubit>().reset();
                         widget.onPressed?.call();
                       },
-                      icon: Icon(AppIcons.plus),
+                      icon:const Icon(AppIcons.plus),
                     ),
                   );
                 },

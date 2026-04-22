@@ -64,7 +64,7 @@ class _ForgetPasswordRequestState extends State<ForgetPasswordRequest> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            customRowAuth(hint: "Type Your Email"),
+            const customRowAuth(hint: "Type Your Email"),
             const SizedBox(height: 4),
             AuthTextFormField(
               controller: _emailController,
@@ -72,14 +72,14 @@ class _ForgetPasswordRequestState extends State<ForgetPasswordRequest> {
               enable: !isLoading,
             ),
             const SizedBox(height: 4),
-            HaveAnAccountWidget(),
+            const HaveAnAccountWidget(),
             const SizedBox(height: 20),
             AbsorbPointer(
               absorbing: isLoading,
               child: CustomButton(
                 child: isLoading
-                    ? Padding(
-                        padding: const EdgeInsets.all(8.0),
+                    ? const Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: CircularProgressIndicator(),
                       )
                     : null,

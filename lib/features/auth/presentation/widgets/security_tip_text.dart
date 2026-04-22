@@ -16,24 +16,24 @@ class SecurityTipText extends StatelessWidget {
             borderRadius: AppBorders.xxxs,
           ),
           padding: const EdgeInsets.all(16),
-          child: Row(
+          child: const Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                 width: 16,
                 height: 16,
-                child: const Icon(
+                child: Icon(
                   Icons.security,
                   color: AppColors.white,
                   size: 16,
                 ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Security Tip',
                       style: TextStyle(
                         color: AppColors.white,
@@ -41,8 +41,8 @@ class SecurityTipText extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    const Text(
+                    SizedBox(height: 4),
+                    Text(
                       'Use a unique password that you don\'t use for other accounts. Consider using a password manager to generate and store strong passwords.',
                       style: TextStyle(
                         color: AppColors.grey,

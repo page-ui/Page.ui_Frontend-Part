@@ -16,7 +16,7 @@ class EmailVerificationCubit extends Cubit<EmailVerficationState> {
   }) async {
     emit(EmailVerificationLoading());
     final result = await authRepoImpl.emailVerfication(params: params);
-    result.fold(
+    await result.fold(
       (failure) {
         emit(EmailVerificationFailure(message: failure.message));
       },
