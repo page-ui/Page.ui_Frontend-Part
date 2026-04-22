@@ -5,6 +5,7 @@ import 'package:pageui/core/helpers/panel_scrollbar.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
 import 'package:pageui/features/chat/presentation/widgets/chat_panel/message_bubble.dart';
+import 'package:pageui/features/chat/presentation/widgets/chat_panel/pending_ai_bubble.dart';
 
 class LoadMessagesBuilder extends StatefulWidget {
   const LoadMessagesBuilder({super.key});
@@ -94,13 +95,19 @@ class _LoadMessagesBuilderState extends State<LoadMessagesBuilder> {
               );
             }
 
+            final pendingOffset = state.isAwaitingAiResponse ? 1 : 0;
+            final loadMoreOffset = state.isLoadingMore ? 1 : 0;
             return ListView.builder(
               controller: _scrollController,
               reverse: true,
               padding: const EdgeInsets.only(top: 4, bottom: 8, right: 16),
-              itemCount: messages.length + (state.isLoadingMore ? 1 : 0),
+              itemCount: messages.length + pendingOffset + loadMoreOffset,
               itemBuilder: (context, index) {
-                if (index == messages.length) {
+                if (pendingOffset == 1 && index == 0) {
+                  return const PendingAiBubble();
+                }
+                final messageIndex = index - pendingOffset;
+                if (messageIndex == messages.length) {
                   return const Padding(
                     padding: EdgeInsets.symmetric(vertical: 16),
                     child: Center(
@@ -115,7 +122,7 @@ class _LoadMessagesBuilderState extends State<LoadMessagesBuilder> {
                     ),
                   );
                 }
-                final reversedIndex = messages.length - 1 - index;
+                final reversedIndex = messages.length - 1 - messageIndex;
                 return MessageBubble(message: messages[reversedIndex]);
               },
             );

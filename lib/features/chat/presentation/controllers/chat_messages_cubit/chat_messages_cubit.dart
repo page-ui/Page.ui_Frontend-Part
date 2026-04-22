@@ -8,6 +8,7 @@ import 'package:pageui/features/chat/domain/entities/message_entity.dart';
 import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/_chat_session.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
+import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_typewriter_registry.dart';
 
 class ChatMessagesCubit extends Cubit<ChatMessagesState> {
   ChatMessagesCubit({required ChatRepo chatRepo})
@@ -130,6 +131,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
             if (isNew && isAiMessageType(message.type)) {
               session.selectedAiRunId = message.id;
               session.isAwaitingAiResponse = false;
+              ChatTypewriterRegistry.markArrived(message.id);
             }
 
             if (_activeChatId == chatId) _emitLoaded(chatId);

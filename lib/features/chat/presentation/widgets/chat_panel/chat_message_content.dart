@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/constants/borders.dart';
 import 'package:pageui/features/chat/domain/constants/message_types.dart';
 import 'package:pageui/features/chat/domain/entities/message_entity.dart';
+import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_typewriter_registry.dart';
 
 class ChatMessageContent extends StatelessWidget {
   const ChatMessageContent({super.key, required this.message});
@@ -41,7 +44,11 @@ class ChatMessageContent extends StatelessWidget {
             heroTag: 'chat-image-${message.id}',
           ),
         if (_hasImage && _displayText != null) const SizedBox(height: 8),
-        _ChatMessageText(content: _displayText),
+        _ChatMessageText(
+          content: _displayText,
+          messageId: message.id,
+          animate: _isAiRun,
+        ),
       ],
     );
   }
@@ -118,20 +125,95 @@ class _ChatMessageImage extends StatelessWidget {
   }
 }
 
-class _ChatMessageText extends StatelessWidget {
-  const _ChatMessageText({required this.content});
+class _ChatMessageText extends StatefulWidget {
+  const _ChatMessageText({
+    required this.content,
+    required this.messageId,
+    required this.animate,
+  });
 
   final String? content;
+  final String messageId;
+  final bool animate;
+
+  @override
+  State<_ChatMessageText> createState() => _ChatMessageTextState();
+}
+
+class _ChatMessageTextState extends State<_ChatMessageText> {
+  static const Duration _tickInterval = Duration(milliseconds: 18);
+
+  Timer? _timer;
+  String _visible = '';
+  String _fullText = '';
+  int _cursor = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fullText = widget.content?.trim() ?? '';
+    final shouldAnimate =
+        widget.animate &&
+        _fullText.isNotEmpty &&
+        ChatTypewriterRegistry.shouldAnimate(widget.messageId);
+    if (shouldAnimate) {
+      _visible = '';
+      _cursor = 0;
+      _startTyping();
+    } else {
+      _visible = _fullText;
+      _cursor = _fullText.length;
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant _ChatMessageText oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final next = widget.content?.trim() ?? '';
+    if (next == _fullText) return;
+    _fullText = next;
+    if (_timer == null) {
+      _visible = _fullText;
+      _cursor = _fullText.length;
+      if (mounted) setState(() {});
+    } else if (_cursor > _fullText.length) {
+      _cursor = _fullText.length;
+      _visible = _fullText;
+    }
+  }
+
+  void _startTyping() {
+    _timer = Timer.periodic(_tickInterval, (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+      if (_cursor >= _fullText.length) {
+        timer.cancel();
+        _timer = null;
+        ChatTypewriterRegistry.markCompleted(widget.messageId);
+        return;
+      }
+      setState(() {
+        _cursor += 1;
+        _visible = _fullText.substring(0, _cursor);
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final text = content?.trim();
-    if (text == null || text.isEmpty) {
+    if (_fullText.isEmpty) {
       return const SizedBox.shrink();
     }
-
     return Text(
-      text,
+      _visible,
       style: TextStyle(
         color: AppColors.white.withValues(alpha: 0.9),
         fontSize: 14,
