@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_icons.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class CustomButtonIconForPanels extends StatelessWidget {
   const CustomButtonIconForPanels({
@@ -14,13 +15,15 @@ class CustomButtonIconForPanels extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      padding: const EdgeInsets.all(0),
-      onPressed: onPressed,
-      icon: Icon(
-        isLeftPanel ? AppIcons.arrowForward : AppIcons.arrowBackward,
-        color: AppColors.grey,
-        size: 12,
+    return PointerInterceptor(
+      child: IconButton(
+        padding: const EdgeInsets.all(0),
+        onPressed: onPressed,
+        icon: Icon(
+          isLeftPanel ? AppIcons.arrowForward : AppIcons.arrowBackward,
+          color: AppColors.grey,
+          size: 12,
+        ),
       ),
     );
   }

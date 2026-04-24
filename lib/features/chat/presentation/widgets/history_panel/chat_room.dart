@@ -23,6 +23,8 @@ class ChatRoom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasMenuActions = onRename != null && onDelete != null;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Material(
@@ -40,33 +42,33 @@ class ChatRoom extends StatelessWidget {
               width: 1.2,
             ),
           ),
-          child: Stack(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              InkWell(
-                onTap: onTap,
-                borderRadius: AppBorders.xxxs,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4, right: 8),
-                            child: Icon(
-                              AppIcons.arrowForward,
-                              size: 12,
-                              color: isSelected
-                                  ? AppColors.primaryColor
-                                  : AppColors.lightGray,
+              Expanded(
+                child: InkWell(
+                  onTap: onTap,
+                  borderRadius: AppBorders.xxxs,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4, right: 8),
+                              child: Icon(
+                                AppIcons.arrowForward,
+                                size: 12,
+                                color: isSelected
+                                    ? AppColors.primaryColor
+                                    : AppColors.lightGray,
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 28),
+                            Expanded(
                               child: Text(
                                 chat.name,
                                 maxLines: 3,
@@ -85,35 +87,28 @@ class ChatRoom extends StatelessWidget {
                                 ),
                               ),
                             ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          _formatDateTime(chat.createdAt ?? DateTime.now()),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: isSelected
+                                ? AppColors.white.withValues(alpha: 0.7)
+                                : AppColors.white.withValues(alpha: 0.5),
+                            fontSize: 12,
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              _formatDateTime(chat.createdAt ?? DateTime.now()),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: isSelected
-                                    ? AppColors.white.withValues(alpha: 0.7)
-                                    : AppColors.white.withValues(alpha: 0.5),
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-              if (onRename != null && onDelete != null)
-                Positioned(
-                  top: 8,
-                  right: 8,
+              if (hasMenuActions)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8, right: 8),
                   child: MenuButton(
                     onRename: onRename!,
                     onDelete: onDelete!,

@@ -60,6 +60,8 @@ class IframeView extends StatelessWidget {
           ..style.border = '0'
           ..style.width = '100%'
           ..style.height = '100%'
+          ..style.pointerEvents = 'none'
+          ..style.userSelect = 'none'
           ..allow = 'clipboard-read; clipboard-write';
         root.appendChild(iframe);
       }

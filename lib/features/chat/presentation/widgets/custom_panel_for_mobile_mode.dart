@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/constants/borders.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class CustomPanelForMobileMode extends StatelessWidget {
   const CustomPanelForMobileMode({
@@ -18,11 +19,13 @@ class CustomPanelForMobileMode extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        GestureDetector(
-          onTap: onClose,
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.black.withValues(alpha: 0.7),
+        PointerInterceptor(
+          child: GestureDetector(
+            onTap: onClose,
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.black.withValues(alpha: 0.7),
+              ),
             ),
           ),
         ),
@@ -31,22 +34,24 @@ class CustomPanelForMobileMode extends StatelessWidget {
           right: isRight ? 0 : null,
           top: 0,
           bottom: 0,
-          child: Container(
-            width: width,
-            margin: EdgeInsets.only(
-              top: 28,
-              bottom: 20,
-              left: isRight ? 0 : 20,
-              right: isRight ? 20 : 0,
+          child: PointerInterceptor(
+            child: Container(
+              width: width,
+              margin: EdgeInsets.only(
+                top: 28,
+                bottom: 20,
+                left: isRight ? 0 : 20,
+                right: isRight ? 20 : 0,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: AppBorders.xxxxs,
+                shape: BoxShape.rectangle,
+                color: AppColors.anotherGray.withValues(alpha: 0.6),
+                border: Border.all(color: AppColors.darkGrey, width: 0.5),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: ColoredBox(color: AppColors.transparent, child: panel),
             ),
-            decoration: BoxDecoration(
-              borderRadius: AppBorders.xxxxs,
-              shape: BoxShape.rectangle,
-              color: AppColors.anotherGray.withValues(alpha: 0.6),
-              border: Border.all(color: AppColors.darkGrey, width: 0.5),
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: ColoredBox(color: AppColors.transparent, child: panel),
           ),
         ),
       ],

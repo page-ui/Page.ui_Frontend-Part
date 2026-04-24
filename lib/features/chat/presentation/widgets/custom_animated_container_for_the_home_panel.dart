@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/constants/borders.dart';
 import 'package:pageui/features/chat/presentation/widgets/home_panel_on_closed.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class CustomAnimatedContainerForTheHomePanel extends StatefulWidget {
   const CustomAnimatedContainerForTheHomePanel({
@@ -65,13 +66,15 @@ class _CustomAnimatedContainerForTheHomePanelState
         border: Border.all(color: AppColors.darkGrey, width: 0.5),
       ),
       onEnd: () => setState(() => _isAnimating = false),
-      child: (widget.isOpen && !_isAnimating)
-          ? widget.child
-          : HomePanelOnClosed(
-              isLeftPanel: widget.isLeft,
-              onPressed: widget.onPressed,
-              isOpen: widget.isOpen,
-            ),
+      child: PointerInterceptor(
+        child: (widget.isOpen && !_isAnimating)
+            ? widget.child
+            : HomePanelOnClosed(
+                isLeftPanel: widget.isLeft,
+                onPressed: widget.onPressed,
+                isOpen: widget.isOpen,
+              ),
+      ),
     );
   }
 }

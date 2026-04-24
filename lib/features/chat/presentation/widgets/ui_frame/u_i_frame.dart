@@ -16,21 +16,29 @@ class UIFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: AnimatedContainer(
-        margin: const EdgeInsets.only(top: 28, bottom: 20, left: 20, right: 20),
-        padding: const EdgeInsets.all(6),
-        decoration: BoxDecoration(
-          borderRadius: AppBorders.xxxxs,
-          shape: BoxShape.rectangle,
-          color: AppColors.anotherGray.withValues(alpha: 0.6),
-          border: Border.all(color: AppColors.darkGrey, width: 0.5),
-        ),
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        child: UIFrameBody(
-          isMobile: context.isMobile,
-          onLeftButtonPressed: onLeftButtonPressed,
-          onRightButtonPressed: onRightButtonPressed,
+      child: ClipRRect(
+        borderRadius: AppBorders.xxxxs,
+        child: AnimatedContainer(
+          margin: const EdgeInsets.only(
+            top: 28,
+            bottom: 20,
+            left: 20,
+            right: 20,
+          ),
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            borderRadius: AppBorders.xxxxs,
+            shape: BoxShape.rectangle,
+            color: AppColors.anotherGray.withValues(alpha: 0.6),
+            border: Border.all(color: AppColors.darkGrey, width: 0.5),
+          ),
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          child: UIFrameBody(
+            isMobile: context.isMobile,
+            onLeftButtonPressed: onLeftButtonPressed,
+            onRightButtonPressed: onRightButtonPressed,
+          ),
         ),
       ),
     );
