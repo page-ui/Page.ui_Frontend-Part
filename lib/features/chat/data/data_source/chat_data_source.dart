@@ -23,6 +23,10 @@ abstract class ChatDataSource {
   Stream<MessageModel> subscribeToMessages({required String chatId});
 
   Future<void> sendMessage({required SendMessageParams params});
+
+  Future<void> deleteChat({required String chatId});
+
+  Future<ChatModel> renameChat({required String chatId, required String name});
 }
 
 class ChatDataSourceImpl extends ChatDataSource {
@@ -200,5 +204,42 @@ class ChatDataSourceImpl extends ChatDataSource {
     if (result.hasException || result.data?['createMessage'] == null) {
       throw Exception('Failed to send message.');
     }
+  }
+
+  @override
+  Future<void> deleteChat({required String chatId}) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(Queries.deleteChatMutation),
+        variables: {'chatId': chatId},
+      ),
+    );
+
+    if (result.hasException) {
+      throw Exception('Failed to delete chat: ${result.exception.toString()}');
+    }
+  }
+
+  @override
+  Future<ChatModel> renameChat({
+    required String chatId,
+    required String name,
+  }) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(Queries.renameChatMutation),
+        variables: {
+          'input': {'chatId': chatId, 'name': name},
+        },
+      ),
+    );
+
+    if (result.hasException || result.data?['renameChat'] == null) {
+      throw Exception('Failed to rename chat: ${result.exception.toString()}');
+    }
+
+    return ChatModel.fromJson(
+      result.data!['renameChat'] as Map<String, dynamic>,
+    );
   }
 }

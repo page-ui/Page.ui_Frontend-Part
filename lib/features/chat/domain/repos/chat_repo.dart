@@ -40,4 +40,11 @@ abstract class ChatRepo {
   Future<Either<Failure, void>> sendMessage({
     required SendMessageParams params,
   });
+
+  Future<Either<Failure, void>> deleteChat({required String chatId});
+
+  Future<Either<Failure, ChatEntity>> renameChat({
+    required String chatId,
+    required String name,
+  });
 }

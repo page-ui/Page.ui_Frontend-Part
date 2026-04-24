@@ -144,6 +144,23 @@ mutation CreateMessage($input: CreateMessageInput!) {
     }
   ''';
 
+  static String deleteChatMutation = r'''
+    mutation DeleteChat($chatId: UUID!) {
+      deleteChat(chatId: $chatId)
+    }
+  ''';
+
+  static String renameChatMutation = r'''
+    mutation RenameChat($input: RenameChatInput!) {
+      renameChat(input: $input) {
+        id
+        name
+        ownerUserId
+        updatedAt
+      }
+    }
+  ''';
+
   static String onMessageCreatedSubscription = r'''
     subscription OnMessageCreated($chatId: UUID!) {
       onMessageCreated(chatId: $chatId) {

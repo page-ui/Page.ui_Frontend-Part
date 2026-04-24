@@ -66,6 +66,15 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     );
   }
 
+  Future<void> refreshMessages({required String chatId}) async {
+    final session = _session(chatId);
+    session.isHydrated = false;
+    session.messages = [];
+    session.endCursor = null;
+    session.hasNextPage = false;
+    await openChat(chatId: chatId);
+  }
+
   Future<void> closeChat({required String chatId}) async {
     await _cancelSubscription(chatId);
     if (_activeChatId == chatId) {

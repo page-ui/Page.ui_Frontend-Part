@@ -15,7 +15,7 @@ class ChatRepoImpl extends ChatRepo {
 
   ChatRepoImpl({required this.dataSource, required this.networkInfo});
 
-  Future<Either<Failure, T>> _guard<T>(
+  Future<Either<Failure, T>> _guardNetworkConnection<T>(
     String operation,
     Future<T> Function() action,
   ) async {
@@ -34,7 +34,7 @@ class ChatRepoImpl extends ChatRepo {
   Future<Either<Failure, ChatEntity>> createChat({
     required CreateChatParams params,
   }) {
-    return _guard('create chat', () => dataSource.createChat(params: params));
+    return _guardNetworkConnection('create chat', () => dataSource.createChat(params: params));
   }
 
   @override
@@ -45,7 +45,7 @@ class ChatRepoImpl extends ChatRepo {
     >
   >
   getChats({required int first, String? after}) {
-    return _guard(
+    return _guardNetworkConnection(
       'load chats',
       () => dataSource.getChats(first: first, after: after),
     );
@@ -56,7 +56,7 @@ class ChatRepoImpl extends ChatRepo {
     required String name,
     required int first,
   }) {
-    return _guard(
+    return _guardNetworkConnection(
       'search chats',
       () => dataSource.searchChats(name: name, first: first),
     );
@@ -74,7 +74,7 @@ class ChatRepoImpl extends ChatRepo {
     required int first,
     String? after,
   }) {
-    return _guard(
+    return _guardNetworkConnection(
       'load messages',
       () => dataSource.getMessages(chatId: chatId, first: first, after: after),
     );
@@ -89,9 +89,28 @@ class ChatRepoImpl extends ChatRepo {
   Future<Either<Failure, void>> sendMessage({
     required SendMessageParams params,
   }) {
-    return _guard(
+    return _guardNetworkConnection(
       'send message',
       () => dataSource.sendMessage(params: params),
+    );
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteChat({required String chatId}) {
+    return _guardNetworkConnection(
+      'delete chat',
+      () => dataSource.deleteChat(chatId: chatId),
+    );
+  }
+
+  @override
+  Future<Either<Failure, ChatEntity>> renameChat({
+    required String chatId,
+    required String name,
+  }) {
+    return _guardNetworkConnection(
+      'rename chat',
+      () => dataSource.renameChat(chatId: chatId, name: name),
     );
   }
 }

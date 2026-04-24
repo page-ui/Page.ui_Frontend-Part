@@ -162,7 +162,13 @@ class GraphQLConfig {
 
     restClient.interceptors.add(
       dio.InterceptorsWrapper(
-        onRequest: (options, handler) {
+        onRequest: (options, handler) async {
+          if (accessToken == null || refreshToken == null) {
+            final tokens = await returnTokensFromSecureDB();
+            accessToken = tokens.accessToken;
+            refreshToken = tokens.refreshToken;
+          }
+
           if (accessToken != null) {
             options.headers['Authorization'] = 'Bearer $accessToken';
           }
@@ -171,17 +177,24 @@ class GraphQLConfig {
         onError: (error, handler) async {
           if (error.response?.statusCode == 401 && refreshToken != null) {
             log('REST API 401 - triggering token refresh');
-            final newTokens = await _refreshTokens();
-            if (newTokens != null) {
-              final retryOptions = error.requestOptions;
-              retryOptions.headers['Authorization'] =
-                  'Bearer ${newTokens.accessToken}';
-              try {
-                final retryResponse = await restClient.fetch(retryOptions);
-                return handler.resolve(retryResponse);
-              } catch (_) {
-                // Retry failed, pass error through
+
+            if (error.requestOptions.path.contains('RefreshToken')) {
+              return handler.next(error);
+            }
+
+            try {
+              final newTokens = await _refreshTokens();
+              if (newTokens != null) {
+                final retryOptions = error.requestOptions;
+                retryOptions.headers['Authorization'] =
+                    'Bearer ${newTokens.accessToken}';
+
+                final response = await restClient.fetch(retryOptions);
+                return handler.resolve(response);
               }
+            } catch (refreshError) {
+              log('Failed to refresh token during REST call: $refreshError');
+              await _clearTokens();
             }
           }
           return handler.next(error);

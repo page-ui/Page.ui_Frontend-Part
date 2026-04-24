@@ -139,6 +139,15 @@ class _HomeViewBodyState extends State<HomeViewBody> {
               textColor: AppColors.white,
             );
           }
+
+          if (state is ChatHomeActive) {
+            setState(() {
+              isRightOpen = true;
+              if (context.isMobile || context.isTablet) {
+                isLeftOpen = false;
+              }
+            });
+          }
         },
         builder: (context, homeState) {
           _handleOpenningDrawers();

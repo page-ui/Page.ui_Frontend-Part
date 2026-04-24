@@ -48,6 +48,11 @@ class ChatHomeCubit extends Cubit<ChatHomeState> {
     emit(ChatHomeActive(chat: chat));
   }
 
+  void updateSelectedChat({required ChatEntity chat}) {
+    if (state.selectedChat?.id != chat.id) return;
+    emit(ChatHomeActive(chat: chat));
+  }
+
   void reset() {
     emit(const ChatHomeInitial());
   }

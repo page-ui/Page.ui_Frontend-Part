@@ -1,4 +1,7 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pageui/core/errors/failure.dart';
+import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
 import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_history_cubit/chat_history_state.dart';
 
@@ -54,6 +57,47 @@ class ChatHistoryCubit extends Cubit<ChatHistoryState> {
         ),
       ),
     );
+  }
+
+  Future<Either<Failure, void>> deleteChat({required String chatId}) async {
+    final current = state;
+    final result = await _chatRepo.deleteChat(chatId: chatId);
+    if (isClosed) return const Right(null);
+
+    return result.fold((failure) => Left(failure), (_) {
+      if (current is ChatHistoryLoaded) {
+        emit(
+          current.copyWith(
+            chats: current.chats.where((c) => c.id != chatId).toList(),
+          ),
+        );
+      }
+      return const Right(null);
+    });
+  }
+
+  Future<Either<Failure, ChatEntity>> renameChat({
+    required String chatId,
+    required String name,
+  }) async {
+    final current = state;
+    final result = await _chatRepo.renameChat(chatId: chatId, name: name);
+    if (isClosed) return Left(ServerFailure(message: 'There is an error , please try again later'));
+
+    return result.fold((failure) => Left(failure), (renamed) {
+      if (current is ChatHistoryLoaded) {
+        final updated = current.chats.map((c) {
+          if (c.id != chatId) return c;
+          return ChatEntity(
+            id: c.id,
+            name: renamed.name,
+            createdAt: c.createdAt,
+          );
+        }).toList();
+        emit(current.copyWith(chats: updated));
+      }
+      return Right(renamed);
+    });
   }
 
   Future<void> searchChats({required String query}) async {
