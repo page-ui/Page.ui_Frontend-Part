@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pageui/config/themes/app_colors.dart';
+import 'package:pageui/config/themes/app_icons.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
 import 'package:pageui/features/chat/presentation/widgets/ui_frame/iframe_view.dart';
+import 'package:pageui/features/chat/presentation/widgets/ui_frame/open_ui_url.dart';
 
 class UIFrameBody extends StatelessWidget {
   const UIFrameBody({
@@ -19,36 +22,57 @@ class UIFrameBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        AbsorbPointer(
-          absorbing: isMobile ? false : true,
-          child: Opacity(
-            opacity: isMobile ? 1 : 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return BlocSelector<ChatMessagesCubit, ChatMessagesState, String>(
+      selector: (state) => state.activeAiRunUrl?.trim() ?? '',
+      builder: (context, url) {
+        final hasUrl = url.isNotEmpty;
+
+        return Column(
+          children: [
+            Row(
               children: [
-                CustomButtonIconForPanels(
-                  isLeftPanel: true,
-                  onPressed: onLeftButtonPressed,
+                Expanded(
+                  child: AbsorbPointer(
+                    absorbing: isMobile ? false : true,
+                    child: Opacity(
+                      opacity: isMobile ? 1 : 0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CustomButtonIconForPanels(
+                            isLeftPanel: true,
+                            onPressed: onLeftButtonPressed,
+                          ),
+                          CustomButtonIconForPanels(
+                            isLeftPanel: false,
+                            onPressed: onRightButtonPressed,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                CustomButtonIconForPanels(
-                  isLeftPanel: false,
-                  onPressed: onRightButtonPressed,
+                Tooltip(
+                  message: hasUrl ? 'Open in new tab' : 'No preview available',
+                  child: IconButton(
+                    onPressed: hasUrl ? () => openUiUrlInBrowser(url) : null,
+                    icon: Icon(
+                      AppIcons.openInNew,
+                      size: 18,
+                      color: hasUrl
+                          ? AppColors.lightGray.withValues(alpha: 0.9)
+                          : AppColors.lightGray.withValues(alpha: 0.35),
+                    ),
+                  ),
                 ),
               ],
             ),
-          ),
-        ),
-        Expanded(
-          child: BlocSelector<ChatMessagesCubit, ChatMessagesState, String>(
-            selector: (state) => state.activeAiRunUrl ?? '',
-            builder: (context, url) {
-              return IframeView(key: ValueKey(url), url: url);
-            },
-          ),
-        ),
-      ],
+            Expanded(
+              child: IframeView(key: ValueKey(url), url: url),
+            ),
+          ],
+        );
+      },
     );
   }
 }

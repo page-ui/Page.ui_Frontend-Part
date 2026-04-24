@@ -45,4 +45,5 @@ class AppIcons {
 
   static const IconData close = Icons.close;
   static const IconData image = Icons.image;
+  static const IconData openInNew = Icons.open_in_new_rounded;
 }
