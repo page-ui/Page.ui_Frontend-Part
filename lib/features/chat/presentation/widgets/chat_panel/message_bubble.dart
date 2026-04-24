@@ -40,7 +40,7 @@ class MessageBubble extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ChatMessageContent(message: message),
+            SelectionArea(child: ChatMessageContent(message: message)),
             const SizedBox(height: 4),
             Row(
               mainAxisSize: MainAxisSize.min,

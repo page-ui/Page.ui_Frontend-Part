@@ -30,7 +30,6 @@ class IframeView extends StatelessWidget {
         ..backgroundColor = 'transparent';
 
       if (url.trim().isEmpty) {
-        // Render Empty State (Matches _EmptyUIPreview in u_i_frame_body.dart)
         final web.HTMLDivElement emptyState =
             web.document.createElement('div') as web.HTMLDivElement;
         emptyState.style

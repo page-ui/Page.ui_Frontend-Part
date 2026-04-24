@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pageui/config/themes/app_colors.dart';
@@ -15,48 +14,62 @@ Future<void> onRenameChatRoom(BuildContext context, ChatEntity chat) async {
 
   final newName = await showDialog<String>(
     context: context,
-    builder: (dialogContext) => AlertDialog(
-      backgroundColor: AppColors.black,
+    builder: (dialogContext) => SimpleDialog(
+      backgroundColor: const Color.fromARGB(255, 75, 99, 76),
+      shadowColor: AppColors.darkGreen,
       shape: const RoundedRectangleBorder(borderRadius: AppBorders.xxxs),
       title: const Text(
         'Rename chat',
         style: TextStyle(color: AppColors.white),
       ),
-      content: TextField(
-        controller: controller,
-        autofocus: true,
-        style: const TextStyle(color: AppColors.white),
-        cursorColor: AppColors.primaryColor,
-        decoration: InputDecoration(
-          hintText: 'Chat name',
-          hintStyle: TextStyle(
-            color: AppColors.lightGray.withValues(alpha: 0.5),
-          ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: AppColors.lightGray.withValues(alpha: 0.4),
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: TextField(
+            controller: controller,
+            autofocus: true,
+            style: const TextStyle(color: AppColors.white),
+            cursorColor: AppColors.primaryColor,
+            decoration: InputDecoration(
+              hintText: 'Chat name',
+              hintStyle: TextStyle(
+                color: AppColors.lightGray.withValues(alpha: 0.5),
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: AppColors.lightGray.withValues(alpha: 0.4),
+                ),
+              ),
+              focusedBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: AppColors.primaryColor),
+              ),
             ),
-          ),
-          focusedBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: AppColors.primaryColor),
-          ),
-        ),
-        onSubmitted: (value) => Navigator.of(dialogContext).pop(value.trim()),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(dialogContext).pop(),
-          child: const Text(
-            'Cancel',
-            style: TextStyle(color: AppColors.lightGray),
+            onSubmitted: (value) =>
+                Navigator.of(dialogContext).pop(value.trim()),
           ),
         ),
-        TextButton(
-          onPressed: () =>
-              Navigator.of(dialogContext).pop(controller.text.trim()),
-          child: const Text(
-            'Rename',
-            style: TextStyle(color: AppColors.primaryColor),
+        const SizedBox(height: 12),
+        Padding(
+          padding: const EdgeInsets.only(right: 12, bottom: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: AppColors.lightGray),
+                ),
+              ),
+              TextButton(
+                onPressed: () =>
+                    Navigator.of(dialogContext).pop(controller.text.trim()),
+                child: const Text(
+                  'Rename',
+                  style: TextStyle(color: AppColors.primaryColor),
+                ),
+              ),
+            ],
           ),
         ),
       ],

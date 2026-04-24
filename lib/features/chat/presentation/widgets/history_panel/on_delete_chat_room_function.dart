@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pageui/config/themes/app_colors.dart';
@@ -16,28 +15,45 @@ Future<void> onDeleteChatRoom(BuildContext context, ChatEntity chat) async {
 
   final confirmed = await showDialog<bool>(
     context: context,
-    builder: (dialogContext) => AlertDialog(
-      backgroundColor: AppColors.black,
+    builder: (dialogContext) => SimpleDialog(
+      backgroundColor: const Color.fromARGB(255, 75, 99, 76),
+      shadowColor: AppColors.darkGreen,
+
       shape: const RoundedRectangleBorder(borderRadius: AppBorders.xxxs),
       title: const Text(
         'Delete chat',
         style: TextStyle(color: AppColors.white),
       ),
-      content: Text(
-        'Are you sure you want to delete "${chat.name}"?',
-        style: const TextStyle(color: AppColors.lightGray),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(dialogContext).pop(false),
-          child: const Text(
-            'Cancel',
-            style: TextStyle(color: AppColors.lightGray),
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Text(
+            'Are you sure you want to delete "${chat.name}"?',
+            style: const TextStyle(color: AppColors.lightGray),
           ),
         ),
-        TextButton(
-          onPressed: () => Navigator.of(dialogContext).pop(true),
-          child: const Text('Delete', style: TextStyle(color: AppColors.red)),
+        const SizedBox(height: 12),
+        Padding(
+          padding: const EdgeInsets.only(right: 12, bottom: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: AppColors.lightGray),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                child: const Text(
+                  'Delete',
+                  style: TextStyle(color: AppColors.red),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     ),
