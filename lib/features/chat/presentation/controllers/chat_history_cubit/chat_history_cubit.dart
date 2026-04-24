@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pageui/core/errors/app_operation.dart';
 import 'package:pageui/core/errors/failure.dart';
 import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
 import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
@@ -82,7 +83,7 @@ class ChatHistoryCubit extends Cubit<ChatHistoryState> {
   }) async {
     final current = state;
     final result = await _chatRepo.renameChat(chatId: chatId, name: name);
-    if (isClosed) return Left(ServerFailure(message: 'There is an error , please try again later'));
+    if (isClosed) return Left(ServerFailure.forOperation(AppOperation.renameChat));
 
     return result.fold((failure) => Left(failure), (renamed) {
       if (current is ChatHistoryLoaded) {

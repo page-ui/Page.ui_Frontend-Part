@@ -1,6 +1,8 @@
-import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:graphql_flutter/graphql_flutter.dart' hide ServerException;
 import 'package:pageui/core/database/api/graph_ql_config.dart';
 import 'package:pageui/core/database/api/queries.dart';
+import 'package:pageui/core/errors/app_operation.dart';
+import 'package:pageui/core/errors/exceptions.dart';
 import 'package:pageui/features/chat/data/models/chat_model.dart';
 import 'package:pageui/features/chat/data/models/message_model.dart';
 import 'package:pageui/features/chat/domain/params/create_chat_params.dart';
@@ -41,12 +43,11 @@ class ChatDataSourceImpl extends ChatDataSource {
       ),
     );
 
-    if (result.exception != null) {
-      throw Exception('Failed to create chat: ${result.exception.toString()}');
-    }
-
-    if (result.data?['createChat'] == null) {
-      throw Exception('Failed to create chat. Server returned no data.');
+    if (result.hasException || result.data?['createChat'] == null) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.createChat,
+      );
     }
 
     return ChatModel.fromJson(
@@ -65,12 +66,11 @@ class ChatDataSourceImpl extends ChatDataSource {
       ),
     );
 
-    if (result.hasException) {
-      throw Exception('Failed to load chats: ${result.exception.toString()}');
-    }
-
-    if (result.data?['chats'] == null) {
-      throw Exception('Failed to load chats. Server returned no data.');
+    if (result.hasException || result.data?['chats'] == null) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.loadChats,
+      );
     }
 
     final data = result.data!['chats'] as Map<String, dynamic>;
@@ -101,8 +101,11 @@ class ChatDataSourceImpl extends ChatDataSource {
       ),
     );
 
-    if (result.exception != null || result.data?['searchChats'] == null) {
-      throw Exception('Failed to search chats.');
+    if (result.hasException || result.data?['searchChats'] == null) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.searchChats,
+      );
     }
 
     final data = result.data!['searchChats'] as Map<String, dynamic>;
@@ -134,14 +137,11 @@ class ChatDataSourceImpl extends ChatDataSource {
       ),
     );
 
-    if (result.hasException) {
-      throw Exception(
-        'Failed to load messages: ${result.exception.toString()}',
+    if (result.hasException || result.data?['messages'] == null) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.loadMessages,
       );
-    }
-
-    if (result.data?['messages'] == null) {
-      throw Exception('Failed to load messages. Server returned no data.');
     }
 
     final data = result.data!['messages'] as Map<String, dynamic>;
@@ -175,8 +175,9 @@ class ChatDataSourceImpl extends ChatDataSource {
 
     await for (final result in stream) {
       if (result.hasException) {
-        throw Exception(
-          'Failed to subscribe to messages: ${result.exception.toString()}',
+        throw ServerException.fromGraphQL(
+          result.exception,
+          operation: AppOperation.subscribeMessages,
         );
       }
 
@@ -202,7 +203,10 @@ class ChatDataSourceImpl extends ChatDataSource {
     );
 
     if (result.hasException || result.data?['createMessage'] == null) {
-      throw Exception('Failed to send message.');
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.sendMessage,
+      );
     }
   }
 
@@ -216,7 +220,10 @@ class ChatDataSourceImpl extends ChatDataSource {
     );
 
     if (result.hasException) {
-      throw Exception('Failed to delete chat: ${result.exception.toString()}');
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.deleteChat,
+      );
     }
   }
 
@@ -235,7 +242,10 @@ class ChatDataSourceImpl extends ChatDataSource {
     );
 
     if (result.hasException || result.data?['renameChat'] == null) {
-      throw Exception('Failed to rename chat: ${result.exception.toString()}');
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.renameChat,
+      );
     }
 
     return ChatModel.fromJson(

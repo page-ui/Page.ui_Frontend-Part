@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pageui/core/errors/exceptions.dart';
 import 'package:pageui/features/chat/data/models/message_model.dart';
 
 void main() {
@@ -25,7 +26,7 @@ void main() {
     () {
       expect(
         () => MessageModel.fromJson(_messageNode),
-        throwsA(isA<FormatException>()),
+        throwsA(isA<BadResponseException>()),
       );
     },
   );

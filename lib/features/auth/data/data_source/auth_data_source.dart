@@ -1,6 +1,8 @@
-import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:graphql_flutter/graphql_flutter.dart' hide ServerException;
 import 'package:pageui/core/database/api/graph_ql_config.dart';
 import 'package:pageui/core/database/api/queries.dart';
+import 'package:pageui/core/errors/app_operation.dart';
+import 'package:pageui/core/errors/exceptions.dart';
 import 'package:pageui/features/auth/data/model/user_tokens_model.dart';
 import 'package:pageui/features/auth/domain/params/login_params.dart';
 import 'package:pageui/features/auth/domain/params/reset_password.dart';
@@ -32,12 +34,13 @@ class AuthDataSourceImpl extends AuthDataSource {
       ),
     );
 
-    if (result.data == null ||
+    if (result.hasException ||
+        result.data == null ||
         !result.data!.containsKey('login') ||
-        result.data!['login'] == null ||
-        result.hasException) {
-      throw Exception(
-        'Login failed. Please check your credentials and try again.',
+        result.data!['login'] == null) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.login,
       );
     }
 
@@ -64,13 +67,14 @@ class AuthDataSourceImpl extends AuthDataSource {
         },
       ),
     );
-    if (result.data == null ||
+    if (result.hasException ||
+        result.data == null ||
         !result.data!.containsKey('register') ||
         result.data!['register'] == null ||
-        result.data!['register'] == false ||
-        result.hasException) {
-      throw Exception(
-        "Register failed. Please try again later. maybe the email is already used.",
+        result.data!['register'] == false) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.register,
       );
     }
 
@@ -85,12 +89,15 @@ class AuthDataSourceImpl extends AuthDataSource {
         variables: {'email': email},
       ),
     );
-    if (result.data == null ||
+    if (result.hasException ||
+        result.data == null ||
         !result.data!.containsKey('forgotPasswordRequest') ||
         result.data!['forgotPasswordRequest'] == null ||
-        result.data!['forgotPasswordRequest'] == false ||
-        result.hasException) {
-      throw Exception("May be you write a wrong account.");
+        result.data!['forgotPasswordRequest'] == false) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.forgotPassword,
+      );
     }
 
     return result.data!['forgotPasswordRequest'];
@@ -106,13 +113,14 @@ class AuthDataSourceImpl extends AuthDataSource {
         variables: {'email': params.email, 'code': params.code},
       ),
     );
-    if (result.data == null ||
+    if (result.hasException ||
+        result.data == null ||
         !result.data!.containsKey('verifyResetCode') ||
         result.data!['verifyResetCode'] == null ||
-        result.data!['verifyResetCode'] == false ||
-        result.hasException) {
-      throw Exception(
-        "There was a propblem, please make sure you're write the code correct, or resend the code.",
+        result.data!['verifyResetCode'] == false) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.verifyCode,
       );
     }
     return result.data!['verifyResetCode'];
@@ -126,13 +134,14 @@ class AuthDataSourceImpl extends AuthDataSource {
         variables: {'email': params.email, 'code': params.code},
       ),
     );
-    if (result.data == null ||
+    if (result.hasException ||
+        result.data == null ||
         !result.data!.containsKey('verifyEmail') ||
         result.data!['verifyEmail'] == null ||
-        result.data!['verifyEmail'] == false ||
-        result.hasException) {
-      throw Exception(
-        "There was a propblem, please make sure you're write the code correct, or resend the code.",
+        result.data!['verifyEmail'] == false) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.verifyEmail,
       );
     }
     return result.data!['verifyEmail'];
@@ -146,18 +155,30 @@ class AuthDataSourceImpl extends AuthDataSource {
         variables: params.toJson(),
       ),
     );
+    if (result.hasException ||
+        result.data == null ||
+        result.data!['resetPassword'] == null) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.resetPassword,
+      );
+    }
     return result.data!['resetPassword'];
   }
 
-
-
   @override
   Future<void> resendVerficationCode({required String email}) async {
-    await _client.mutate(
+    final result = await _client.mutate(
       MutationOptions(
         document: gql(Queries.resendVerificationMutation),
         variables: {"email": email},
       ),
     );
+    if (result.hasException) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.resendCode,
+      );
+    }
   }
 }

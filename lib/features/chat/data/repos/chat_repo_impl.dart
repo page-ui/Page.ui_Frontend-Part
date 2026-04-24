@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:pageui/core/errors/app_operation.dart';
+import 'package:pageui/core/errors/exceptions.dart';
 import 'package:pageui/core/errors/failure.dart';
 import 'package:pageui/core/helpers/app_logger.dart';
 import 'package:pageui/core/network/network_info.dart';
@@ -16,7 +18,7 @@ class ChatRepoImpl extends ChatRepo {
   ChatRepoImpl({required this.dataSource, required this.networkInfo});
 
   Future<Either<Failure, T>> _guardNetworkConnection<T>(
-    String operation,
+    AppOperation operation,
     Future<T> Function() action,
   ) async {
     try {
@@ -24,9 +26,15 @@ class ChatRepoImpl extends ChatRepo {
         return Left(NetworkFailure.error());
       }
       return Right(await action());
+    } on ServerException catch (e, stackTrace) {
+      appLogger.e('ChatRepo.${operation.name} failed', error: e, stackTrace: stackTrace);
+      return Left(ServerFailure.fromException(e));
+    } on CacheExeption catch (e, stackTrace) {
+      appLogger.e('ChatRepo.${operation.name} cache failed', error: e, stackTrace: stackTrace);
+      return Left(CacheFailure.fromException(e));
     } catch (e, stackTrace) {
-      appLogger.e('ChatRepo.$operation failed', error: e, stackTrace: stackTrace);
-      return Left(ServerFailure(message: 'Failed to $operation: $e'));
+      appLogger.e('ChatRepo.${operation.name} unexpected', error: e, stackTrace: stackTrace);
+      return Left(ServerFailure.forOperation(operation));
     }
   }
 
@@ -34,7 +42,7 @@ class ChatRepoImpl extends ChatRepo {
   Future<Either<Failure, ChatEntity>> createChat({
     required CreateChatParams params,
   }) {
-    return _guardNetworkConnection('create chat', () => dataSource.createChat(params: params));
+    return _guardNetworkConnection(AppOperation.createChat, () => dataSource.createChat(params: params));
   }
 
   @override
@@ -46,7 +54,7 @@ class ChatRepoImpl extends ChatRepo {
   >
   getChats({required int first, String? after}) {
     return _guardNetworkConnection(
-      'load chats',
+      AppOperation.loadChats,
       () => dataSource.getChats(first: first, after: after),
     );
   }
@@ -57,7 +65,7 @@ class ChatRepoImpl extends ChatRepo {
     required int first,
   }) {
     return _guardNetworkConnection(
-      'search chats',
+      AppOperation.searchChats,
       () => dataSource.searchChats(name: name, first: first),
     );
   }
@@ -75,7 +83,7 @@ class ChatRepoImpl extends ChatRepo {
     String? after,
   }) {
     return _guardNetworkConnection(
-      'load messages',
+      AppOperation.loadMessages,
       () => dataSource.getMessages(chatId: chatId, first: first, after: after),
     );
   }
@@ -90,7 +98,7 @@ class ChatRepoImpl extends ChatRepo {
     required SendMessageParams params,
   }) {
     return _guardNetworkConnection(
-      'send message',
+      AppOperation.sendMessage,
       () => dataSource.sendMessage(params: params),
     );
   }
@@ -98,7 +106,7 @@ class ChatRepoImpl extends ChatRepo {
   @override
   Future<Either<Failure, void>> deleteChat({required String chatId}) {
     return _guardNetworkConnection(
-      'delete chat',
+      AppOperation.deleteChat,
       () => dataSource.deleteChat(chatId: chatId),
     );
   }
@@ -109,7 +117,7 @@ class ChatRepoImpl extends ChatRepo {
     required String name,
   }) {
     return _guardNetworkConnection(
-      'rename chat',
+      AppOperation.renameChat,
       () => dataSource.renameChat(chatId: chatId, name: name),
     );
   }

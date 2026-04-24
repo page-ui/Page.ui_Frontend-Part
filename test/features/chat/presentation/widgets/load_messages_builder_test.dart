@@ -170,4 +170,16 @@ class _FakeChatRepo implements ChatRepo {
   }) {
     throw UnimplementedError();
   }
+  
+  @override
+  Future<Either<Failure, void>> deleteChat({required String chatId}) {
+    // TODO: implement deleteChat
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<Either<Failure, ChatEntity>> renameChat({required String chatId, required String name}) {
+    // TODO: implement renameChat
+    throw UnimplementedError();
+  }
 }

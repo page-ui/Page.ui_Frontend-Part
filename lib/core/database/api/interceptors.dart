@@ -1,5 +1,7 @@
-import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:graphql_flutter/graphql_flutter.dart' hide ServerException;
 import 'package:logger/logger.dart';
+import 'package:pageui/core/errors/error_model.dart';
+import 'package:pageui/core/errors/exceptions.dart';
 
 /// This Link is used to show GraphQL request and response logs
 class GraphQLLoggerLink extends Link {
@@ -38,7 +40,12 @@ class GraphQLLoggerLink extends Link {
         .handleError((Object error) {
           // 3. Log Network/Link Errors
           _logger.f('🚨 GRAPHQL TERMINAL ERROR [$operationName]:\n$error');
-          throw error;
+          if (error is ServerException) {
+            throw error;
+          }
+          throw ConnectionErrorException(
+            ErrorModel(status: 0, errorMessage: operationName),
+          );
         });
   }
 }

@@ -1,6 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pageui/core/errors/app_operation.dart';
+import 'package:pageui/core/errors/failure.dart';
+import 'package:pageui/core/helpers/app_logger.dart';
 import 'package:pageui/features/chat/domain/params/send_message_params.dart';
 import 'package:pageui/features/chat/domain/usecases/send_message_usecase.dart';
 import 'package:pageui/features/chat/domain/usecases/upload_attachment_usecase.dart';
@@ -60,9 +63,14 @@ class SendMessageCubit extends Cubit<SendMessageState> {
           emit(const SendMessageSuccess());
         },
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      appLogger.e('SendMessageCubit.sendMessage unexpected', error: e, stackTrace: stackTrace);
       if (isClosed) return;
-      emit(SendMessageError(message: e.toString()));
+      emit(
+        SendMessageError(
+          message: ServerFailure.forOperation(AppOperation.sendMessage).message,
+        ),
+      );
     }
   }
 }

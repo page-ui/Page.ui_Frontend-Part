@@ -1,3 +1,6 @@
+import 'package:pageui/core/errors/app_operation.dart';
+import 'package:pageui/core/errors/error_model.dart';
+import 'package:pageui/core/errors/exceptions.dart';
 import 'package:pageui/features/chat/domain/entities/message_entity.dart';
 
 class MessageModel extends MessageEntity {
@@ -21,7 +24,10 @@ class MessageModel extends MessageEntity {
   }) {
     final chatId = (json['chatId'] as String?) ?? fallbackChatId;
     if (chatId == null || chatId.trim().isEmpty) {
-      throw const FormatException('There is a missing message.');
+      throw BadResponseException(
+        ErrorModel(status: 0, errorMessage: AppOperation.parseMessage.name),
+        operation: AppOperation.parseMessage,
+      );
     }
 
     return MessageModel(

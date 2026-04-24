@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pageui/config/routes/on_generate_routes.dart';
-import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/custom_widget/custom_button.dart';
 import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
 import 'package:pageui/features/auth/presentation/controllers/login_cubit/login_cubit.dart';
@@ -99,15 +98,6 @@ class _LoginViewFormState extends State<LoginViewForm> {
                     });
                   }
                 },
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                AppRoutes.pushHomeView(context);
-              },
-              child: const Text(
-                "Go to Home View",
-                style: TextStyle(color: AppColors.amber),
               ),
             ),
           ],
