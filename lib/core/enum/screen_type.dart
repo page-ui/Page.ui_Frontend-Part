@@ -32,7 +32,7 @@ extension ResponsiveExtension on BuildContext {
   bool get isDesktop =>
       screenType == ScreenType.desktop || screenType == ScreenType.largeDesktop;
   bool get isLargeDesktop => screenType == ScreenType.largeDesktop;
-  
+
   double responsiveValue({
     required double mobile,
     double? tablet,

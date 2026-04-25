@@ -22,11 +22,7 @@ class SecurityTipText extends StatelessWidget {
               SizedBox(
                 width: 16,
                 height: 16,
-                child: Icon(
-                  Icons.security,
-                  color: AppColors.white,
-                  size: 16,
-                ),
+                child: Icon(Icons.security, color: AppColors.white, size: 16),
               ),
               SizedBox(width: 10),
               Expanded(

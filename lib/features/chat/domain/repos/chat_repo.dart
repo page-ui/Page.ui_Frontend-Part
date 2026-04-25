@@ -29,11 +29,7 @@ abstract class ChatRepo {
       ({List<MessageEntity> messages, bool hasNextPage, String? endCursor})
     >
   >
-  getMessages({
-    required String chatId,
-    required int first,
-    String? after,
-  });
+  getMessages({required String chatId, required int first, String? after});
 
   Stream<MessageEntity> subscribeToMessages({required String chatId});
 

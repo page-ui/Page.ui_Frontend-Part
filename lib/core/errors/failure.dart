@@ -27,8 +27,7 @@ class ServerFailure extends Failure {
         exception is SendTimeoutException ||
         exception is ReceiveTimeoutException) {
       return ServerFailure(
-        message:
-            "The server is taking too long to respond. Please try again.",
+        message: "The server is taking too long to respond. Please try again.",
       );
     }
 
@@ -41,16 +40,15 @@ class ServerFailure extends Failure {
     }
 
     if (exception is CancelException) {
-      return ServerFailure(message: "The request was cancelled. Please try again.");
+      return ServerFailure(
+        message: "The request was cancelled. Please try again.",
+      );
     }
 
     return ServerFailure(message: _messageFor(operation, status, exception));
   }
 
-  factory ServerFailure.forOperation(
-    AppOperation operation, {
-    int status = 0,
-  }) {
+  factory ServerFailure.forOperation(AppOperation operation, {int status = 0}) {
     return ServerFailure(message: _messageFor(operation, status, null));
   }
 
@@ -147,6 +145,9 @@ const Map<AppOperation, String> _operationDefaults = {
       "We couldn't upload your file. Please try a different file or try again.",
   AppOperation.parseMessage:
       "A message couldn't be displayed. Please reload the chat.",
+  AppOperation.signOut: "We couldn't sign you out. Please try again.",
+  AppOperation.deleteAccount:
+      "We couldn't delete your account. Please try again.",
   AppOperation.generic: _defaultFriendly,
 };
 
@@ -160,9 +161,7 @@ const Map<AppOperation, Map<int, String>> _statusOverrides = {
     409: "An account with this email already exists.",
     422: "Please check your details and try again.",
   },
-  AppOperation.forgotPassword: {
-    404: "No account matches that email.",
-  },
+  AppOperation.forgotPassword: {404: "No account matches that email."},
   AppOperation.verifyCode: {
     400: "The code you entered is invalid or has expired.",
     410: "This code has expired. Please request a new one.",
@@ -175,10 +174,6 @@ const Map<AppOperation, Map<int, String>> _statusOverrides = {
     413: "This file is too large to upload.",
     415: "This file type is not supported.",
   },
-  AppOperation.sendMessage: {
-    413: "Your message is too long.",
-  },
-  AppOperation.renameChat: {
-    409: "A chat with that name already exists.",
-  },
+  AppOperation.sendMessage: {413: "Your message is too long."},
+  AppOperation.renameChat: {409: "A chat with that name already exists."},
 };

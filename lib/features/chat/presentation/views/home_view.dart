@@ -12,9 +12,8 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      
-        create: (_) => getit.get<ChatHomeCubit>(),
-      
+      create: (_) => getit.get<ChatHomeCubit>(),
+
       child: Scaffold(
         backgroundColor: AppColors.black.withValues(alpha: 0.8),
         extendBody: true,

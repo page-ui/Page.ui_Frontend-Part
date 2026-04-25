@@ -194,7 +194,7 @@ class GraphQLConfig {
               }
             } catch (refreshError) {
               log('Failed to refresh token during REST call: $refreshError');
-              await _clearTokens();
+              await clearTokens();
             }
           }
           return handler.next(error);
@@ -231,7 +231,7 @@ class GraphQLConfig {
 
         final refreshedTokenPayload = result.data?['refreshToken'];
         if (result.hasException || refreshedTokenPayload == null) {
-          await _clearTokens();
+          await clearTokens();
           completer.complete(null);
           return;
         }
@@ -242,7 +242,7 @@ class GraphQLConfig {
         await _persistTokens(newTokens);
         completer.complete(newTokens);
       } catch (_) {
-        await _clearTokens();
+        await clearTokens();
         completer.complete(null);
       } finally {
         _ongoingRefresh = null;
@@ -258,7 +258,7 @@ class GraphQLConfig {
     await saveTokens(tokens);
   }
 
-  static Future<void> _clearTokens() async {
+  static Future<void> clearTokens() async {
     accessToken = null;
     refreshToken = null;
     await SecureStorage.deleteData(key: tokensKey);

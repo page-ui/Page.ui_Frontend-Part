@@ -20,4 +20,5 @@ abstract class AuthRepo {
     required VerifyResetCodeParams params,
   });
   Future<Either<Failure, void>> resendVerficationCode({required String email});
+  Future<Either<Failure, void>> signOut();
 }

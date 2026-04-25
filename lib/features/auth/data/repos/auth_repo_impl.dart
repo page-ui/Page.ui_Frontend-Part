@@ -29,21 +29,31 @@ class AuthRepoImpl extends AuthRepo {
       }
       return Right(await action());
     } on ServerException catch (e, stackTrace) {
-      appLogger.e('AuthRepo.${operation.name} failed', error: e, stackTrace: stackTrace);
+      appLogger.e(
+        'AuthRepo.${operation.name} failed',
+        error: e,
+        stackTrace: stackTrace,
+      );
       return Left(ServerFailure.fromException(e));
     } on CacheExeption catch (e, stackTrace) {
-      appLogger.e('AuthRepo.${operation.name} cache failed', error: e, stackTrace: stackTrace);
+      appLogger.e(
+        'AuthRepo.${operation.name} cache failed',
+        error: e,
+        stackTrace: stackTrace,
+      );
       return Left(CacheFailure.fromException(e));
     } catch (e, stackTrace) {
-      appLogger.e('AuthRepo.${operation.name} unexpected', error: e, stackTrace: stackTrace);
+      appLogger.e(
+        'AuthRepo.${operation.name} unexpected',
+        error: e,
+        stackTrace: stackTrace,
+      );
       return Left(ServerFailure.forOperation(operation));
     }
   }
 
   @override
-  Future<Either<Failure, UserTokensModel>> login({
-    required LoginParams param,
-  }) {
+  Future<Either<Failure, UserTokensModel>> login({required LoginParams param}) {
     return _guard(AppOperation.login, () async {
       final tokens = await dataSource.login(params: param);
       GraphQLConfig.accessToken = tokens.accessToken;
@@ -54,13 +64,14 @@ class AuthRepoImpl extends AuthRepo {
 
   @override
   Future<Either<Failure, bool>> register({required RegisterParams param}) {
-    return _guard(AppOperation.register, () => dataSource.register(params: param));
+    return _guard(
+      AppOperation.register,
+      () => dataSource.register(params: param),
+    );
   }
 
   @override
-  Future<Either<Failure, bool>> forgotPasswordRequest({
-    required String email,
-  }) {
+  Future<Either<Failure, bool>> forgotPasswordRequest({required String email}) {
     return _guard(
       AppOperation.forgotPassword,
       () => dataSource.forgotPasswordRequest(email: email),
@@ -108,5 +119,19 @@ class AuthRepoImpl extends AuthRepo {
       () => dataSource.resendVerficationCode(email: email),
       checkNetwork: false,
     );
+  }
+
+  @override
+  Future<Either<Failure, void>> signOut() async {
+    return _guard<void>(AppOperation.signOut, () async {
+      final currentRefreshToken = GraphQLConfig.refreshToken;
+      if (currentRefreshToken == null) {
+        throw CacheExeption(
+          errorMessage: 'There is an error , please try again.',
+        );
+      }
+      await dataSource.signOut(refreshToken: currentRefreshToken);
+      await GraphQLConfig.clearTokens();
+    });
   }
 }

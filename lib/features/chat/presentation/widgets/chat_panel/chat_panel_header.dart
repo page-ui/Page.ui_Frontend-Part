@@ -5,10 +5,7 @@ import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
 
 class ChatPanelHeader extends StatelessWidget {
-  const ChatPanelHeader({
-    super.key,
-    required this.onPressed,
-  });
+  const ChatPanelHeader({super.key, required this.onPressed});
 
   final void Function()? onPressed;
 
@@ -30,10 +27,7 @@ class ChatPanelHeader extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 70),
-            CustomButtonIconForPanels(
-              isLeftPanel: true,
-              onPressed: onPressed,
-            ),
+            CustomButtonIconForPanels(isLeftPanel: true, onPressed: onPressed),
           ],
         ),
       ),

@@ -27,13 +27,25 @@ class ChatRepoImpl extends ChatRepo {
       }
       return Right(await action());
     } on ServerException catch (e, stackTrace) {
-      appLogger.e('ChatRepo.${operation.name} failed', error: e, stackTrace: stackTrace);
+      appLogger.e(
+        'ChatRepo.${operation.name} failed',
+        error: e,
+        stackTrace: stackTrace,
+      );
       return Left(ServerFailure.fromException(e));
     } on CacheExeption catch (e, stackTrace) {
-      appLogger.e('ChatRepo.${operation.name} cache failed', error: e, stackTrace: stackTrace);
+      appLogger.e(
+        'ChatRepo.${operation.name} cache failed',
+        error: e,
+        stackTrace: stackTrace,
+      );
       return Left(CacheFailure.fromException(e));
     } catch (e, stackTrace) {
-      appLogger.e('ChatRepo.${operation.name} unexpected', error: e, stackTrace: stackTrace);
+      appLogger.e(
+        'ChatRepo.${operation.name} unexpected',
+        error: e,
+        stackTrace: stackTrace,
+      );
       return Left(ServerFailure.forOperation(operation));
     }
   }
@@ -42,7 +54,10 @@ class ChatRepoImpl extends ChatRepo {
   Future<Either<Failure, ChatEntity>> createChat({
     required CreateChatParams params,
   }) {
-    return _guardNetworkConnection(AppOperation.createChat, () => dataSource.createChat(params: params));
+    return _guardNetworkConnection(
+      AppOperation.createChat,
+      () => dataSource.createChat(params: params),
+    );
   }
 
   @override
@@ -77,11 +92,7 @@ class ChatRepoImpl extends ChatRepo {
       ({List<MessageEntity> messages, bool hasNextPage, String? endCursor})
     >
   >
-  getMessages({
-    required String chatId,
-    required int first,
-    String? after,
-  }) {
+  getMessages({required String chatId, required int first, String? after}) {
     return _guardNetworkConnection(
       AppOperation.loadMessages,
       () => dataSource.getMessages(chatId: chatId, first: first, after: after),

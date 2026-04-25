@@ -17,6 +17,7 @@ abstract class AuthDataSource {
   Future<String> verifyResetCode({required VerifyResetCodeParams params});
   Future<bool> emailVerfication({required VerifyResetCodeParams params});
   Future<void> resendVerficationCode({required String email});
+  Future<void> signOut({required String refreshToken});
 }
 
 class AuthDataSourceImpl extends AuthDataSource {
@@ -178,6 +179,22 @@ class AuthDataSourceImpl extends AuthDataSource {
       throw ServerException.fromGraphQL(
         result.exception,
         operation: AppOperation.resendCode,
+      );
+    }
+  }
+
+  @override
+  Future<void> signOut({required String refreshToken}) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(Queries.signOutMutation),
+        variables: {"refreshToken": refreshToken},
+      ),
+    );
+    if (result.hasException) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.signOut,
       );
     }
   }

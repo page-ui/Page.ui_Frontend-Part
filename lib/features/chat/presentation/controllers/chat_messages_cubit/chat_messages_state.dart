@@ -51,8 +51,7 @@ final class ChatMessagesLoaded extends ChatMessagesState {
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       selectedAiRunMessageId:
           selectedAiRunMessageId ?? this.selectedAiRunMessageId,
-      isAwaitingAiResponse:
-          isAwaitingAiResponse ?? this.isAwaitingAiResponse,
+      isAwaitingAiResponse: isAwaitingAiResponse ?? this.isAwaitingAiResponse,
     );
   }
 }

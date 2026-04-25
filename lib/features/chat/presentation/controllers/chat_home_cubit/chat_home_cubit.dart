@@ -37,7 +37,11 @@ class ChatHomeCubit extends Cubit<ChatHomeState> {
         (chat) => emit(ChatHomeActive(chat: chat)),
       );
     } catch (e, stackTrace) {
-      appLogger.e('ChatHomeCubit.createChat unexpected', error: e, stackTrace: stackTrace);
+      appLogger.e(
+        'ChatHomeCubit.createChat unexpected',
+        error: e,
+        stackTrace: stackTrace,
+      );
       if (isClosed) return;
       emit(
         ChatHomeError(

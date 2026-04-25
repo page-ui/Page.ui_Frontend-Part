@@ -6,10 +6,7 @@ import 'package:pageui/features/chat/presentation/widgets/custom_button_icon_for
 import 'package:pageui/features/chat/presentation/widgets/history_panel/history_panel_body.dart';
 
 class HistoryPanelHeader extends StatelessWidget {
-  const HistoryPanelHeader({
-    super.key,
-    required this.widget,
-  });
+  const HistoryPanelHeader({super.key, required this.widget});
 
   final HistoryPanelBody widget;
 
@@ -21,7 +18,7 @@ class HistoryPanelHeader extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            const  Icon(AppIcons.arrowForward, size: 12, color: AppColors.white),
+            const Icon(AppIcons.arrowForward, size: 12, color: AppColors.white),
             const SizedBox(width: 8),
             Text(
               "History Interface",

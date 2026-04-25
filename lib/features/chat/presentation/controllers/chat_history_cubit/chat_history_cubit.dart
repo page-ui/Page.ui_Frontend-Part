@@ -83,7 +83,8 @@ class ChatHistoryCubit extends Cubit<ChatHistoryState> {
   }) async {
     final current = state;
     final result = await _chatRepo.renameChat(chatId: chatId, name: name);
-    if (isClosed) return Left(ServerFailure.forOperation(AppOperation.renameChat));
+    if (isClosed)
+      return Left(ServerFailure.forOperation(AppOperation.renameChat));
 
     return result.fold((failure) => Left(failure), (renamed) {
       if (current is ChatHistoryLoaded) {

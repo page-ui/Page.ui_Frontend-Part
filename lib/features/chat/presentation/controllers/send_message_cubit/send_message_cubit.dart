@@ -50,10 +50,7 @@ class SendMessageCubit extends Cubit<SendMessageState> {
         );
       }
 
-      final result = await _sendMessage(
-        params: params,
-        attachment: attachment,
-      );
+      final result = await _sendMessage(params: params, attachment: attachment);
       if (isClosed) return;
 
       result.fold(
@@ -64,7 +61,11 @@ class SendMessageCubit extends Cubit<SendMessageState> {
         },
       );
     } catch (e, stackTrace) {
-      appLogger.e('SendMessageCubit.sendMessage unexpected', error: e, stackTrace: stackTrace);
+      appLogger.e(
+        'SendMessageCubit.sendMessage unexpected',
+        error: e,
+        stackTrace: stackTrace,
+      );
       if (isClosed) return;
       emit(
         SendMessageError(

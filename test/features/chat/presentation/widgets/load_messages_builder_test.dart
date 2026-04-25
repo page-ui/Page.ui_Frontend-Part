@@ -111,11 +111,7 @@ class _FakeChatRepo implements ChatRepo {
       ({List<MessageEntity> messages, bool hasNextPage, String? endCursor})
     >
   >
-  Function({
-    required String chatId,
-    required int first,
-    String? after,
-  })
+  Function({required String chatId, required int first, String? after})
   getMessagesHandler;
   final Stream<MessageEntity> Function({required String chatId})
   _subscribeToMessagesHandler;
@@ -127,11 +123,8 @@ class _FakeChatRepo implements ChatRepo {
       ({List<MessageEntity> messages, bool hasNextPage, String? endCursor})
     >
   >
-  getMessages({
-    required String chatId,
-    required int first,
-    String? after,
-  }) => getMessagesHandler(chatId: chatId, first: first, after: after);
+  getMessages({required String chatId, required int first, String? after}) =>
+      getMessagesHandler(chatId: chatId, first: first, after: after);
 
   @override
   Stream<MessageEntity> subscribeToMessages({required String chatId}) {
@@ -170,15 +163,18 @@ class _FakeChatRepo implements ChatRepo {
   }) {
     throw UnimplementedError();
   }
-  
+
   @override
   Future<Either<Failure, void>> deleteChat({required String chatId}) {
     // TODO: implement deleteChat
     throw UnimplementedError();
   }
-  
+
   @override
-  Future<Either<Failure, ChatEntity>> renameChat({required String chatId, required String name}) {
+  Future<Either<Failure, ChatEntity>> renameChat({
+    required String chatId,
+    required String name,
+  }) {
     // TODO: implement renameChat
     throw UnimplementedError();
   }

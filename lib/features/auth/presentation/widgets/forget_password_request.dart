@@ -32,6 +32,7 @@ class _ForgetPasswordRequestState extends State<ForgetPasswordRequest> {
     _emailController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<ForgetPasswordCubit, ForgetPasswordState>(

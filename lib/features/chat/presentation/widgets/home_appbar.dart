@@ -3,6 +3,7 @@ import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_images.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/core/constants/constants.dart';
+import 'package:pageui/features/chat/presentation/widgets/settings_menu_button.dart';
 
 class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppbar({super.key});
@@ -34,6 +35,12 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
       ),
+      actions: const [
+        Padding(
+          padding: EdgeInsets.only(right: 16.0),
+          child: SettingsMenuButton(),
+        ),
+      ],
     );
   }
 }

@@ -12,7 +12,7 @@ class CustomModalProgressHud extends StatelessWidget {
   final bool isLoading;
   @override
   Widget build(BuildContext context) {
-    return  ModalProgressHUD(
+    return ModalProgressHUD(
       blur: 3,
       inAsyncCall: isLoading,
       progressIndicator: const CustomCliLoadingIndicator(),
