@@ -4,8 +4,6 @@ import 'package:pageui/core/helpers/setup_service_locator_getit.dart';
 import 'package:pageui/main_app.dart';
 
 void main() {
-  // CacheHelper cacheHelper = CacheHelper();
-  // cacheHelper.init();
   SecureStorage.init();
   setUpServiceLocator();
   runApp(const PageDotUi());

@@ -79,20 +79,20 @@ class Queries {
     ''';
 
   static String sendMessageMutation = r'''
-mutation CreateMessage($input: CreateMessageInput!) {
-  createMessage(input: $input) {
-    id
-    chatId
-    senderId
-    content
-    type
-    status
-    createdAt
-    replyToId
-    attachmentUrl
-    serverGeneratedId
-  }
-}
+    mutation CreateMessage($input: CreateMessageInput!) {
+      createMessage(input: $input) {
+        id
+        chatId
+        senderId
+        content
+        type
+        status
+        createdAt
+        replyToId
+        attachmentUrl
+        serverGeneratedId
+      }
+    }
     ''';
 
   static String chatRoomsQuery = r'''

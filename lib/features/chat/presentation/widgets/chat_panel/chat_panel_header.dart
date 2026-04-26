@@ -11,11 +11,11 @@ class ChatPanelHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: AlignmentGeometry.topCenter,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(AppIcons.arrowForward, size: 12, color: AppColors.white),
             const SizedBox(width: 8),
@@ -26,11 +26,10 @@ class ChatPanelHeader extends StatelessWidget {
                 letterSpacing: 2,
               ),
             ),
-            const SizedBox(width: 70),
-            CustomButtonIconForPanels(isLeftPanel: true, onPressed: onPressed),
           ],
         ),
-      ),
+        CustomButtonIconForPanels(isLeftPanel: true, onPressed: onPressed),
+      ],
     );
   }
 }

@@ -27,7 +27,8 @@ class IframeView extends StatelessWidget {
         ..overflow = 'hidden'
         ..display = 'flex'
         ..flexDirection = 'column'
-        ..backgroundColor = 'transparent';
+        ..backgroundColor = 'transparent'
+        ..borderRadius = '4px';
 
       if (url.trim().isEmpty) {
         final web.HTMLDivElement emptyState =
@@ -60,6 +61,7 @@ class IframeView extends StatelessWidget {
           ..style.border = '0'
           ..style.width = '100%'
           ..style.height = '100%'
+          ..style.borderRadius = '24px'
           ..style.pointerEvents = 'none'
           ..style.userSelect = 'none'
           ..allow = 'clipboard-read; clipboard-write';

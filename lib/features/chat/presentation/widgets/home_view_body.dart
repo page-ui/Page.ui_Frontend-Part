@@ -15,8 +15,8 @@ import 'package:pageui/features/chat/presentation/widgets/custom_animated_contai
 import 'package:pageui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_panel_for_mobile_mode.dart';
 import 'package:pageui/features/chat/presentation/widgets/history_panel/history_panel.dart';
-import 'package:pageui/features/chat/presentation/widgets/landing_page.dart';
 import 'package:pageui/features/chat/presentation/widgets/home_appbar.dart';
+import 'package:pageui/features/chat/presentation/widgets/landing_view.dart';
 import 'package:pageui/features/chat/presentation/widgets/ui_frame/u_i_frame.dart';
 
 class HomeViewBody extends StatefulWidget {
@@ -32,7 +32,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
   ScreenType? _lastMode;
 
   final double leftWidth = 260;
-  final double rightWidth = 290;
+  final double rightWidth = 400;
 
   void _handleOpenningDrawers() {
     ScreenType currentMode;
@@ -187,7 +187,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                       ),
                     if (!hasSelectedChat)
                       Expanded(
-                        child: LandingPage(
+                        child: LandingView(
                           onSend: ({required content, attachmentUrl}) {
                             _onLandingPageSend(
                               context: context,
