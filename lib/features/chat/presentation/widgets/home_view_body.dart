@@ -108,7 +108,17 @@ class _HomeViewBodyState extends State<HomeViewBody> {
     if (trimmed.isEmpty) {
       return 'Chat ${DateTime.now().millisecondsSinceEpoch}';
     }
-    return trimmed.length > 40 ? '${trimmed.substring(0, 40)}…' : trimmed;
+
+    final normalizedName = trimmed
+        .replaceAll('\r\n', '\n')
+        .replaceAll('\r', '\n')
+        .replaceAll('\n', ' ')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
+
+    return normalizedName.length > 40
+        ? '${normalizedName.substring(0, 40)}…'
+        : normalizedName;
   }
 
   @override

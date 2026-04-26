@@ -2,6 +2,7 @@ import 'package:pageui/core/errors/app_operation.dart';
 import 'package:pageui/core/errors/error_model.dart';
 import 'package:pageui/core/errors/exceptions.dart';
 import 'package:pageui/features/chat/domain/entities/message_entity.dart';
+import 'package:pageui/features/chat/domain/params/message_content_codec.dart';
 
 class MessageModel extends MessageEntity {
   static const String defaultStatus = 'sent';
@@ -34,7 +35,7 @@ class MessageModel extends MessageEntity {
       id: json['id'] as String,
       chatId: chatId,
       senderId: json['senderId'] as String?,
-      content: json['content'] as String,
+      content: decodeMessageContent(json['content'] as String),
       type: json['type'] as String,
       status: (json['status'] as String?) ?? defaultStatus,
       createdAt: DateTime.parse(json['createdAt'] as String),

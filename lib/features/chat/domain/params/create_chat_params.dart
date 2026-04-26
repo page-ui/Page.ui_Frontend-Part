@@ -1,3 +1,5 @@
+import 'message_content_codec.dart';
+
 class CreateChatParams {
   final String name;
   final String content;
@@ -10,12 +12,31 @@ class CreateChatParams {
   });
 
   Map<String, dynamic> toInputJson() {
+    final normalizedContent = _normalizeContent(
+      content: content,
+      attachmentUrl: attachmentUrl,
+    );
+
     return {
       'name': name,
       'initialUserMessage': {
-        'content': content,
-        'attachmentUrl': attachmentUrl,
+        'content': normalizedContent,
+        if (attachmentUrl != null && attachmentUrl!.trim().isNotEmpty)
+          'attachmentUrl': attachmentUrl,
       },
     };
   }
+}
+
+String _normalizeContent({
+  required String content,
+  required String? attachmentUrl,
+}) {
+  final normalizedLineEndings = encodeMessageContent(content);
+
+  if (attachmentUrl == null || attachmentUrl.trim().isEmpty) {
+    return normalizedLineEndings;
+  }
+
+  return normalizedLineEndings;
 }
