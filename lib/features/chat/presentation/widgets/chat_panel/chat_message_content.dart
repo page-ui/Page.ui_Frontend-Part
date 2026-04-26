@@ -85,13 +85,13 @@ class _ChatMessageImage extends StatelessWidget {
           tag: heroTag,
           child: Image.network(
             url,
-            width: 320,
+            width: 310,
             height: 260,
             fit: BoxFit.cover,
             loadingBuilder: (context, child, loadingProgress) {
               if (loadingProgress == null) return child;
               return Container(
-                width: 320,
+                width: 310,
                 height: 260,
                 color: AppColors.black.withValues(alpha: 0.2),
                 alignment: Alignment.center,
@@ -103,7 +103,7 @@ class _ChatMessageImage extends StatelessWidget {
             },
             errorBuilder: (context, error, stackTrace) {
               return Container(
-                width: 320,
+                width: 310,
                 height: 260,
                 padding: const EdgeInsets.all(12),
                 color: AppColors.black.withValues(alpha: 0.2),

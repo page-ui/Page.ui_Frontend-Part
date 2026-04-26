@@ -35,7 +35,7 @@ class _ThinkingBubbleState extends State<ThinkingBubble>
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        constraints: const BoxConstraints(maxWidth: 320),
+        constraints: const BoxConstraints(maxWidth: 310),
         margin: const EdgeInsets.symmetric(vertical: 4),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(

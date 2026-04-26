@@ -32,7 +32,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
   ScreenType? _lastMode;
 
   final double leftWidth = 260;
-  final double rightWidth = 400;
+  final double rightWidth = 390;
 
   void _handleOpenningDrawers() {
     ScreenType currentMode;
