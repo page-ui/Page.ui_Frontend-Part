@@ -71,7 +71,9 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
           builder: (context, isSendLoading) {
             return BlocSelector<ChatMessagesCubit, ChatMessagesState, bool>(
               selector: (state) =>
-                  state is ChatMessagesLoaded && state.isAwaitingAiResponse,
+                  state is ChatMessagesLoaded &&
+                  (state.isAwaitingAiResponse ||
+                      state.activeThinkingMessage != null),
               builder: (context, isAwaitingAi) {
                 return BlocBuilder<ChatHomeCubit, ChatHomeState>(
                   builder: (context, homeState) {

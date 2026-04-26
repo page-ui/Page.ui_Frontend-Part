@@ -126,22 +126,31 @@ mutation CreateMessage($input: CreateMessageInput!) {
     ''';
 
   static String getMessagesQuery = r'''
-    query GetMessages($chatId: UUID!, $first: Int, $after: String) {
-      messages(chatId: $chatId, first: $first, after: $after) {
-        nodes {
-          id
-          content
-          senderId
-          type
-          createdAt
-          attachmentUrl
-        }
-        pageInfo {
-          hasNextPage
-          endCursor
-        }
+query GetMessages($chatId: UUID!, $first: Int, $after: String, $order: [MessageSortInput!]) {
+  messages(
+    chatId: $chatId
+    first: $first
+    after: $after
+    order: $order
+    where: { type: { nin: [THINKING] } }
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        id
+        senderId
+        content
+        type
+        createdAt
+        attachmentUrl
       }
     }
+  }
+}
   ''';
 
   static String deleteChatMutation = r'''

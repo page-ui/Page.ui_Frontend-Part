@@ -23,6 +23,7 @@ final class ChatMessagesLoaded extends ChatMessagesState {
   final bool isLoadingMore;
   final String? selectedAiRunMessageId;
   final bool isAwaitingAiResponse;
+  final MessageEntity? activeThinkingMessage;
 
   const ChatMessagesLoaded({
     required this.chatId,
@@ -32,6 +33,7 @@ final class ChatMessagesLoaded extends ChatMessagesState {
     this.isLoadingMore = false,
     this.selectedAiRunMessageId,
     this.isAwaitingAiResponse = false,
+    this.activeThinkingMessage,
   });
 
   ChatMessagesLoaded copyWith({
@@ -42,6 +44,7 @@ final class ChatMessagesLoaded extends ChatMessagesState {
     bool? isLoadingMore,
     String? selectedAiRunMessageId,
     bool? isAwaitingAiResponse,
+    MessageEntity? activeThinkingMessage,
   }) {
     return ChatMessagesLoaded(
       chatId: chatId ?? this.chatId,
@@ -52,6 +55,8 @@ final class ChatMessagesLoaded extends ChatMessagesState {
       selectedAiRunMessageId:
           selectedAiRunMessageId ?? this.selectedAiRunMessageId,
       isAwaitingAiResponse: isAwaitingAiResponse ?? this.isAwaitingAiResponse,
+      activeThinkingMessage:
+          activeThinkingMessage ?? this.activeThinkingMessage,
     );
   }
 }
@@ -78,7 +83,7 @@ extension ChatMessagesLoadedAiRun on ChatMessagesLoaded {
     if (selectedId == null) return null;
     for (final message in messages) {
       if (message.id != selectedId) continue;
-      if (!isAiMessageType(message.type)) return null;
+      if (!isAiRunType(message.type)) return null;
       return message.content.trim().isEmpty ? null : message;
     }
     return null;
@@ -86,7 +91,7 @@ extension ChatMessagesLoadedAiRun on ChatMessagesLoaded {
 
   MessageEntity? get _latestAiMessage {
     for (final message in messages.reversed) {
-      if (!isAiMessageType(message.type)) continue;
+      if (!isAiRunType(message.type)) continue;
       if (message.content.trim().isEmpty) continue;
       return message;
     }

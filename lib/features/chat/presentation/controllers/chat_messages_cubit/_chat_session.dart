@@ -13,4 +13,8 @@ class ChatSession {
   bool isLoading = false;
   bool isLoadingMore = false;
   bool isAwaitingAiResponse = false;
+
+  /// Transient status bubble — shows animated bubble with dynamic content
+  /// from backend. Cleared when AI_MESSAGE or AI_RUN arrives.
+  MessageEntity? activeThinkingMessage;
 }

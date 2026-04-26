@@ -13,11 +13,13 @@ class MessageBubble extends StatelessWidget {
 
   final MessageEntity message;
 
-  bool get _isAssistantMessage => isAiMessageType(message.type);
+  bool get _isAssistant => isAssistantMessage(message.type);
+
+  bool get _isAiRun => isAiRunType(message.type);
 
   @override
   Widget build(BuildContext context) {
-    final isUser = !_isAssistantMessage;
+    final isUser = !_isAssistant;
 
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
@@ -52,7 +54,7 @@ class MessageBubble extends StatelessWidget {
                     fontSize: 11,
                   ),
                 ),
-                if (_isAssistantMessage) ...[
+                if (_isAiRun) ...[
                   const SizedBox(width: 6),
                   _PreviewUiButton(messageId: message.id),
                 ],

@@ -134,13 +134,30 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
         .listen(
           (message) {
             if (isClosed) return;
-            final isNew = !session.messages.any((m) => m.id == message.id);
-            session.messages = _mergeMessages(session.messages, [message]);
 
-            if (isNew && isAiMessageType(message.type)) {
-              session.selectedAiRunId = message.id;
+            final type = message.type.trim().toUpperCase();
+
+            if (type == MessageType.thinking) {
+              // Any THINKING message → show as transient animated bubble
+              session.activeThinkingMessage = message;
+              session.isAwaitingAiResponse = true;
+            } else if (type == MessageType.aiMessage) {
+              // AI text response → clear thinking bubble, add to messages
+              session.activeThinkingMessage = null;
               session.isAwaitingAiResponse = false;
+              session.messages = _mergeMessages(session.messages, [message]);
               ChatTypewriterRegistry.markArrived(message.id);
+            } else if (type == MessageType.aiRun) {
+              // UI arrived → clear thinking bubble, update iframe
+              session.activeThinkingMessage = null;
+              session.isAwaitingAiResponse = false;
+              session.selectedAiRunId = message.id;
+              final isNew = !session.messages.any((m) => m.id == message.id);
+              session.messages = _mergeMessages(session.messages, [message]);
+              if (isNew) ChatTypewriterRegistry.markArrived(message.id);
+            } else {
+              // USER_MESSAGE or other — add to messages
+              session.messages = _mergeMessages(session.messages, [message]);
             }
 
             if (_activeChatId == chatId) _emitLoaded(chatId);
@@ -153,6 +170,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
             );
             if (isClosed) return;
             session.isAwaitingAiResponse = false;
+            session.activeThinkingMessage = null;
             if (_activeChatId != chatId) return;
             if (session.messages.isEmpty) {
               emit(
@@ -195,6 +213,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
         isLoadingMore: session.isLoadingMore,
         selectedAiRunMessageId: session.selectedAiRunId,
         isAwaitingAiResponse: session.isAwaitingAiResponse,
+        activeThinkingMessage: session.activeThinkingMessage,
       ),
     );
   }

@@ -8,7 +8,7 @@ class ChatModel extends ChatEntity {
 
     return ChatModel(
       id: chatJson['id'] as String,
-      name: chatJson['name'] as String,
+      name: chatJson['name'] ?? "New Chat",
       createdAt: chatJson['createdAt'] != null
           ? DateTime.parse(chatJson['createdAt'] as String)
           : null,

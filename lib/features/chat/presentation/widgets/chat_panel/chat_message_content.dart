@@ -13,19 +13,19 @@ class ChatMessageContent extends StatelessWidget {
 
   final MessageEntity message;
 
-  bool get _isAiRun => isAiMessageType(message.type);
+  bool get _isAiRun => isAiRunType(message.type);
+
+  bool get _isAssistant => isAssistantMessage(message.type);
 
   bool get _hasImage =>
-      !_isAiRun &&
+      !_isAssistant &&
       message.attachmentUrl != null &&
       message.attachmentUrl!.trim().isNotEmpty;
 
   String? get _displayText {
     final content = message.content.trim();
     if (_isAiRun) {
-      if (content.isEmpty) return aiMessageType;
-      if (content.startsWith('/')) return 'http://localhost$content';
-      return content;
+      return 'The UI';
     }
 
     if (content.isEmpty) return null;
@@ -38,7 +38,7 @@ class ChatMessageContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (!_isAiRun)
+        if (!_isAssistant)
           _ChatMessageImage(
             imageUrl: message.attachmentUrl,
             heroTag: 'chat-image-${message.id}',
@@ -47,7 +47,7 @@ class ChatMessageContent extends StatelessWidget {
         _ChatMessageText(
           content: _displayText,
           messageId: message.id,
-          animate: _isAiRun,
+          animate: _isAssistant,
         ),
       ],
     );
