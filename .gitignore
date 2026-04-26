@@ -46,3 +46,5 @@ app.*.map.json
 ai.md
 project_context.md
 .env
+.codex
+/.claude/
