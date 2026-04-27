@@ -165,6 +165,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
           final hasSelectedChat = homeState.selectedChat != null;
 
           return Scaffold(
+            backgroundColor: Colors.transparent,
             appBar: const HomeAppbar(),
             body: Stack(
               children: [
