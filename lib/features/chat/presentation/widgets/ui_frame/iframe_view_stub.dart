@@ -19,8 +19,6 @@ class _IframeViewState extends State<IframeView> {
   @override
   void initState() {
     super.initState();
-
-    // Use a stable ID based on the URL or 'empty' state
     viewID =
         'pageui-view-${widget.url.isEmpty ? 'empty' : widget.url.hashCode}';
 
@@ -37,7 +35,6 @@ class _IframeViewState extends State<IframeView> {
         ..backgroundColor = 'transparent';
 
       if (widget.url.trim().isEmpty) {
-        // Replicating _EmptyUIPreview in HTML/CSS
         final web.HTMLDivElement emptyState =
             web.document.createElement('div') as web.HTMLDivElement;
         emptyState.style
@@ -52,9 +49,7 @@ class _IframeViewState extends State<IframeView> {
             '''
           <div style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;">
             <div style="margin-bottom: 12px; opacity: 0.4;">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="#539062">
-                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 14H6V6h12v12z"/>
-              </svg>
+              <img src="assets/images/logoWithoutBackground.png" width="48" height="48" alt="Logo" />
             </div>
             <div style="color: white; opacity: 0.7; font-size: 16px; margin-bottom: 4px; font-weight: 500;">UI Preview</div>
             <div style="color: #E5E7EB; opacity: 0.4; font-size: 13px;">Generated UI will render here</div>
@@ -63,7 +58,6 @@ class _IframeViewState extends State<IframeView> {
                 .toJS;
         baseElement.appendChild(emptyState);
       } else {
-        // Regular Iframe for content
         final web.HTMLIFrameElement iframe =
             web.document.createElement('iframe') as web.HTMLIFrameElement;
 
