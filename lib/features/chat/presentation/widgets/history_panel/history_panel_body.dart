@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_icons.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_history_cubit/chat_history_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
@@ -45,30 +46,40 @@ class _HistoryPanelBodyState extends State<HistoryPanelBody> {
         children: [
           HistoryPanelHeader(widget: widget),
           const SizedBox(height: 8),
-          Row(
-            children: [
-              BlocBuilder<ChatHomeCubit, ChatHomeState>(
-                builder: (context, state) {
-                  return AbsorbPointer(
-                    absorbing: state is ChatHomeLoading,
-                    child: IconButton(
-                      onPressed: () {
-                        context.read<ChatHomeCubit>().reset();
-                        widget.onPressed?.call();
-                      },
-                      icon: const Icon(AppIcons.plus),
+          SizedBox(
+            width: double.infinity,
+            child: BlocBuilder<ChatHomeCubit, ChatHomeState>(
+              builder: (context, state) {
+                return AbsorbPointer(
+                  absorbing: state is ChatHomeLoading,
+                  child: TextButton.icon(
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.textGray,
+                      backgroundColor: AppColors.black.withValues(alpha: 0.3),
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: BorderSide(
+                          color: AppColors.darkGrey.withValues(alpha: 0.3),
+                        ),
+                      ),
                     ),
-                  );
-                },
-              ),
-              const SizedBox(width: 2),
-              Expanded(
-                child: HistorySearchTextField(
-                  onSearch: _onSearchChanged,
-                  searchController: _searchController,
-                ),
-              ),
-            ],
+                    onPressed: () {
+                      context.read<ChatHomeCubit>().reset();
+                      widget.onPressed?.call();
+                    },
+                    icon: const Icon(AppIcons.plus),
+                    label: const Text('Create New Chat'),
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 8),
+          HistorySearchTextField(
+            onSearch: _onSearchChanged,
+            searchController: _searchController,
           ),
           const SizedBox(height: 12),
           ListOfChatRooms(

@@ -102,7 +102,7 @@ class _ListOfChatRoomsState extends State<ListOfChatRooms> {
 
                   return ListView.builder(
                     controller: _scrollController,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.only(right: 16),
                     itemCount:
                         state.chats.length + (state.isLoadingMore ? 1 : 0),
                     itemBuilder: (context, index) {

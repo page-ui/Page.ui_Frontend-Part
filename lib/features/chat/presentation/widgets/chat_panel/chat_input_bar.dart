@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/core/constants/borders.dart';
 import 'package:pageui/features/chat/presentation/widgets/chat_panel/image_preview_chat_input_bar.dart';
@@ -41,46 +40,29 @@ class ChatInputBar extends StatelessWidget {
               const PickImageButton(),
               const SizedBox(width: 6),
               Expanded(
-                child: Focus(
-                  onKeyEvent: (node, event) {
-                    if (event is KeyDownEvent &&
-                        event.logicalKey == LogicalKeyboardKey.enter) {
-                      if (HardwareKeyboard.instance.isShiftPressed) {
-                        return KeyEventResult.ignored;
-                      } else {
-                        _handleSend();
-                        return KeyEventResult.handled;
-                      }
-                    }
-                    return KeyEventResult.ignored;
-                  },
-                  child: TextField(
-                    keyboardType: TextInputType.multiline,
-
-                    controller: controller,
-                    focusNode: focusNode,
-                    enabled: !isSending,
-                    textInputAction: TextInputAction.newline,
-                    style: TextStyle(
-                      color: AppColors.white.withValues(alpha: 0.9),
+                child: TextField(
+                  keyboardType: TextInputType.multiline,
+                  controller: controller,
+                  focusNode: focusNode,
+                  textInputAction: TextInputAction.newline,
+                  style: TextStyle(
+                    color: AppColors.white.withValues(alpha: 0.9),
+                    fontSize: 14,
+                  ),
+                  maxLines: 6,
+                  minLines: 1,
+                  decoration: InputDecoration(
+                    hintText: 'Type your prompt...',
+                    hintStyle: TextStyle(
+                      color: AppColors.lightGray.withValues(alpha: 0.4),
                       fontSize: 14,
                     ),
-                    maxLines: 6,
-
-                    minLines: 1,
-                    decoration: InputDecoration(
-                      hintText: 'Type your prompt...',
-                      hintStyle: TextStyle(
-                        color: AppColors.lightGray.withValues(alpha: 0.4),
-                        fontSize: 14,
-                      ),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 8,
-                      ),
-                      isDense: true,
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 8,
                     ),
+                    isDense: true,
                   ),
                 ),
               ),

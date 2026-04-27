@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_icons.dart';
 import 'package:pageui/core/constants/borders.dart';
+import 'package:pageui/core/helpers/format_date_time.dart';
 import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
 import 'package:pageui/features/chat/presentation/widgets/history_panel/menu_button.dart';
 
@@ -42,13 +43,12 @@ class ChatRoom extends StatelessWidget {
               width: 1.2,
             ),
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: InkWell(
-                  onTap: onTap,
-                  borderRadius: AppBorders.xxxs,
+          child: InkWell(                    onTap: onTap,
+                    borderRadius: AppBorders.xxxs,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
@@ -91,7 +91,7 @@ class ChatRoom extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          _formatDateTime(chat.createdAt ?? DateTime.now()),
+                          formatDateTime(chat.createdAt ?? DateTime.now()),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -105,27 +105,20 @@ class ChatRoom extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
-              if (hasMenuActions)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8, right: 8),
-                  child: MenuButton(
-                    onRename: onRename!,
-                    onDelete: onDelete!,
-                    isSelected: isSelected,
+                if (hasMenuActions)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8, right: 8),
+                    child: MenuButton(
+                      onRename: onRename!,
+                      onDelete: onDelete!,
+                      isSelected: isSelected,
+                    ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
-  }
-
-  String _formatDateTime(DateTime dateTime) {
-    final hour = dateTime.hour > 12 ? dateTime.hour - 12 : dateTime.hour;
-    final period = dateTime.hour >= 12 ? 'PM' : 'AM';
-    final minute = dateTime.minute.toString().padLeft(2, '0');
-    return '$hour:$minute $period - ${dateTime.day}/${dateTime.month}/${dateTime.year.toString().substring(2)}';
   }
 }
