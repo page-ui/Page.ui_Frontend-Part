@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_images.dart';
-import 'package:pageui/config/themes/app_text_style.dart';
-import 'package:pageui/core/constants/constants.dart';
+import 'package:pageui/features/chat/presentation/widgets/name_and_the_logo.dart';
 import 'package:pageui/features/chat/presentation/widgets/settings_menu_button.dart';
 
 class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
@@ -17,24 +15,7 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       toolbarHeight: 45,
       backgroundColor: AppColors.anotherGray.withValues(alpha: 0.8),
-      title: Row(
-        children: [
-          Container(
-            width: 50,
-            height: 50,
-            child: Image.asset(
-              Assets.assetsImagesLogoWithoutBackground,
-              fit: BoxFit.contain,
-            ),
-          ),
-          Text(
-            appName,
-            style: AppTextStyles.headlineSmall!.copyWith(
-              color: AppColors.white,
-            ),
-          ),
-        ],
-      ),
+      title: const NameAndTheLogo(),
       actions: const [
         Padding(
           padding: EdgeInsets.only(right: 16.0),

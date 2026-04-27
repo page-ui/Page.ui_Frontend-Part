@@ -59,7 +59,7 @@ class _AnimatedStarfieldBackgroundState
   final Random _random = Random(42);
   bool _initialized = false;
 
-  static const int _starCount = 200;
+  static const int _starCount = 300;
   static const int _nebulaCount = 3;
 
   @override

@@ -6,6 +6,8 @@ import 'package:pageui/features/auth/presentation/views/login_view.dart';
 import 'package:pageui/features/auth/presentation/views/register_view.dart';
 import 'package:pageui/features/auth/presentation/views/train_view.dart';
 import 'package:pageui/features/chat/presentation/views/home_view.dart';
+import 'package:pageui/features/intro_screens/presentation/views/developers_view.dart';
+import 'package:pageui/features/intro_screens/presentation/views/landing_view.dart';
 import 'package:pageui/features/intro_screens/presentation/views/splash_view.dart';
 
 sealed class AppRoutes {
@@ -39,18 +41,26 @@ sealed class AppRoutes {
     );
   }
 
-  // Convenience methods
   static Future<void> pushRegisterView(BuildContext context) =>
       pushNamed(context, RegisterView.routeName);
 
   static Future<void> pushLoginView(BuildContext context) =>
       pushNamedAndRemoveAll(context, LoginView.routeName);
 
+  static Future<void> pushLoginViewFromLanding(BuildContext context) =>
+      pushNamed(context, LoginView.routeName);
+
   static Future<void> pushHomeView(BuildContext context) =>
       pushNamedAndRemoveAll(context, HomeView.routeName);
 
   static Future<void> pushTrainView(BuildContext context) =>
       pushNamedAndRemoveAll(context, TrainView.routeName);
+
+  static Future<void> pushLandingView(BuildContext context) =>
+      pushNamedAndRemoveAll(context, LandingView.routeName);
+
+  static Future<void> pushDevelopersView(BuildContext context) =>
+      pushNamed(context, DevelopersView.routeName);
 
   static Future<void> pushForgetPasswordView(BuildContext context) =>
       pushNamed(context, ForgetPaswordView.routeName);
@@ -61,6 +71,8 @@ sealed class AppRoutes {
 
   // Named routes map
   static final Map<String, Widget Function(BuildContext, Object?)> routes = {
+    LandingView.routeName: (_, __) => const LandingView(),
+    DevelopersView.routeName: (_, __) => const DevelopersView(),
     LoginView.routeName: (_, __) => const LoginView(),
     TrainView.routeName: (_, __) => const TrainView(),
     SplashView.routeName: (_, __) => const SplashView(),
