@@ -4,8 +4,12 @@ import 'package:pageui/config/themes/app_icons.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/features/chat/presentation/widgets/chat_panel/chat_input_builder.dart';
 
-class LandingView extends StatelessWidget {
-  const LandingView({super.key, required this.onSend, this.errorMessage});
+class CreateNewChatSection extends StatelessWidget {
+  const CreateNewChatSection({
+    super.key,
+    required this.onSend,
+    this.errorMessage,
+  });
 
   final Function({required String content, String? attachmentUrl}) onSend;
   final String? errorMessage;
