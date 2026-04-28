@@ -48,7 +48,7 @@ class _CustomButtonState extends State<CustomButton> {
             }),
             backgroundColor: const WidgetStateColor.fromMap({
               WidgetState.pressed: AppColors.primaryColor,
-              WidgetState.any: AppColors.darkGreen,
+              WidgetState.any: AppColors.green,
             }),
             enableFeedback: true,
             shape: const WidgetStateProperty.fromMap({

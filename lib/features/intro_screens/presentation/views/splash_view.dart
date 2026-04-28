@@ -29,50 +29,58 @@ class _SplashViewState extends State<SplashView> {
     GraphQLConfig.accessToken = userTokenModel.accessToken;
     GraphQLConfig.refreshToken = userTokenModel.refreshToken;
     Future.delayed(const Duration(milliseconds: 4500), () {
+      if (!mounted) return;
       userTokenModel.isEmpty()
-          ? AppRoutes.pushLoginView(context)
+          ? AppRoutes.pushLoginViewFromLanding(context)
           : AppRoutes.pushHomeView(context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(top: 130.0),
-        child: Center(
-          child: Column(
-            children: [
-              DefaultTextStyle(
-                style: AppTextStyles.displayLarge!.copyWith(
-                  color: AppColors.white,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        AppRoutes.pushLandingView(context);
+      },
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.only(top: 130.0),
+          child: Center(
+            child: Column(
+              children: [
+                DefaultTextStyle(
+                  style: AppTextStyles.displayLarge!.copyWith(
+                    color: AppColors.white,
+                  ),
+                  child: AnimatedTextKit(
+                    totalRepeatCount: 1,
+                    animatedTexts: [
+                      WavyAnimatedText(
+                        appName,
+                        speed: const Duration(milliseconds: 200),
+                      ),
+                    ],
+                  ),
                 ),
-                child: AnimatedTextKit(
-                  totalRepeatCount: 1,
-                  animatedTexts: [
-                    WavyAnimatedText(
-                      appName,
-                      speed: const Duration(milliseconds: 200),
-                    ),
-                  ],
+                const SizedBox(height: 32),
+                DefaultTextStyle(
+                  style: AppTextStyles.titleMedium!.copyWith(
+                    color: AppColors.white,
+                  ),
+                  child: AnimatedTextKit(
+                    totalRepeatCount: 1,
+                    animatedTexts: [
+                      TyperAnimatedText(
+                        "initializing page.ui....",
+                        speed: const Duration(milliseconds: 200),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 32),
-              DefaultTextStyle(
-                style: AppTextStyles.titleMedium!.copyWith(
-                  color: AppColors.white,
-                ),
-                child: AnimatedTextKit(
-                  totalRepeatCount: 1,
-                  animatedTexts: [
-                    TyperAnimatedText(
-                      "initializing page.ui....",
-                      speed: const Duration(milliseconds: 200),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
