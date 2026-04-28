@@ -92,7 +92,7 @@ class _SettingsMenuButtonContent extends StatelessWidget {
 
       if (!context.mounted) return;
       if (action == _SettingsAction.signOut) {
-        context.read<SettingsCubit>().signOut();
+        await context.read<SettingsCubit>().signOut();
       } else if (action == _SettingsAction.deleteAccount) {
         // Just UI for now
       }
