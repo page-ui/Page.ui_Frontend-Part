@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pageui/config/routes/on_generate_routes.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
+import 'package:pageui/features/intro_screens/presentation/widgets/read_docs_button.dart';
 
 class HeroSection extends StatelessWidget {
   const HeroSection({super.key});
@@ -163,29 +164,7 @@ class HeroSection extends StatelessWidget {
                       ],
                     ),
                   ),
-                  OutlinedButton(
-                    onPressed: () {},
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.white,
-                      side: BorderSide(
-                        color: AppColors.white.withValues(alpha: 0.3),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 50.w,
-                        vertical: 20.h,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40),
-                      ),
-                    ),
-                    child: Text(
-                      "Read the Docs",
-                      style: AppTextStyles.titleLarge?.copyWith(
-                        color: AppColors.white,
-                        fontSize: btnFont,
-                      ),
-                    ),
-                  ),
+                  ReadDocsButton(btnFont: btnFont),
                 ],
               ),
 
