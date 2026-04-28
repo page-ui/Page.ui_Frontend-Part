@@ -6,7 +6,6 @@ import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/core/constants/constants.dart';
 import 'package:pageui/core/database/api/graph_ql_config.dart';
 import 'package:pageui/features/auth/data/model/user_tokens_model.dart';
-import 'package:pageui/features/intro_screens/presentation/views/landing_view.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -31,8 +30,8 @@ class _SplashViewState extends State<SplashView> {
     GraphQLConfig.refreshToken = userTokenModel.refreshToken;
     Future.delayed(const Duration(milliseconds: 4500), () {
       userTokenModel.isEmpty()
-        ? AppRoutes.pushNamedAndRemoveAll(context, LandingView.routeName)
-        : AppRoutes.pushHomeView(context);
+          ? AppRoutes.pushLoginView(context)
+          : AppRoutes.pushHomeView(context);
     });
   }
 

@@ -134,7 +134,7 @@ class HeroSection extends StatelessWidget {
                     onPressed: () =>
                         AppRoutes.pushLoginViewFromLanding(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.white,
+                      backgroundColor: AppColors.green,
                       foregroundColor: AppColors.black,
                       padding: EdgeInsets.symmetric(
                         horizontal: 50.w,

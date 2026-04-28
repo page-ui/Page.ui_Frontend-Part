@@ -74,8 +74,7 @@ class LandingNavBar extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextButton(
-                        onPressed: () =>
-                            AppRoutes.pushLoginViewFromLanding(context),
+                        onPressed: () => AppRoutes.pushSplashView(context),
                         child: Text(
                           "Log in",
                           style: AppTextStyles.titleMedium?.copyWith(

@@ -41,6 +41,9 @@ sealed class AppRoutes {
     );
   }
 
+  static Future<void> pushSplashView(BuildContext context) =>
+      pushNamed(context, SplashView.routeName);
+
   static Future<void> pushRegisterView(BuildContext context) =>
       pushNamed(context, RegisterView.routeName);
 
