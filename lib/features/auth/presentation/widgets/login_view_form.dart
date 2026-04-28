@@ -77,9 +77,9 @@ class _LoginViewFormState extends State<LoginViewForm> {
             const customRowAuth(hint: "Password"),
             const SizedBox(height: 4),
             PasswordTextFormField(controller: _passwordController),
-            const SizedBox(height: 6),
+            const SizedBox(height: 12),
             const DoNotHaveAnAccountWidget(),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             const ForgetPasswordWidget(),
             const SizedBox(height: 20),
             Center(

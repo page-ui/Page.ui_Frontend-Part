@@ -72,7 +72,7 @@ class _ForgetPasswordRequestState extends State<ForgetPasswordRequest> {
               validator: EmailValidator,
               enable: !isLoading,
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 12),
             const HaveAnAccountWidget(),
             const SizedBox(height: 20),
             AbsorbPointer(

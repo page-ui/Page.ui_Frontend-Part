@@ -15,7 +15,7 @@ class ForgetPasswordWidget extends StatelessWidget {
         GestureDetector(
           onTap: () => AppRoutes.pushForgetPasswordView(context),
           child: Text(
-            "[ Forget Passoword ]",
+            "[ Forget Password ]",
             style: AppTextStyles.bodySmall!.copyWith(
               color: AppColors.primaryColor,
             ),

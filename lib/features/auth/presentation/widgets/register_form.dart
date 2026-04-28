@@ -117,7 +117,7 @@ class _RegisterFormState extends State<RegisterForm> {
             const SizedBox(height: 4),
             PasswordTextFormField(controller: _confirmpasswordController),
 
-            const SizedBox(height: 6),
+            const SizedBox(height: 12),
 
             const HaveAnAccountWidget(),
 
