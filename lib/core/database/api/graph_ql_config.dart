@@ -66,6 +66,13 @@ class GraphQLConfig {
   static GraphQLLoggerLink loggerLink = GraphQLLoggerLink();
   static AuthLink authLink = AuthLink(
     getToken: () async {
+      if (accessToken == null) {
+        final tokens = await returnTokensFromSecureDB();
+        if (tokens.accessToken != null) {
+          accessToken = tokens.accessToken;
+          refreshToken ??= tokens.refreshToken;
+        }
+      }
       if (accessToken == null) return null;
       return 'Bearer $accessToken';
     },

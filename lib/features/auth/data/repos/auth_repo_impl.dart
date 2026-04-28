@@ -124,6 +124,12 @@ class AuthRepoImpl extends AuthRepo {
   @override
   Future<Either<Failure, void>> signOut() async {
     return _guard<void>(AppOperation.signOut, () async {
+      if (GraphQLConfig.refreshToken == null) {
+        final tokens = await returnTokensFromSecureDB();
+        GraphQLConfig.accessToken = tokens.accessToken;
+        GraphQLConfig.refreshToken = tokens.refreshToken;
+      }
+
       final currentRefreshToken = GraphQLConfig.refreshToken;
       if (currentRefreshToken == null) {
         throw CacheExeption(
