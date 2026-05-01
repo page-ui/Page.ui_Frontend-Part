@@ -59,7 +59,7 @@ class _AnimatedStarfieldBackgroundState
   final Random _random = Random(42);
   bool _initialized = false;
 
-  static const int _starCount = 300;
+  static const int _starCount = 150;
   static const int _nebulaCount = 3;
 
   @override
@@ -120,7 +120,6 @@ class _AnimatedStarfieldBackgroundState
       builder: (context, constraints) {
         final size = Size(constraints.maxWidth, constraints.maxHeight);
         _initParticles();
-
 
         return Directionality(
           textDirection: TextDirection.ltr,
@@ -192,11 +191,10 @@ class _StarfieldPainter extends CustomPainter {
       final ny = relY * size.height;
 
       final paint = Paint()
-        ..shader = RadialGradient(
-          colors: [nebula.color, Colors.transparent],
-        ).createShader(
-          Rect.fromCircle(center: Offset(nx, ny), radius: nebula.radius),
-        );
+        ..shader = RadialGradient(colors: [nebula.color, Colors.transparent])
+            .createShader(
+              Rect.fromCircle(center: Offset(nx, ny), radius: nebula.radius),
+            );
 
       canvas.drawCircle(Offset(nx, ny), nebula.radius, paint);
     }
@@ -212,8 +210,7 @@ class _StarfieldPainter extends CustomPainter {
           (sin(time * star.twinkleSpeed + star.twinklePhase) + 1) / 2;
       final alpha = (star.opacity * (0.4 + 0.6 * twinkle)).clamp(0.0, 1.0);
 
-      final paint = Paint()
-        ..color = Color.fromRGBO(255, 255, 255, alpha);
+      final paint = Paint()..color = Color.fromRGBO(255, 255, 255, alpha);
 
       if (star.size > 1.5) {
         final glowPaint = Paint()

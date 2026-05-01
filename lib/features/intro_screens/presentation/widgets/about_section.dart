@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
@@ -53,29 +52,30 @@ class _AboutSectionState extends State<AboutSection> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final w = constraints.maxWidth;
-        final compact = w < 700;
-        final medium = w >= 700 && w < 1100;
+        final compact = w < 600;
+        final medium = w >= 600 && w < 1100;
 
-        final labelFont = compact
-            ? 58.sp
-            : medium
-            ? 36.sp
-            : 20.sp;
+        final labelFont = compact ? 12.0 : 14.0;
         final headFont = compact
-            ? 120.sp
+            ? 22.0
             : medium
-            ? 80.sp
-            : 36.sp;
+                ? 28.0
+                : 36.0;
         final bodyFont = compact
-            ? 72.sp
+            ? 14.0
             : medium
-            ? 44.sp
-            : 24.sp;
+                ? 16.0
+                : 18.0;
         final hPad = compact
-            ? 80.w
+            ? 20.0
             : medium
-            ? 120.w
-            : 200.w;
+                ? 48.0
+                : 120.0;
+        final videoHeight = compact
+            ? 220.0
+            : medium
+                ? 300.0
+                : 380.0;
 
         final textContent = Column(
           crossAxisAlignment: compact
@@ -90,7 +90,7 @@ class _AboutSectionState extends State<AboutSection> {
                 fontSize: labelFont,
               ),
             ),
-            SizedBox(height: 20.h),
+            const SizedBox(height: 16),
             Text(
               "Bridging the gap between code and design.",
               textAlign: compact ? TextAlign.center : TextAlign.left,
@@ -100,7 +100,7 @@ class _AboutSectionState extends State<AboutSection> {
                 fontSize: headFont,
               ),
             ),
-            SizedBox(height: 40.h),
+            const SizedBox(height: 24),
             Text(
               "From an academic perspective, this platform explores prompt-driven design generation, pattern learning from large-scale visual data, and reducing design bias in generative systems.\n\nFrom a practical perspective, it aims to radically improve productivity for frontend developers and lower the barrier to entry for building visually stunning applications.",
               textAlign: compact ? TextAlign.center : TextAlign.left,
@@ -116,7 +116,7 @@ class _AboutSectionState extends State<AboutSection> {
         final visual = ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: Container(
-            height: 400.h,
+            height: videoHeight,
             width: double.infinity,
             decoration: BoxDecoration(
               color: AppColors.black,
@@ -147,12 +147,12 @@ class _AboutSectionState extends State<AboutSection> {
 
         return Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 150.h),
+          padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 80),
           child: compact
               ? Column(
                   children: [
                     visual,
-                    SizedBox(height: 60.h),
+                    const SizedBox(height: 40),
                     textContent,
                   ],
                 )
@@ -160,7 +160,7 @@ class _AboutSectionState extends State<AboutSection> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(child: textContent),
-                    SizedBox(width: 100.w),
+                    const SizedBox(width: 48),
                     Expanded(child: visual),
                   ],
                 ),

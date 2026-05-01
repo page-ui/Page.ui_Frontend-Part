@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/core/constants/constants.dart';
@@ -13,38 +12,34 @@ class FooterSection extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final w = constraints.maxWidth;
-        final compact = w < 700;
-        final medium = w >= 700 && w < 1100;
+        final compact = w < 600;
+        final medium = w >= 600 && w < 1100;
 
         final headFont = compact
-            ? 96.sp
+            ? 18.0
             : medium
-            ? 56.sp
-            : 24.sp;
+                ? 20.0
+                : 22.0;
         final bodyFont = compact
-            ? 72.sp
+            ? 14.0
             : medium
-            ? 44.sp
-            : 20.sp;
+                ? 15.0
+                : 16.0;
         final linkFont = compact
-            ? 64.sp
+            ? 13.0
             : medium
-            ? 40.sp
-            : 18.sp;
-        final smallFont = compact
-            ? 52.sp
-            : medium
-            ? 32.sp
-            : 14.sp;
+                ? 14.0
+                : 15.0;
+        final smallFont = compact ? 11.0 : 13.0;
         final hPad = compact
-            ? 80.w
+            ? 20.0
             : medium
-            ? 120.w
-            : 200.w;
+                ? 48.0
+                : 120.0;
 
         return Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 80.h),
+          padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 48),
           decoration: BoxDecoration(
             color: AppColors.black.withValues(alpha: 0.5),
             border: Border(
@@ -57,23 +52,19 @@ class FooterSection extends StatelessWidget {
                   ? _buildCompactFooter(headFont, bodyFont, linkFont)
                   : _buildWideFooter(headFont, bodyFont, linkFont),
 
-              SizedBox(height: 60.h),
+              const SizedBox(height: 40),
               Divider(color: AppColors.white.withValues(alpha: 0.1)),
-              SizedBox(height: 20.h),
+              const SizedBox(height: 16),
 
-              Wrap(
-                alignment: WrapAlignment.spaceBetween,
-                spacing: 20.w,
-                runSpacing: 10.h,
-                children: [
-                  Text(
-                    "© ${DateTime.now().year} Page.ui.",
-                    style: AppTextStyles.labelMedium?.copyWith(
-                      color: AppColors.white.withValues(alpha: 0.4),
-                      fontSize: smallFont,
-                    ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "© ${DateTime.now().year} Page.ui.",
+                  style: AppTextStyles.labelMedium?.copyWith(
+                    color: AppColors.white.withValues(alpha: 0.4),
+                    fontSize: smallFont,
                   ),
-                ],
+                ),
               ),
             ],
           ),
@@ -99,7 +90,7 @@ class FooterSection extends StatelessWidget {
                   fontSize: headFont,
                 ),
               ),
-              SizedBox(height: 20.h),
+              const SizedBox(height: 14),
               Text(
                 "Empowering frontend developers to build visually coherent, original UI designs instantly.",
                 style: AppTextStyles.titleMedium?.copyWith(
@@ -147,7 +138,7 @@ class FooterSection extends StatelessWidget {
             fontSize: headFont,
           ),
         ),
-        SizedBox(height: 16.h),
+        const SizedBox(height: 12),
         Text(
           "Empowering frontend developers to build visually coherent, original UI designs instantly.",
           style: AppTextStyles.titleMedium?.copyWith(
@@ -155,10 +146,9 @@ class FooterSection extends StatelessWidget {
             fontSize: bodyFont,
           ),
         ),
-        SizedBox(height: 40.h),
-        Wrap(
-          spacing: 60.w,
-          runSpacing: 40.h,
+        const SizedBox(height: 28),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: FooterLinksColumn(
@@ -168,6 +158,7 @@ class FooterSection extends StatelessWidget {
                 linkFont: linkFont,
               ),
             ),
+            const SizedBox(width: 24),
             Expanded(
               child: FooterLinksColumn(
                 title: "Company",

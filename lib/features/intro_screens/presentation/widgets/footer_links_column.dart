@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pageui/config/routes/on_generate_routes.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
@@ -58,7 +57,7 @@ class FooterLinksColumn extends StatelessWidget {
                 child: titleLabel,
               )
             : titleLabel,
-        SizedBox(height: 20.h),
+        const SizedBox(height: 14),
         ...links.map(
           (link) {
             final target = _linkTarget(link);
@@ -72,7 +71,7 @@ class FooterLinksColumn extends StatelessWidget {
             );
 
             return Padding(
-              padding: EdgeInsets.only(bottom: 12.h),
+              padding: const EdgeInsets.only(bottom: 8),
               child: TextButton(
                 onPressed: () {
                   if (link == 'Developers') {

@@ -52,7 +52,7 @@ class Queries {
   static String signOutMutation = r'''
     mutation SignOut($refreshToken: String!) {
     signOut(refreshToken: $refreshToken)
-  }
+    }
     ''';
   static String deleteAccountMutation = r'''
     mutation DeleteAccount {
@@ -70,10 +70,6 @@ class Queries {
             name
             chatKey
           }
-          initialMessage {
-            id
-            content
-          }
         }
       }
     ''';
@@ -81,16 +77,6 @@ class Queries {
   static String sendMessageMutation = r'''
     mutation CreateMessage($input: CreateMessageInput!) {
       createMessage(input: $input) {
-        id
-        chatId
-        senderId
-        content
-        type
-        status
-        createdAt
-        replyToId
-        attachmentUrl
-        serverGeneratedId
       }
     }
     ''';
@@ -102,10 +88,8 @@ class Queries {
           id
           name
           createdAt
-          updatedAt
         }
         pageInfo { hasNextPage endCursor }
-        totalCount
       }
     }
     ''';
@@ -126,31 +110,31 @@ class Queries {
     ''';
 
   static String getMessagesQuery = r'''
-query GetMessages($chatId: UUID!, $first: Int, $after: String, $order: [MessageSortInput!]) {
-  messages(
-    chatId: $chatId
-    first: $first
-    after: $after
-    order: $order
-    where: { type: { nin: [THINKING] } }
-  ) {
-    totalCount
-    pageInfo {
-      hasNextPage
-      endCursor
-    }
-    edges {
-      node {
-        id
-        senderId
-        content
-        type
-        createdAt
-        attachmentUrl
+    query GetMessages($chatId: UUID!, $first: Int, $after: String, $order: [MessageSortInput!]) {
+      messages(
+        chatId: $chatId
+        first: $first
+        after: $after
+        order: $order
+        where: { type: { nin: [THINKING] } }
+      ) {
+        totalCount
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+        edges {
+          node {
+            id
+            senderId
+            content
+            type
+            createdAt
+            attachmentUrl
+          }
+        }
       }
     }
-  }
-}
   ''';
 
   static String deleteChatMutation = r'''
@@ -164,8 +148,6 @@ query GetMessages($chatId: UUID!, $first: Int, $after: String, $order: [MessageS
       renameChat(input: $input) {
         id
         name
-        ownerUserId
-        updatedAt
       }
     }
   ''';

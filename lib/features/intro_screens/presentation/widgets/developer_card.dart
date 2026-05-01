@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/core/helpers/open_external_link.dart';
@@ -21,8 +20,8 @@ class DeveloperCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints(minWidth: 280, maxWidth: 520),
-      padding: const EdgeInsets.all(20),
+      constraints: const BoxConstraints(minWidth: 240, maxWidth: 520),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: AppColors.mainBackgroundColor.withValues(alpha: 0.75),
         borderRadius: BorderRadius.circular(20),
@@ -36,9 +35,10 @@ class DeveloperCard extends StatelessWidget {
             style: AppTextStyles.bodyMedium?.copyWith(
               color: AppColors.white,
               fontWeight: FontWeight.w600,
+              fontSize: nameFont,
             ),
           ),
-          SizedBox(height: 14.h),
+          const SizedBox(height: 10),
           TextButton(
             onPressed: () => openExternalLink(developer.repoUrl),
             style: TextButton.styleFrom(
@@ -51,6 +51,7 @@ class DeveloperCard extends StatelessWidget {
               developer.repoUrl,
               style: AppTextStyles.bodySmall?.copyWith(
                 color: accent,
+                fontSize: repoFont,
                 decoration: TextDecoration.underline,
                 decorationColor: accent,
               ),

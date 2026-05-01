@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/features/intro_screens/presentation/widgets/developer_card.dart';
@@ -26,7 +25,7 @@ class DeveloperSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(24.w),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.black.withValues(alpha: 0.35),
         borderRadius: BorderRadius.circular(24),
@@ -48,12 +47,13 @@ class DeveloperSection extends StatelessWidget {
             style: AppTextStyles.titleMedium?.copyWith(
               color: AppColors.white,
               fontWeight: FontWeight.w700,
+              fontSize: titleFont,
             ),
           ),
-          SizedBox(height: 20.h),
+          const SizedBox(height: 16),
           Wrap(
-            spacing: 20.w,
-            runSpacing: 20.h,
+            spacing: 16,
+            runSpacing: 16,
             children: developers
                 .map(
                   (developer) => DeveloperCard(

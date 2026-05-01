@@ -30,7 +30,6 @@ class CustomAuthScreenTheme extends StatelessWidget {
           maxWidth = 500;
         } else if (context.isMobile) {
           maxWidth = double.infinity;
-          maxHeight = MediaQuery.sizeOf(context).height;
           isMobile = true;
         } else {
           maxWidth = constraints.maxWidth * 0.62;
@@ -48,7 +47,7 @@ class CustomAuthScreenTheme extends StatelessWidget {
                 ConstrainedBox(
                   constraints: BoxConstraints(
                     maxWidth: maxWidth,
-                    maxHeight: maxHeight,
+                    minHeight: isMobile ? MediaQuery.sizeOf(context).height : 0,
                   ),
                   child: Container(
                     decoration: BoxDecoration(
@@ -60,15 +59,15 @@ class CustomAuthScreenTheme extends StatelessWidget {
                           blurStyle: BlurStyle.outer,
                         ),
                       ],
-                      borderRadius: isMobile
-                          ? AppBorders.zero
-                          : AppBorders.xxxxs,
+                      borderRadius: isMobile ? AppBorders.zero : AppBorders.xxxxs,
                       border: Border.all(
                         color: AppColors.primaryColor,
                         width: 2,
                         strokeAlign: BorderSide.strokeAlignOutside,
                       ),
-                      color: AppColors.mainBackgroundColor,
+                      color: isMobile
+                          ? AppColors.transparent
+                          : AppColors.mainBackgroundColor,
                     ),
                     child: Padding(
                       padding: EdgeInsets.symmetric(
@@ -76,9 +75,7 @@ class CustomAuthScreenTheme extends StatelessWidget {
                         horizontal: 24,
                       ),
                       child: Column(
-                        mainAxisSize: isMobile
-                            ? MainAxisSize.max
-                            : MainAxisSize.min,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Visibility(visible: !isMobile, child: Dots()),
                           Visibility(

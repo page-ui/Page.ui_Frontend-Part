@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/features/intro_screens/presentation/widgets/feature_card.dart';
@@ -12,54 +11,53 @@ class FeaturesSection extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final w = constraints.maxWidth;
-        final compact = w < 700;
-        final medium = w >= 700 && w < 1100;
+        final compact = w < 600;
+        final medium = w >= 600 && w < 1100;
 
-        final labelFont = compact
-            ? 58.sp
-            : medium
-            ? 36.sp
-            : 20.sp;
+        final labelFont = compact ? 12.0 : 14.0;
         final headFont = compact
-            ? 130.sp
+            ? 24.0
             : medium
-            ? 85.sp
-            : 48.sp;
+                ? 32.0
+                : 42.0;
         final titleFont = compact
-            ? 96.sp
+            ? 18.0
             : medium
-            ? 56.sp
-            : 28.sp;
+                ? 20.0
+                : 22.0;
         final bodyFont = compact
-            ? 72.sp
+            ? 14.0
             : medium
-            ? 44.sp
-            : 22.sp;
+                ? 15.0
+                : 16.0;
         final iconSize = compact
-            ? 100.sp
+            ? 28.0
             : medium
-            ? 64.sp
-            : 32.sp;
+                ? 30.0
+                : 32.0;
         final hPad = compact
-            ? 80.w
+            ? 20.0
             : medium
-            ? 120.w
-            : 200.w;
+                ? 48.0
+                : 120.0;
 
-        final cardSpacing = 40.w;
-        final availableW = w - hPad * 2;
+        const cardSpacing = 24.0;
+        final availableW =
+            (w - hPad * 2).clamp(0.0, double.infinity).toDouble();
         final double cardW;
         if (compact) {
           cardW = availableW;
         } else if (medium) {
-          cardW = (availableW - cardSpacing) / 2;
+          cardW =
+              ((availableW - cardSpacing) / 2).clamp(0.0, double.infinity).toDouble();
         } else {
-          cardW = (availableW - cardSpacing * 2) / 3;
+          cardW =
+              ((availableW - cardSpacing * 2) / 3).clamp(0.0, double.infinity).toDouble();
         }
 
         return Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 150.h),
+          padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 80),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -71,7 +69,7 @@ class FeaturesSection extends StatelessWidget {
                   fontSize: labelFont,
                 ),
               ),
-              SizedBox(height: 20.h),
+              const SizedBox(height: 16),
               Text(
                 "Built for the frontend developer",
                 style: AppTextStyles.displayMedium?.copyWith(
@@ -80,10 +78,10 @@ class FeaturesSection extends StatelessWidget {
                   fontSize: headFont,
                 ),
               ),
-              SizedBox(height: 80.h),
+              const SizedBox(height: 48),
               Wrap(
                 spacing: cardSpacing,
-                runSpacing: 40.h,
+                runSpacing: 24,
                 children: [
                   FeatureCard(
                     icon: Icons.lightbulb_outline,

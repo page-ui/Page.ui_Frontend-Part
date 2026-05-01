@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
 
@@ -43,7 +42,7 @@ class FeatureCard extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
-            padding: EdgeInsets.all(40.w),
+            padding: const EdgeInsets.all(28),
             decoration: BoxDecoration(
               color: AppColors.white.withValues(alpha: 0.03),
               borderRadius: BorderRadius.circular(24),
@@ -55,14 +54,14 @@ class FeatureCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: EdgeInsets.all(16.w),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: AppColors.white.withValues(alpha: 0.05),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(icon, color: AppColors.white, size: iconSize),
                 ),
-                SizedBox(height: 30.h),
+                const SizedBox(height: 24),
                 Text(
                   title,
                   style: AppTextStyles.headlineSmall?.copyWith(
@@ -71,7 +70,7 @@ class FeatureCard extends StatelessWidget {
                     fontSize: titleFont,
                   ),
                 ),
-                SizedBox(height: 20.h),
+                const SizedBox(height: 14),
                 Text(
                   description,
                   style: AppTextStyles.titleMedium?.copyWith(

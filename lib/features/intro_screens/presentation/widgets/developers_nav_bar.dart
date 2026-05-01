@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pageui/config/routes/on_generate_routes.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
@@ -14,7 +13,7 @@ class DevelopersNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final compact = constraints.maxWidth < 700;
+        final compact = constraints.maxWidth < 600;
 
         return ClipRRect(
           child: BackdropFilter(
@@ -22,8 +21,8 @@ class DevelopersNavBar extends StatelessWidget {
             child: Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(
-                horizontal: compact ? 10.w : 20.w,
-                vertical: 20.h,
+                horizontal: compact ? 12 : 24,
+                vertical: 14,
               ),
               decoration: BoxDecoration(
                 color: AppColors.mainBackgroundColor.withValues(alpha: 0.5),
@@ -47,7 +46,7 @@ class DevelopersNavBar extends StatelessWidget {
                       'Log in',
                       style: AppTextStyles.titleMedium?.copyWith(
                         color: AppColors.white.withValues(alpha: 0.8),
-                        fontSize: 16.0,
+                        fontSize: 15.0,
                       ),
                     ),
                   ),

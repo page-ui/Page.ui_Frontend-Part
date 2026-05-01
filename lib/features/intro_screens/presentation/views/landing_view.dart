@@ -17,6 +17,10 @@ class LandingView extends StatefulWidget {
 class _LandingViewState extends State<LandingView> {
   final ScrollController _scrollController = ScrollController();
 
+  final GlobalKey _featuresKey = GlobalKey();
+  final GlobalKey _aboutKey = GlobalKey();
+  final GlobalKey _footerKey = GlobalKey();
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -31,12 +35,12 @@ class _LandingViewState extends State<LandingView> {
         children: [
           SingleChildScrollView(
             controller: _scrollController,
-            child: const Column(
+            child: Column(
               children: [
-                HeroSection(),
-                FeaturesSection(),
-                AboutSection(),
-                FooterSection(),
+                const HeroSection(),
+                FeaturesSection(key: _featuresKey),
+                AboutSection(key: _aboutKey),
+                FooterSection(key: _footerKey),
               ],
             ),
           ),
@@ -45,7 +49,12 @@ class _LandingViewState extends State<LandingView> {
             top: 0,
             left: 0,
             right: 0,
-            child: LandingNavBar(scrollController: _scrollController),
+            child: LandingNavBar(
+              scrollController: _scrollController,
+              featuresKey: _featuresKey,
+              aboutKey: _aboutKey,
+              footerKey: _footerKey,
+            ),
           ),
         ],
       ),

@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pageui/config/routes/on_generate_routes.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
@@ -10,12 +9,32 @@ import 'package:pageui/features/intro_screens/presentation/widgets/landing_view_
 
 class LandingNavBar extends StatelessWidget {
   final ScrollController scrollController;
+  final GlobalKey featuresKey;
+  final GlobalKey aboutKey;
+  final GlobalKey footerKey;
 
-  const LandingNavBar({super.key, required this.scrollController});
+  const LandingNavBar({
+    super.key,
+    required this.scrollController,
+    required this.featuresKey,
+    required this.aboutKey,
+    required this.footerKey,
+  });
 
-  void _scrollTo(double offset) {
+  void _scrollToSection(GlobalKey key) {
+    final context = key.currentContext;
+    if (context != null) {
+      Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeInOutCubic,
+      );
+    }
+  }
+
+  void _scrollToTop() {
     scrollController.animateTo(
-      offset,
+      0,
       duration: const Duration(milliseconds: 800),
       curve: Curves.easeInOutCubic,
     );
@@ -26,15 +45,16 @@ class LandingNavBar extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final w = constraints.maxWidth;
-        final compact = w < 700;
+        final compact = w < 600;
+
         return ClipRRect(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
             child: Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(
-                horizontal: compact ? 10.w : 20.w,
-                vertical: 20.h,
+                horizontal: compact ? 12 : 24,
+                vertical: 14,
               ),
               decoration: BoxDecoration(
                 color: AppColors.mainBackgroundColor.withValues(alpha: 0.5),
@@ -48,28 +68,30 @@ class LandingNavBar extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  NameAndTheLogo(onTap: () => _scrollTo(0)),
-                  compact
-                      ? Container()
-                      : Row(
-                          children: [
-                            LandingViewNavBarItem(
-                              title: "Features",
-                              onTap: () => _scrollTo(1000.h),
-                            ),
-                            SizedBox(width: 40.w),
-                            LandingViewNavBarItem(
-                              title: "About",
-                              onTap: () => _scrollTo(2200.h),
-                            ),
-                            SizedBox(width: 40.w),
-                            LandingViewNavBarItem(
-                              title: "Contact",
-                              onTap: () => _scrollTo(3500.h),
-                            ),
-                          ],
-                        ),
+                  NameAndTheLogo(onTap: _scrollToTop),
 
+                  // Desktop nav items
+                  if (!compact)
+                    Row(
+                      children: [
+                        LandingViewNavBarItem(
+                          title: "Features",
+                          onTap: () => _scrollToSection(featuresKey),
+                        ),
+                        const SizedBox(width: 24),
+                        LandingViewNavBarItem(
+                          title: "About",
+                          onTap: () => _scrollToSection(aboutKey),
+                        ),
+                        const SizedBox(width: 24),
+                        LandingViewNavBarItem(
+                          title: "Contact",
+                          onTap: () => _scrollToSection(footerKey),
+                        ),
+                      ],
+                    ),
+
+                  // Right side: Log in + optional hamburger
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -79,11 +101,65 @@ class LandingNavBar extends StatelessWidget {
                           "Log in",
                           style: AppTextStyles.titleMedium?.copyWith(
                             color: AppColors.white.withValues(alpha: 0.8),
-                            fontSize: 16.0,
+                            fontSize: 15.0,
                           ),
                         ),
                       ),
-                      if (!compact) SizedBox(width: 20.w),
+                      // Mobile hamburger menu
+                      if (compact)
+                        PopupMenuButton<String>(
+                          icon: Icon(
+                            Icons.menu,
+                            color: AppColors.white.withValues(alpha: 0.8),
+                            size: 22,
+                          ),
+                          color: AppColors.mainBackgroundColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(
+                              color: AppColors.white.withValues(alpha: 0.1),
+                            ),
+                          ),
+                          onSelected: (value) {
+                            switch (value) {
+                              case 'features':
+                                _scrollToSection(featuresKey);
+                              case 'about':
+                                _scrollToSection(aboutKey);
+                              case 'contact':
+                                _scrollToSection(footerKey);
+                            }
+                          },
+                          itemBuilder: (_) => [
+                            PopupMenuItem(
+                              value: 'features',
+                              child: Text(
+                                'Features',
+                                style: AppTextStyles.bodyMedium?.copyWith(
+                                  color: AppColors.white,
+                                ),
+                              ),
+                            ),
+                            PopupMenuItem(
+                              value: 'about',
+                              child: Text(
+                                'About',
+                                style: AppTextStyles.bodyMedium?.copyWith(
+                                  color: AppColors.white,
+                                ),
+                              ),
+                            ),
+                            PopupMenuItem(
+                              value: 'contact',
+                              child: Text(
+                                'Contact',
+                                style: AppTextStyles.bodyMedium?.copyWith(
+                                  color: AppColors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                 ],

@@ -1,6 +1,5 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pageui/config/routes/on_generate_routes.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
@@ -14,43 +13,53 @@ class HeroSection extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final w = constraints.maxWidth;
-        final compact = w < 700;
-        final medium = w >= 700 && w < 1100;
+        final compact = w < 600;
+        final medium = w >= 600 && w < 1100;
 
         final heroFont = compact
-            ? 180.sp
+            ? 26.0
             : medium
-            ? 130.sp
-            : 90.sp;
+                ? 36.0
+                : 48.0;
         final bodyFont = compact
-            ? 72.sp
+            ? 14.0
             : medium
-            ? 44.sp
-            : 28.sp;
+                ? 17.0
+                : 20.0;
         final pillFont = compact
-            ? 58.sp
+            ? 11.0
             : medium
-            ? 36.sp
-            : 20.sp;
+                ? 13.0
+                : 14.0;
         final btnFont = compact
-            ? 72.sp
+            ? 14.0
             : medium
-            ? 44.sp
-            : 26.sp;
+                ? 16.0
+                : 18.0;
         final hPad = compact
-            ? 80.w
+            ? 20.0
             : medium
-            ? 120.w
-            : 200.w;
+                ? 48.0
+                : 120.0;
+        final pillIconSize = compact
+            ? 14.0
+            : medium
+                ? 16.0
+                : 18.0;
 
         return Container(
           width: double.infinity,
           padding: EdgeInsets.symmetric(horizontal: hPad),
           child: Column(
             children: [
-              const SizedBox(height: 105),
+              const SizedBox(height: 90),
+
+              // --- Pill badge ---
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.white.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(30),
@@ -64,13 +73,13 @@ class HeroSection extends StatelessWidget {
                     Icon(
                       Icons.auto_awesome,
                       color: AppColors.primaryColor,
-                      size: pillFont,
+                      size: pillIconSize,
                     ),
-                    SizedBox(width: 12.w),
+                    const SizedBox(width: 10),
                     Flexible(
                       child: Text(
                         "Introducing Prompt-to-UI Generation",
-                        style: AppTextStyles.labelLarge?.copyWith(
+                        style: AppTextStyles.labelMedium?.copyWith(
                           color: AppColors.white,
                           fontSize: pillFont,
                         ),
@@ -79,40 +88,43 @@ class HeroSection extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 50.h),
-              SizedBox(
-                height: compact ? 280.h : 200.h,
-                child: DefaultTextStyle(
-                  style: AppTextStyles.displayLarge!.copyWith(
-                    color: AppColors.white,
-                    fontSize: heroFont,
-                    fontWeight: FontWeight.bold,
-                    height: 1.1,
-                    letterSpacing: -2,
-                  ),
-                  textAlign: TextAlign.center,
-                  child: AnimatedTextKit(
-                    repeatForever: true,
-                    pause: const Duration(milliseconds: 3000),
-                    animatedTexts: [
-                      TypewriterAnimatedText(
-                        "Creativity without limits.\nPrompt to UI.",
-                        speed: const Duration(milliseconds: 100),
-                        textStyle: AppTextStyles.titleLarge!.copyWith(
-                          fontSize: compact ? 120.sp : 70.sp,
-                          color: AppColors.white,
-                        ),
-                        cursor: '|',
+              const SizedBox(height: 26),
+
+              // --- Animated hero text (unconstrained height) ---
+              DefaultTextStyle(
+                style: AppTextStyles.displayLarge!.copyWith(
+                  color: AppColors.white,
+                  fontSize: heroFont,
+                  fontWeight: FontWeight.bold,
+                  height: 1.2,
+                  letterSpacing: -1,
+                ),
+                textAlign: TextAlign.center,
+                child: AnimatedTextKit(
+                  repeatForever: true,
+                  pause: const Duration(milliseconds: 3000),
+                  animatedTexts: [
+                    TypewriterAnimatedText(
+                      "Creativity without limits.\nPrompt to UI.",
+                      speed: const Duration(milliseconds: 100),
+                      textStyle: AppTextStyles.displayMedium!.copyWith(
+                        fontSize: heroFont,
+                        color: AppColors.white,
+                        fontWeight: FontWeight.bold,
+                        height: 1.2,
+                        letterSpacing: -1,
                       ),
-                    ],
-                  ),
+                      cursor: '|',
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 30.h),
+              const SizedBox(height: 24),
 
+              // --- Subtitle ---
               ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxWidth: compact ? w * 0.9 : 800.w,
+                  maxWidth: compact ? w * 0.95 : 700,
                 ),
                 child: Text(
                   "Empowering frontend developers to build visually coherent, original UI designs instantly from natural language.",
@@ -120,15 +132,17 @@ class HeroSection extends StatelessWidget {
                   style: AppTextStyles.headlineSmall?.copyWith(
                     color: AppColors.white.withValues(alpha: 0.7),
                     fontSize: bodyFont,
-                    height: 1.5,
+                    height: 1.6,
                   ),
                 ),
               ),
-              SizedBox(height: 60.h),
+              const SizedBox(height: 40),
+
+              // --- CTA buttons ---
               Wrap(
                 alignment: WrapAlignment.center,
-                spacing: 24.w,
-                runSpacing: 20.h,
+                spacing: 20,
+                runSpacing: 16,
                 children: [
                   ElevatedButton(
                     onPressed: () =>
@@ -137,8 +151,8 @@ class HeroSection extends StatelessWidget {
                       backgroundColor: AppColors.green,
                       foregroundColor: AppColors.black,
                       padding: EdgeInsets.symmetric(
-                        horizontal: 50.w,
-                        vertical: 20.h,
+                        horizontal: compact ? 28 : 40,
+                        vertical: compact ? 14 : 18,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(40),
@@ -155,7 +169,7 @@ class HeroSection extends StatelessWidget {
                             fontSize: btnFont,
                           ),
                         ),
-                        SizedBox(width: 12.w),
+                        const SizedBox(width: 10),
                         Icon(
                           Icons.arrow_forward,
                           size: btnFont,
@@ -164,15 +178,18 @@ class HeroSection extends StatelessWidget {
                       ],
                     ),
                   ),
-                  ReadDocsButton(btnFont: btnFont),
+                  ReadDocsButton(btnFont: btnFont, compact: compact),
                 ],
               ),
 
-              SizedBox(height: 80.h),
+              const SizedBox(height: 60),
 
+              // --- Preview placeholder ---
               Container(
-                width: compact ? double.infinity : 1000.w,
-                height: 300.h,
+                width: compact
+                    ? double.infinity
+                    : (w * 0.6).clamp(400.0, 900.0),
+                height: compact ? 180 : 280,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
@@ -204,9 +221,9 @@ class HeroSection extends StatelessWidget {
                       Icon(
                         Icons.code,
                         color: AppColors.white.withValues(alpha: 0.2),
-                        size: compact ? 120.sp : 60.sp,
+                        size: compact ? 40 : 56,
                       ),
-                      SizedBox(height: 16.h),
+                      const SizedBox(height: 12),
                       Text(
                         "AI UI Generation Interface",
                         style: AppTextStyles.titleMedium?.copyWith(
@@ -218,7 +235,7 @@ class HeroSection extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 40.h),
+              const SizedBox(height: 40),
             ],
           ),
         );

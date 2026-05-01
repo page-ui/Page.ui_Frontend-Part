@@ -129,6 +129,7 @@ class ChatDataSourceImpl extends ChatDataSource {
       QueryOptions(
         document: gql(Queries.getMessagesQuery),
         variables: {
+          //chatkey
           'chatId': chatId,
           'first': first,
           if (after != null) 'after': after,
@@ -215,6 +216,7 @@ class ChatDataSourceImpl extends ChatDataSource {
     final result = await _client.mutate(
       MutationOptions(
         document: gql(Queries.deleteChatMutation),
+        // chatkey
         variables: {'chatId': chatId},
       ),
     );
@@ -236,6 +238,7 @@ class ChatDataSourceImpl extends ChatDataSource {
       MutationOptions(
         document: gql(Queries.renameChatMutation),
         variables: {
+          // chatkey
           'input': {'chatId': chatId, 'name': name},
         },
       ),

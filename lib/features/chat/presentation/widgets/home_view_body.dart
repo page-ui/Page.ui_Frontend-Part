@@ -11,12 +11,12 @@ import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/ch
 import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
 import 'package:pageui/features/chat/presentation/widgets/chat_panel/chat_panel.dart';
+import 'package:pageui/features/chat/presentation/widgets/create_new_chat_section.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_animated_container_for_the_home_panel.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
 import 'package:pageui/features/chat/presentation/widgets/custom_panel_for_mobile_mode.dart';
 import 'package:pageui/features/chat/presentation/widgets/history_panel/history_panel.dart';
 import 'package:pageui/features/chat/presentation/widgets/home_appbar.dart';
-import 'package:pageui/features/chat/presentation/widgets/create_new_chat_section.dart';
 import 'package:pageui/features/chat/presentation/widgets/ui_frame/u_i_frame.dart';
 
 class HomeViewBody extends StatefulWidget {
@@ -32,7 +32,6 @@ class _HomeViewBodyState extends State<HomeViewBody> {
   ScreenType? _lastMode;
 
   final double leftWidth = 260;
-  final double rightWidth = 390;
 
   void _handleOpenningDrawers() {
     ScreenType currentMode;
@@ -123,6 +122,10 @@ class _HomeViewBodyState extends State<HomeViewBody> {
 
   @override
   Widget build(BuildContext context) {
+    final double rightWidth = MediaQuery.sizeOf(context).width <= 400
+        ? MediaQuery.sizeOf(context).width - 35
+        : 390;
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => PickFileCubit()),

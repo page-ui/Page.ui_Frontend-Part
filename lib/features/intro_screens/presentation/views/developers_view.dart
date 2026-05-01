@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/features/intro_screens/presentation/widgets/developer_profile.dart';
@@ -18,18 +17,19 @@ class DevelopersView extends StatelessWidget {
       body: LayoutBuilder(
         builder: (context, constraints) {
           final width = constraints.maxWidth;
-          final compact = width < 700;
-          final hPad = compact ? 20.w : 80.w;
-          const bodyFont = 16.0;
-          final cardTitleFont = compact ? 44.sp : 22.sp;
-          final nameFont = compact ? 36.sp : 18.sp;
-          final repoFont = compact ? 28.sp : 14.sp;
+          final compact = width < 600;
+          final hPad = compact ? 16.0 : 48.0;
+          final titleFont = compact ? 22.0 : 28.0;
+          const bodyFont = 15.0;
+          final cardTitleFont = compact ? 18.0 : 20.0;
+          final nameFont = compact ? 15.0 : 16.0;
+          final repoFont = compact ? 12.0 : 13.0;
 
           return Stack(
             children: [
               SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(hPad, 120.h, hPad, 80.h),
+                  padding: EdgeInsets.fromLTRB(hPad, 80, hPad, 48),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -37,11 +37,11 @@ class DevelopersView extends StatelessWidget {
                         'Developers',
                         style: AppTextStyles.headlineMedium?.copyWith(
                           color: AppColors.white,
-                          // fontSize: titleFont,
+                          fontSize: titleFont,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 16.h),
+                      const SizedBox(height: 12),
                       Text(
                         'Frontend, backend, and AI contributors with direct links to their GitHub profiles.',
                         style: AppTextStyles.titleMedium?.copyWith(
@@ -49,7 +49,7 @@ class DevelopersView extends StatelessWidget {
                           fontSize: bodyFont,
                         ),
                       ),
-                      SizedBox(height: 40.h),
+                      const SizedBox(height: 32),
                       DeveloperSection(
                         title: 'Frontend Developer',
                         accent: AppColors.lightCyan,
@@ -63,7 +63,7 @@ class DevelopersView extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 24.h),
+                      const SizedBox(height: 20),
                       DeveloperSection(
                         title: 'Backend Developer',
                         accent: AppColors.greenAccent,
@@ -77,7 +77,7 @@ class DevelopersView extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 24.h),
+                      const SizedBox(height: 20),
                       DeveloperSection(
                         title: 'AI Developers',
                         accent: AppColors.amber,
