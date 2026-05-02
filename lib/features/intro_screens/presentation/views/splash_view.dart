@@ -31,7 +31,7 @@ class _SplashViewState extends State<SplashView> {
     Future.delayed(const Duration(milliseconds: 4500), () {
       if (!mounted) return;
       userTokenModel.isEmpty()
-          ? AppRoutes.pushLoginViewFromLanding(context)
+          ? AppRoutes.pushLoginViewWithReturn(context)
           : AppRoutes.pushHomeView(context);
     });
   }

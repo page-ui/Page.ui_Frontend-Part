@@ -106,7 +106,7 @@ sealed class AppRoutes {
   static Future<void> pushLoginView(BuildContext context) async =>
       pushNamedAndRemoveAll(context, LoginView.routeName);
 
-  static Future<void> pushLoginViewFromLanding(BuildContext context) async =>
+  static Future<void> pushLoginViewWithReturn(BuildContext context) async =>
       pushNamed(context, LoginView.routeName);
 
   static Future<void> pushHomeView(BuildContext context) async =>

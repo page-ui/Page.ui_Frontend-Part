@@ -40,8 +40,7 @@ class DevelopersNavBar extends StatelessWidget {
                     onTap: () => AppRoutes.pushLandingView(context),
                   ),
                   TextButton(
-                    onPressed: () =>
-                        AppRoutes.pushLoginViewFromLanding(context),
+                    onPressed: () => AppRoutes.pushLoginViewWithReturn(context),
                     child: Text(
                       'Log in',
                       style: AppTextStyles.titleMedium?.copyWith(

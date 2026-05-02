@@ -19,33 +19,33 @@ class HeroSection extends StatelessWidget {
         final heroFont = compact
             ? 26.0
             : medium
-                ? 36.0
-                : 48.0;
+            ? 36.0
+            : 48.0;
         final bodyFont = compact
             ? 14.0
             : medium
-                ? 17.0
-                : 20.0;
+            ? 17.0
+            : 20.0;
         final pillFont = compact
             ? 11.0
             : medium
-                ? 13.0
-                : 14.0;
+            ? 13.0
+            : 14.0;
         final btnFont = compact
             ? 14.0
             : medium
-                ? 16.0
-                : 18.0;
+            ? 16.0
+            : 18.0;
         final hPad = compact
             ? 20.0
             : medium
-                ? 48.0
-                : 120.0;
+            ? 48.0
+            : 120.0;
         final pillIconSize = compact
             ? 14.0
             : medium
-                ? 16.0
-                : 18.0;
+            ? 16.0
+            : 18.0;
 
         return Container(
           width: double.infinity,
@@ -123,9 +123,7 @@ class HeroSection extends StatelessWidget {
 
               // --- Subtitle ---
               ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: compact ? w * 0.95 : 700,
-                ),
+                constraints: BoxConstraints(maxWidth: compact ? w * 0.95 : 700),
                 child: Text(
                   "Empowering frontend developers to build visually coherent, original UI designs instantly from natural language.",
                   textAlign: TextAlign.center,
@@ -145,8 +143,7 @@ class HeroSection extends StatelessWidget {
                 runSpacing: 16,
                 children: [
                   ElevatedButton(
-                    onPressed: () =>
-                        AppRoutes.pushLoginViewFromLanding(context),
+                    onPressed: () => AppRoutes.pushLoginViewWithReturn(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.green,
                       foregroundColor: AppColors.black,
