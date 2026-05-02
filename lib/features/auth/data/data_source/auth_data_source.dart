@@ -1,12 +1,12 @@
-import 'package:Page.ui/core/database/api/graph_ql_config.dart';
-import 'package:Page.ui/core/database/api/queries.dart';
-import 'package:Page.ui/core/errors/app_operation.dart';
-import 'package:Page.ui/core/errors/exceptions.dart';
-import 'package:Page.ui/features/auth/data/model/user_tokens_model.dart';
-import 'package:Page.ui/features/auth/domain/params/login_params.dart';
-import 'package:Page.ui/features/auth/domain/params/register_params.dart';
-import 'package:Page.ui/features/auth/domain/params/reset_password.dart';
-import 'package:Page.ui/features/auth/domain/params/verify_reset_code_params.dart';
+import 'package:page_ui/core/database/api/graph_ql_config.dart';
+import 'package:page_ui/core/database/api/queries.dart';
+import 'package:page_ui/core/errors/app_operation.dart';
+import 'package:page_ui/core/errors/exceptions.dart';
+import 'package:page_ui/features/auth/data/model/user_tokens_model.dart';
+import 'package:page_ui/features/auth/domain/params/login_params.dart';
+import 'package:page_ui/features/auth/domain/params/register_params.dart';
+import 'package:page_ui/features/auth/domain/params/reset_password.dart';
+import 'package:page_ui/features/auth/domain/params/verify_reset_code_params.dart';
 import 'package:graphql_flutter/graphql_flutter.dart' hide ServerException;
 
 abstract class AuthDataSource {

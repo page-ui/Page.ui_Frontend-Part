@@ -1,14 +1,14 @@
-import 'package:Page.ui/core/errors/app_operation.dart';
-import 'package:Page.ui/core/errors/exceptions.dart';
-import 'package:Page.ui/core/errors/failure.dart';
-import 'package:Page.ui/core/helpers/app_logger.dart';
-import 'package:Page.ui/core/network/network_info.dart';
-import 'package:Page.ui/features/chat/data/data_source/abstract_chat_data_source.dart';
-import 'package:Page.ui/features/chat/domain/entities/chat_entity.dart';
-import 'package:Page.ui/features/chat/domain/entities/message_entity.dart';
-import 'package:Page.ui/features/chat/domain/params/create_chat_params.dart';
-import 'package:Page.ui/features/chat/domain/params/send_message_params.dart';
-import 'package:Page.ui/features/chat/domain/repos/chat_repo.dart';
+import 'package:page_ui/core/errors/app_operation.dart';
+import 'package:page_ui/core/errors/exceptions.dart';
+import 'package:page_ui/core/errors/failure.dart';
+import 'package:page_ui/core/helpers/app_logger.dart';
+import 'package:page_ui/core/network/network_info.dart';
+import 'package:page_ui/features/chat/data/data_source/abstract_chat_data_source.dart';
+import 'package:page_ui/features/chat/domain/entities/chat_entity.dart';
+import 'package:page_ui/features/chat/domain/entities/message_entity.dart';
+import 'package:page_ui/features/chat/domain/params/create_chat_params.dart';
+import 'package:page_ui/features/chat/domain/params/send_message_params.dart';
+import 'package:page_ui/features/chat/domain/repos/chat_repo.dart';
 import 'package:dartz/dartz.dart';
 
 class ChatRepoImpl extends ChatRepo {

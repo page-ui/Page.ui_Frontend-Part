@@ -1,5 +1,5 @@
-import 'package:Page.ui/features/auth/presentation/widgets/custom_auth_screen_theme.dart';
-import 'package:Page.ui/features/auth/presentation/widgets/forget_pasword_view_body.dart';
+import 'package:page_ui/features/auth/presentation/widgets/custom_auth_screen_theme.dart';
+import 'package:page_ui/features/auth/presentation/widgets/forget_pasword_view_body.dart';
 import 'package:flutter/material.dart';
 
 class ForgetPaswordView extends StatelessWidget {

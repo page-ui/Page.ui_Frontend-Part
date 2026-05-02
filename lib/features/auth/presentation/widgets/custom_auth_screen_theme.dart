@@ -1,10 +1,10 @@
-import 'package:Page.ui/config/themes/app_colors.dart';
-import 'package:Page.ui/core/constants/borders.dart';
-import 'package:Page.ui/core/custom_widget/custom_divider.dart';
-import 'package:Page.ui/core/custom_widget/dots.dart';
-import 'package:Page.ui/core/custom_widget/logo_widget.dart';
-import 'package:Page.ui/core/custom_widget/scramb_animated_title_text.dart';
-import 'package:Page.ui/core/enum/screen_type.dart';
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/core/constants/borders.dart';
+import 'package:page_ui/core/custom_widget/custom_divider.dart';
+import 'package:page_ui/core/custom_widget/dots.dart';
+import 'package:page_ui/core/custom_widget/logo_widget.dart';
+import 'package:page_ui/core/custom_widget/scramb_animated_title_text.dart';
+import 'package:page_ui/core/enum/screen_type.dart';
 import 'package:flutter/material.dart';
 
 class CustomAuthScreenTheme extends StatelessWidget {

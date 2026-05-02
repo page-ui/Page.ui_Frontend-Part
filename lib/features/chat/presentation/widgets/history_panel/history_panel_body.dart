@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:Page.ui/config/themes/app_colors.dart';
-import 'package:Page.ui/config/themes/app_icons.dart';
-import 'package:Page.ui/features/chat/presentation/controllers/chat_history_cubit/chat_history_cubit.dart';
-import 'package:Page.ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
-import 'package:Page.ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
-import 'package:Page.ui/features/chat/presentation/widgets/history_panel/history_panel_header.dart';
-import 'package:Page.ui/features/chat/presentation/widgets/history_panel/history_search_text_field.dart';
-import 'package:Page.ui/features/chat/presentation/widgets/history_panel/list_of_chat_rooms.dart';
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/config/themes/app_icons.dart';
+import 'package:page_ui/features/chat/presentation/controllers/chat_history_cubit/chat_history_cubit.dart';
+import 'package:page_ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
+import 'package:page_ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
+import 'package:page_ui/features/chat/presentation/widgets/history_panel/history_panel_header.dart';
+import 'package:page_ui/features/chat/presentation/widgets/history_panel/history_search_text_field.dart';
+import 'package:page_ui/features/chat/presentation/widgets/history_panel/list_of_chat_rooms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

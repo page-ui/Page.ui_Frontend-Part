@@ -1,8 +1,8 @@
-import 'package:Page.ui/core/errors/failure.dart';
-import 'package:Page.ui/features/chat/domain/entities/chat_entity.dart';
-import 'package:Page.ui/features/chat/domain/entities/message_entity.dart';
-import 'package:Page.ui/features/chat/domain/params/create_chat_params.dart';
-import 'package:Page.ui/features/chat/domain/params/send_message_params.dart';
+import 'package:page_ui/core/errors/failure.dart';
+import 'package:page_ui/features/chat/domain/entities/chat_entity.dart';
+import 'package:page_ui/features/chat/domain/entities/message_entity.dart';
+import 'package:page_ui/features/chat/domain/params/create_chat_params.dart';
+import 'package:page_ui/features/chat/domain/params/send_message_params.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class ChatRepo {

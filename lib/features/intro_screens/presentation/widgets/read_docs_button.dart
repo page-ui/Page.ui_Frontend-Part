@@ -1,5 +1,5 @@
-import 'package:Page.ui/config/themes/app_colors.dart';
-import 'package:Page.ui/config/themes/app_text_style.dart';
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/config/themes/app_text_style.dart';
 import 'package:flutter/material.dart';
 
 class ReadDocsButton extends StatelessWidget {

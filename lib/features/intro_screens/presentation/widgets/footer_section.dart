@@ -1,7 +1,7 @@
-import 'package:Page.ui/config/themes/app_colors.dart';
-import 'package:Page.ui/config/themes/app_text_style.dart';
-import 'package:Page.ui/core/constants/constants.dart';
-import 'package:Page.ui/features/intro_screens/presentation/widgets/footer_links_column.dart';
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/config/themes/app_text_style.dart';
+import 'package:page_ui/core/constants/constants.dart';
+import 'package:page_ui/features/intro_screens/presentation/widgets/footer_links_column.dart';
 import 'package:flutter/material.dart';
 
 class FooterSection extends StatelessWidget {

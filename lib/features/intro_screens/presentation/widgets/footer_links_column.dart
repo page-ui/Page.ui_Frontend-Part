@@ -1,7 +1,7 @@
-import 'package:Page.ui/config/routes/on_generate_routes.dart';
-import 'package:Page.ui/config/themes/app_colors.dart';
-import 'package:Page.ui/config/themes/app_text_style.dart';
-import 'package:Page.ui/core/helpers/open_external_link.dart';
+import 'package:page_ui/config/routes/on_generate_routes.dart';
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/config/themes/app_text_style.dart';
+import 'package:page_ui/core/helpers/open_external_link.dart';
 import 'package:flutter/material.dart';
 
 class FooterLinksColumn extends StatelessWidget {

@@ -1,9 +1,9 @@
-import 'package:Page.ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
-import 'package:Page.ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
-import 'package:Page.ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
-import 'package:Page.ui/features/chat/presentation/widgets/chat_panel/chat_input_builder.dart';
-import 'package:Page.ui/features/chat/presentation/widgets/chat_panel/chat_panel_header.dart';
-import 'package:Page.ui/features/chat/presentation/widgets/chat_panel/load_messages_builder.dart';
+import 'package:page_ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
+import 'package:page_ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
+import 'package:page_ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
+import 'package:page_ui/features/chat/presentation/widgets/chat_panel/chat_input_builder.dart';
+import 'package:page_ui/features/chat/presentation/widgets/chat_panel/chat_panel_header.dart';
+import 'package:page_ui/features/chat/presentation/widgets/chat_panel/load_messages_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

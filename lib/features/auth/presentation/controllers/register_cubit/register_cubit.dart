@@ -1,5 +1,5 @@
-import 'package:Page.ui/features/auth/data/repos/auth_repo_impl.dart';
-import 'package:Page.ui/features/auth/domain/params/register_params.dart';
+import 'package:page_ui/features/auth/data/repos/auth_repo_impl.dart';
+import 'package:page_ui/features/auth/domain/params/register_params.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 

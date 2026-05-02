@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:Page.ui/core/constants/constants.dart';
-import 'package:Page.ui/core/database/api/interceptors.dart';
-import 'package:Page.ui/core/database/api/queries.dart';
-import 'package:Page.ui/core/database/cache/secure_storage.dart';
-import 'package:Page.ui/features/auth/data/model/user_tokens_model.dart';
+import 'package:page_ui/core/constants/constants.dart';
+import 'package:page_ui/core/database/api/interceptors.dart';
+import 'package:page_ui/core/database/api/queries.dart';
+import 'package:page_ui/core/database/cache/secure_storage.dart';
+import 'package:page_ui/features/auth/data/model/user_tokens_model.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';

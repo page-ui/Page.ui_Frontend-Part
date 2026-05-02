@@ -1,5 +1,5 @@
-import 'package:Page.ui/features/chat/domain/entities/chat_entity.dart';
-import 'package:Page.ui/features/chat/presentation/widgets/history_panel/chat_room.dart';
+import 'package:page_ui/features/chat/domain/entities/chat_entity.dart';
+import 'package:page_ui/features/chat/presentation/widgets/history_panel/chat_room.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 

@@ -1,5 +1,5 @@
-import 'package:Page.ui/core/errors/app_operation.dart';
-import 'package:Page.ui/core/errors/error_model.dart';
+import 'package:page_ui/core/errors/app_operation.dart';
+import 'package:page_ui/core/errors/error_model.dart';
 import 'package:dio/dio.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 

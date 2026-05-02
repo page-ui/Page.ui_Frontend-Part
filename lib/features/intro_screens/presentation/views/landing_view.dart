@@ -1,8 +1,8 @@
-import 'package:Page.ui/features/intro_screens/presentation/widgets/about_section.dart';
-import 'package:Page.ui/features/intro_screens/presentation/widgets/features_section.dart';
-import 'package:Page.ui/features/intro_screens/presentation/widgets/footer_section.dart';
-import 'package:Page.ui/features/intro_screens/presentation/widgets/hero_section.dart';
-import 'package:Page.ui/features/intro_screens/presentation/widgets/landing_nav_bar.dart';
+import 'package:page_ui/features/intro_screens/presentation/widgets/about_section.dart';
+import 'package:page_ui/features/intro_screens/presentation/widgets/features_section.dart';
+import 'package:page_ui/features/intro_screens/presentation/widgets/footer_section.dart';
+import 'package:page_ui/features/intro_screens/presentation/widgets/hero_section.dart';
+import 'package:page_ui/features/intro_screens/presentation/widgets/landing_nav_bar.dart';
 import 'package:flutter/material.dart';
 
 class LandingView extends StatefulWidget {

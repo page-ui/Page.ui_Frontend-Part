@@ -1,6 +1,6 @@
-import 'package:Page.ui/features/auth/presentation/widgets/OTP_code_verfication.dart';
-import 'package:Page.ui/features/auth/presentation/widgets/forget_password_request.dart';
-import 'package:Page.ui/features/auth/presentation/widgets/password_reset.dart';
+import 'package:page_ui/features/auth/presentation/widgets/OTP_code_verfication.dart';
+import 'package:page_ui/features/auth/presentation/widgets/forget_password_request.dart';
+import 'package:page_ui/features/auth/presentation/widgets/password_reset.dart';
 import 'package:flutter/material.dart';
 
 class ForgetPaswordViewForm extends StatefulWidget {

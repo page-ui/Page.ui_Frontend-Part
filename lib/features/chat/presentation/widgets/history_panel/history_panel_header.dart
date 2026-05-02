@@ -1,8 +1,8 @@
-import 'package:Page.ui/config/themes/app_colors.dart';
-import 'package:Page.ui/config/themes/app_icons.dart';
-import 'package:Page.ui/config/themes/app_text_style.dart';
-import 'package:Page.ui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
-import 'package:Page.ui/features/chat/presentation/widgets/history_panel/history_panel_body.dart';
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/config/themes/app_icons.dart';
+import 'package:page_ui/config/themes/app_text_style.dart';
+import 'package:page_ui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
+import 'package:page_ui/features/chat/presentation/widgets/history_panel/history_panel_body.dart';
 import 'package:flutter/material.dart';
 
 class HistoryPanelHeader extends StatelessWidget {

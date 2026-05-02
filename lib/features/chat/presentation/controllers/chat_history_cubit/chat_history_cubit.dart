@@ -1,8 +1,8 @@
-import 'package:Page.ui/core/errors/app_operation.dart';
-import 'package:Page.ui/core/errors/failure.dart';
-import 'package:Page.ui/features/chat/domain/entities/chat_entity.dart';
-import 'package:Page.ui/features/chat/domain/repos/chat_repo.dart';
-import 'package:Page.ui/features/chat/presentation/controllers/chat_history_cubit/chat_history_state.dart';
+import 'package:page_ui/core/errors/app_operation.dart';
+import 'package:page_ui/core/errors/failure.dart';
+import 'package:page_ui/features/chat/domain/entities/chat_entity.dart';
+import 'package:page_ui/features/chat/domain/repos/chat_repo.dart';
+import 'package:page_ui/features/chat/presentation/controllers/chat_history_cubit/chat_history_state.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

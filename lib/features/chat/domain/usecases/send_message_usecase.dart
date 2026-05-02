@@ -1,7 +1,7 @@
-import 'package:Page.ui/core/errors/failure.dart';
-import 'package:Page.ui/features/chat/domain/params/send_message_params.dart';
-import 'package:Page.ui/features/chat/domain/repos/chat_repo.dart';
-import 'package:Page.ui/features/chat/domain/usecases/upload_attachment_usecase.dart';
+import 'package:page_ui/core/errors/failure.dart';
+import 'package:page_ui/features/chat/domain/params/send_message_params.dart';
+import 'package:page_ui/features/chat/domain/repos/chat_repo.dart';
+import 'package:page_ui/features/chat/domain/usecases/upload_attachment_usecase.dart';
 import 'package:dartz/dartz.dart';
 
 class SendMessageUseCase {

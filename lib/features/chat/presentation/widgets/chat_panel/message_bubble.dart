@@ -1,10 +1,10 @@
-import 'package:Page.ui/config/themes/app_colors.dart';
-import 'package:Page.ui/core/constants/borders.dart';
-import 'package:Page.ui/features/chat/domain/constants/message_types.dart';
-import 'package:Page.ui/features/chat/domain/entities/message_entity.dart';
-import 'package:Page.ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
-import 'package:Page.ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
-import 'package:Page.ui/features/chat/presentation/widgets/chat_panel/chat_message_content.dart';
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/core/constants/borders.dart';
+import 'package:page_ui/features/chat/domain/constants/message_types.dart';
+import 'package:page_ui/features/chat/domain/entities/message_entity.dart';
+import 'package:page_ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
+import 'package:page_ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
+import 'package:page_ui/features/chat/presentation/widgets/chat_panel/chat_message_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

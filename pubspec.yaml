@@ -1,4 +1,4 @@
-name: Page.ui
+name: page_ui
 description: "Creativity Without Limits"
 publish_to: 'none' 
 version: 1.0.0+1
@@ -57,8 +57,8 @@ flutter_assets:
 
 flutter_launcher_icons:
   android: "launcher_icon"
-  image_path: "assets/images/logo.png"
+  image_path: "assets/images/logoWithoutBackground.png"
   min_sdk_android: 21
   web:
     generate: true
-    image_path: "assets/images/logo.png"
+    image_path: "assets/images/logoWithoutBackground.png"

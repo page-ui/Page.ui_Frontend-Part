@@ -1,4 +1,4 @@
-import 'package:Page.ui/config/themes/app_images.dart';
+import 'package:page_ui/config/themes/app_images.dart';
 import 'package:flutter/material.dart';
 
 class LogoWidget extends StatefulWidget {

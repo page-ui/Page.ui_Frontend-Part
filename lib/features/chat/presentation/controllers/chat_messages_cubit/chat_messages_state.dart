@@ -1,5 +1,5 @@
-import 'package:Page.ui/features/chat/domain/constants/message_types.dart';
-import 'package:Page.ui/features/chat/domain/entities/message_entity.dart';
+import 'package:page_ui/features/chat/domain/constants/message_types.dart';
+import 'package:page_ui/features/chat/domain/entities/message_entity.dart';
 
 sealed class ChatMessagesState {
   const ChatMessagesState();

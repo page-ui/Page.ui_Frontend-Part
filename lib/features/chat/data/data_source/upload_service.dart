@@ -1,10 +1,10 @@
 import 'dart:typed_data';
 
-import 'package:Page.ui/core/database/api/graph_ql_config.dart';
-import 'package:Page.ui/core/errors/app_operation.dart';
-import 'package:Page.ui/core/errors/error_model.dart';
-import 'package:Page.ui/core/errors/exceptions.dart';
-import 'package:Page.ui/features/chat/data/models/upload_result_model.dart';
+import 'package:page_ui/core/database/api/graph_ql_config.dart';
+import 'package:page_ui/core/errors/app_operation.dart';
+import 'package:page_ui/core/errors/error_model.dart';
+import 'package:page_ui/core/errors/exceptions.dart';
+import 'package:page_ui/features/chat/data/models/upload_result_model.dart';
 import 'package:dio/dio.dart';
 
 class UploadService {

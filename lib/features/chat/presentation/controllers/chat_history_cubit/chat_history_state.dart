@@ -1,4 +1,4 @@
-import 'package:Page.ui/features/chat/domain/entities/chat_entity.dart';
+import 'package:page_ui/features/chat/domain/entities/chat_entity.dart';
 
 sealed class ChatHistoryState {
   const ChatHistoryState();

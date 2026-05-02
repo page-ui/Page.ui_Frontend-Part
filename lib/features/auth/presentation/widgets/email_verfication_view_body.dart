@@ -1,9 +1,9 @@
-import 'package:Page.ui/core/helpers/setup_service_locator_getit.dart';
-import 'package:Page.ui/features/auth/data/repos/auth_repo_impl.dart';
-import 'package:Page.ui/features/auth/domain/params/verify_reset_code_params.dart';
-import 'package:Page.ui/features/auth/presentation/controllers/email_verfication_cubit/email_verfication_cubit.dart';
-import 'package:Page.ui/features/auth/presentation/views/email_verfication_view.dart';
-import 'package:Page.ui/features/auth/presentation/widgets/o_t_p_code_verfication_for_the_view.dart';
+import 'package:page_ui/core/helpers/setup_service_locator_getit.dart';
+import 'package:page_ui/features/auth/data/repos/auth_repo_impl.dart';
+import 'package:page_ui/features/auth/domain/params/verify_reset_code_params.dart';
+import 'package:page_ui/features/auth/presentation/controllers/email_verfication_cubit/email_verfication_cubit.dart';
+import 'package:page_ui/features/auth/presentation/views/email_verfication_view.dart';
+import 'package:page_ui/features/auth/presentation/widgets/o_t_p_code_verfication_for_the_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

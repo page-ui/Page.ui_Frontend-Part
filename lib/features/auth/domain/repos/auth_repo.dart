@@ -1,9 +1,9 @@
-import 'package:Page.ui/core/errors/failure.dart';
-import 'package:Page.ui/features/auth/data/model/user_tokens_model.dart';
-import 'package:Page.ui/features/auth/domain/params/login_params.dart';
-import 'package:Page.ui/features/auth/domain/params/register_params.dart';
-import 'package:Page.ui/features/auth/domain/params/reset_password.dart';
-import 'package:Page.ui/features/auth/domain/params/verify_reset_code_params.dart';
+import 'package:page_ui/core/errors/failure.dart';
+import 'package:page_ui/features/auth/data/model/user_tokens_model.dart';
+import 'package:page_ui/features/auth/domain/params/login_params.dart';
+import 'package:page_ui/features/auth/domain/params/register_params.dart';
+import 'package:page_ui/features/auth/domain/params/reset_password.dart';
+import 'package:page_ui/features/auth/domain/params/verify_reset_code_params.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class AuthRepo {

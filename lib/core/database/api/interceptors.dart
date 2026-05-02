@@ -1,5 +1,5 @@
-import 'package:Page.ui/core/errors/error_model.dart';
-import 'package:Page.ui/core/errors/exceptions.dart';
+import 'package:page_ui/core/errors/error_model.dart';
+import 'package:page_ui/core/errors/exceptions.dart';
 import 'package:graphql_flutter/graphql_flutter.dart' hide ServerException;
 import 'package:logger/logger.dart';
 

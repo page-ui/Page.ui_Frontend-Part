@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:Page.ui/config/routes/on_generate_routes.dart';
-import 'package:Page.ui/features/chat/presentation/widgets/ui_frame/iframe_view.dart';
+import 'package:page_ui/config/routes/on_generate_routes.dart';
+import 'package:page_ui/features/chat/presentation/widgets/ui_frame/iframe_view.dart';
 import 'package:flutter/material.dart';
 
 class TrainView extends StatefulWidget {

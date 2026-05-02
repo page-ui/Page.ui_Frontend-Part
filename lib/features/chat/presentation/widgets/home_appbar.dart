@@ -1,6 +1,6 @@
-import 'package:Page.ui/config/themes/app_colors.dart';
-import 'package:Page.ui/features/chat/presentation/widgets/name_and_the_logo.dart';
-import 'package:Page.ui/features/chat/presentation/widgets/settings_menu_button.dart';
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/features/chat/presentation/widgets/name_and_the_logo.dart';
+import 'package:page_ui/features/chat/presentation/widgets/settings_menu_button.dart';
 import 'package:flutter/material.dart';
 
 class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {

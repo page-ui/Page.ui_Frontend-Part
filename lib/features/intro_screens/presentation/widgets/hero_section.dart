@@ -1,7 +1,8 @@
-import 'package:Page.ui/config/routes/on_generate_routes.dart';
-import 'package:Page.ui/config/themes/app_colors.dart';
-import 'package:Page.ui/config/themes/app_text_style.dart';
-import 'package:Page.ui/features/intro_screens/presentation/widgets/read_docs_button.dart';
+import 'package:page_ui/config/routes/on_generate_routes.dart';
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/config/themes/app_text_style.dart';
+import 'package:page_ui/core/constants/constants.dart';
+import 'package:page_ui/features/intro_screens/presentation/widgets/read_docs_button.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 
@@ -90,7 +91,6 @@ class HeroSection extends StatelessWidget {
               ),
               const SizedBox(height: 26),
 
-              // --- Animated hero text (unconstrained height) ---
               DefaultTextStyle(
                 style: AppTextStyles.displayLarge!.copyWith(
                   color: AppColors.white,
@@ -105,7 +105,7 @@ class HeroSection extends StatelessWidget {
                   pause: const Duration(milliseconds: 3000),
                   animatedTexts: [
                     TypewriterAnimatedText(
-                      "Creativity without limits.\nPrompt to UI.",
+                      appDescription,
                       speed: const Duration(milliseconds: 100),
                       textStyle: AppTextStyles.displayMedium!.copyWith(
                         fontSize: heroFont,
