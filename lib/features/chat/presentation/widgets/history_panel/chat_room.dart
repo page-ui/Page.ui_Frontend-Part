@@ -18,8 +18,8 @@ class ChatRoom extends StatelessWidget {
 
   final ChatEntity chat;
   final VoidCallback? onTap;
-  final VoidCallback? onRename;
-  final VoidCallback? onDelete;
+  final Future<void> Function(BuildContext menuButtonContext)? onRename;
+  final Future<void> Function(BuildContext menuButtonContext)? onDelete;
   final bool isSelected;
 
   @override
@@ -109,8 +109,8 @@ class ChatRoom extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 8, right: 8),
                     child: MenuButton(
-                      onRename: onRename!,
-                      onDelete: onDelete!,
+                      onRename: (ctx) => onRename!(ctx),
+                      onDelete: (ctx) => onDelete!(ctx),
                       isSelected: isSelected,
                     ),
                   ),

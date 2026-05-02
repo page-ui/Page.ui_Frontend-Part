@@ -114,8 +114,10 @@ class _ListOfChatRoomsState extends State<ListOfChatRooms> {
                         chat: chat,
                         isSelected: chat.id == selectedChatId,
                         onTap: () => _onChatSelected(chat),
-                        onRename: () => onRenameChatRoom(context, chat),
-                        onDelete: () => onDeleteChatRoom(context, chat),
+                        onRename: (menuButtonContext) =>
+                            onRenameChatRoom(menuButtonContext, chat),
+                        onDelete: (menuButtonContext) =>
+                            onDeleteChatRoom(menuButtonContext, chat),
                       );
                     },
                   );

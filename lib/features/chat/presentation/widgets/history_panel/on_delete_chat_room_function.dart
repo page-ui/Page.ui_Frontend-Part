@@ -7,7 +7,6 @@ import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_history_cubit/chat_history_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
 import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
-import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 Future<void> onDeleteChatRoom(BuildContext context, ChatEntity chat) async {
   final historyCubit = context.read<ChatHistoryCubit>();
@@ -16,52 +15,50 @@ Future<void> onDeleteChatRoom(BuildContext context, ChatEntity chat) async {
 
   final confirmed = await showDialog<bool>(
     context: context,
-    builder: (dialogContext) => PointerInterceptor(
-      child: SimpleDialog(
-        backgroundColor: AppColors.primaryColor.withValues(alpha: 0.96),
-        surfaceTintColor: AppColors.transparent,
-        shadowColor: AppColors.darkGreen,
-        shape: RoundedRectangleBorder(
-          borderRadius: AppBorders.xxxs,
-          side: BorderSide(color: AppColors.darkGreen.withValues(alpha: 0.35)),
-        ),
-        title: const Text(
-          'Delete chat',
-          style: TextStyle(color: AppColors.white),
-        ),
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Text(
-              'Are you sure you want to delete "${chat.name}"?',
-              style: const TextStyle(color: AppColors.lightGray),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Padding(
-            padding: const EdgeInsets.only(right: 12, bottom: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.of(dialogContext).pop(false),
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(color: AppColors.lightGray),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(dialogContext).pop(true),
-                  child: const Text(
-                    'Delete',
-                    style: TextStyle(color: AppColors.white),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+    builder: (dialogContext) => SimpleDialog(
+      backgroundColor: AppColors.primaryColor.withValues(alpha: 0.96),
+      surfaceTintColor: AppColors.transparent,
+      shadowColor: AppColors.darkGreen,
+      shape: RoundedRectangleBorder(
+        borderRadius: AppBorders.xxxs,
+        side: BorderSide(color: AppColors.darkGreen.withValues(alpha: 0.35)),
       ),
+      title: const Text(
+        'Delete chat',
+        style: TextStyle(color: AppColors.white),
+      ),
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Text(
+            'Are you sure you want to delete "${chat.name}"?',
+            style: const TextStyle(color: AppColors.lightGray),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Padding(
+          padding: const EdgeInsets.only(right: 12, bottom: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: AppColors.lightGray),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                child: const Text(
+                  'Delete',
+                  style: TextStyle(color: AppColors.white),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     ),
   );
 

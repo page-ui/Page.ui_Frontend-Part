@@ -12,8 +12,8 @@ class MenuButton extends StatelessWidget {
     required this.isSelected,
   });
 
-  final VoidCallback onRename;
-  final VoidCallback onDelete;
+  final Future<void> Function(BuildContext menuButtonContext) onRename;
+  final Future<void> Function(BuildContext menuButtonContext) onDelete;
   final bool isSelected;
 
   @override
@@ -23,71 +23,67 @@ class MenuButton extends StatelessWidget {
         : AppColors.lightGray.withValues(alpha: 0.8);
 
     Future<void> openActionsDialog() async {
-      final action = await showDialog<_ChatRoomAction>(
+      final buttonBox = context.findRenderObject() as RenderBox?;
+      final overlayBox =
+          Overlay.of(context).context.findRenderObject() as RenderBox?;
+      if (buttonBox == null || overlayBox == null) return;
+
+      final rect = Rect.fromPoints(
+        buttonBox.localToGlobal(Offset.zero, ancestor: overlayBox),
+        buttonBox.localToGlobal(
+          buttonBox.size.bottomRight(Offset.zero),
+          ancestor: overlayBox,
+        ),
+      );
+
+      final action = await showMenu<_ChatRoomAction>(
         context: context,
-        builder: (dialogContext) {
-          return PointerInterceptor(
-            child: SimpleDialog(
-              backgroundColor: AppColors.primaryColor.withValues(alpha: 0.96),
-              surfaceTintColor: AppColors.transparent,
-              shape: RoundedRectangleBorder(
-                borderRadius: AppBorders.xxxs,
-                side: BorderSide(
-                  color: AppColors.darkGreen.withValues(alpha: 0.35),
-                ),
-              ),
-              title: const Text(
-                'Chat actions',
-                style: TextStyle(color: AppColors.white),
-              ),
+        position: RelativeRect.fromRect(
+          rect,
+          Offset.zero & overlayBox.size,
+        ),
+        color: AppColors.primaryColor.withValues(alpha: 0.96),
+        shape: RoundedRectangleBorder(
+          borderRadius: AppBorders.xxxs,
+          side: BorderSide(
+            color: AppColors.darkGreen.withValues(alpha: 0.35),
+          ),
+        ),
+        items: const [
+          PopupMenuItem(
+            value: _ChatRoomAction.rename,
+            child: Row(
               children: [
-                SimpleDialogOption(
-                  onPressed: () =>
-                      Navigator.of(dialogContext).pop(_ChatRoomAction.rename),
-                  child: const Row(
-                    children: [
-                      Icon(
-                        Icons.edit_outlined,
-                        size: 16,
-                        color: AppColors.white,
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        'Rename',
-                        style: TextStyle(color: AppColors.white, fontSize: 13),
-                      ),
-                    ],
-                  ),
-                ),
-                SimpleDialogOption(
-                  onPressed: () =>
-                      Navigator.of(dialogContext).pop(_ChatRoomAction.delete),
-                  child: const Row(
-                    children: [
-                      Icon(
-                        Icons.delete_outline,
-                        size: 16,
-                        color: AppColors.white,
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        'Delete',
-                        style: TextStyle(color: AppColors.white, fontSize: 13),
-                      ),
-                    ],
-                  ),
+                Icon(Icons.edit_outlined, size: 16, color: AppColors.white),
+                SizedBox(width: 8),
+                Text(
+                  'Rename',
+                  style: TextStyle(color: AppColors.white, fontSize: 13),
                 ),
               ],
             ),
-          );
-        },
+          ),
+          PopupMenuItem(
+            value: _ChatRoomAction.delete,
+            child: Row(
+              children: [
+                Icon(Icons.delete_outline, size: 16, color: AppColors.white),
+                SizedBox(width: 8),
+                Text(
+                  'Delete',
+                  style: TextStyle(color: AppColors.white, fontSize: 13),
+                ),
+              ],
+            ),
+          ),
+        ],
       );
 
       if (!context.mounted) return;
       if (action == _ChatRoomAction.rename) {
-        onRename();
+        await onRename(context);
       } else if (action == _ChatRoomAction.delete) {
-        onDelete();
+        await onDelete(context);
       }
     }
 

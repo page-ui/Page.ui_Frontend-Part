@@ -29,65 +29,60 @@ class _SettingsMenuButtonContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<void> openActionsDialog() async {
-      final action = await showDialog<_SettingsAction>(
+      final buttonBox = context.findRenderObject() as RenderBox?;
+      final overlayBox =
+          Overlay.of(context).context.findRenderObject() as RenderBox?;
+      if (buttonBox == null || overlayBox == null) return;
+
+      final rect = Rect.fromPoints(
+        buttonBox.localToGlobal(Offset.zero, ancestor: overlayBox),
+        buttonBox.localToGlobal(
+          buttonBox.size.bottomRight(Offset.zero),
+          ancestor: overlayBox,
+        ),
+      );
+
+      final action = await showMenu<_SettingsAction>(
         context: context,
-        builder: (dialogContext) {
-          return PointerInterceptor(
-            child: SimpleDialog(
-              backgroundColor: AppColors.primaryColor.withValues(alpha: 0.96),
-              surfaceTintColor: AppColors.transparent,
-              shape: RoundedRectangleBorder(
-                borderRadius: AppBorders.xxxs,
-                side: BorderSide(
-                  color: AppColors.darkGreen.withValues(alpha: 0.35),
-                ),
-              ),
-              title: const Text(
-                'Settings',
-                style: TextStyle(color: AppColors.white),
-              ),
+        position: RelativeRect.fromRect(
+          rect,
+          Offset.zero & overlayBox.size,
+        ),
+        color: AppColors.primaryColor.withValues(alpha: 0.96),
+        shape: RoundedRectangleBorder(
+          borderRadius: AppBorders.xxxs,
+          side: BorderSide(
+            color: AppColors.darkGreen.withValues(alpha: 0.35),
+          ),
+        ),
+        items: const [
+          PopupMenuItem(
+            value: _SettingsAction.signOut,
+            child: Row(
               children: [
-                SimpleDialogOption(
-                  onPressed: () =>
-                      Navigator.of(dialogContext).pop(_SettingsAction.signOut),
-                  child: const Row(
-                    children: [
-                      Icon(
-                        Icons.logout_outlined,
-                        size: 16,
-                        color: AppColors.white,
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        'Sign out',
-                        style: TextStyle(color: AppColors.white, fontSize: 13),
-                      ),
-                    ],
-                  ),
-                ),
-                SimpleDialogOption(
-                  onPressed: () => Navigator.of(
-                    dialogContext,
-                  ).pop(_SettingsAction.deleteAccount),
-                  child: const Row(
-                    children: [
-                      Icon(
-                        Icons.delete_outline,
-                        size: 16,
-                        color: AppColors.white,
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        'Delete account',
-                        style: TextStyle(color: AppColors.white, fontSize: 13),
-                      ),
-                    ],
-                  ),
+                Icon(Icons.logout_outlined, size: 16, color: AppColors.white),
+                SizedBox(width: 8),
+                Text(
+                  'Sign out',
+                  style: TextStyle(color: AppColors.white, fontSize: 13),
                 ),
               ],
             ),
-          );
-        },
+          ),
+          PopupMenuItem(
+            value: _SettingsAction.deleteAccount,
+            child: Row(
+              children: [
+                Icon(Icons.delete_outline, size: 16, color: AppColors.white),
+                SizedBox(width: 8),
+                Text(
+                  'Delete account',
+                  style: TextStyle(color: AppColors.white, fontSize: 13),
+                ),
+              ],
+            ),
+          ),
+        ],
       );
 
       if (!context.mounted) return;
