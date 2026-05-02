@@ -1,9 +1,9 @@
+import 'package:Page.ui/core/errors/failure.dart';
+import 'package:Page.ui/features/chat/domain/entities/chat_entity.dart';
+import 'package:Page.ui/features/chat/domain/params/create_chat_params.dart';
+import 'package:Page.ui/features/chat/domain/repos/chat_repo.dart';
+import 'package:Page.ui/features/chat/domain/usecases/upload_attachment_usecase.dart';
 import 'package:dartz/dartz.dart';
-import 'package:pageui/core/errors/failure.dart';
-import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
-import 'package:pageui/features/chat/domain/params/create_chat_params.dart';
-import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
-import 'package:pageui/features/chat/domain/usecases/upload_attachment_usecase.dart';
 
 class CreateChatUseCase {
   final ChatRepo _chatRepo;

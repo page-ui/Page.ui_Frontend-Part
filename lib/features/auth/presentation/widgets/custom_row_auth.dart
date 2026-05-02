@@ -1,7 +1,7 @@
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/config/themes/app_icons.dart';
+import 'package:Page.ui/config/themes/app_text_style.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_icons.dart';
-import 'package:pageui/config/themes/app_text_style.dart';
 
 class customRowAuth extends StatelessWidget {
   const customRowAuth({super.key, required this.hint});

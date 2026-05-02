@@ -1,7 +1,7 @@
-import 'package:pageui/features/chat/data/models/chat_model.dart';
-import 'package:pageui/features/chat/data/models/message_model.dart';
-import 'package:pageui/features/chat/domain/params/create_chat_params.dart';
-import 'package:pageui/features/chat/domain/params/send_message_params.dart';
+import 'package:Page.ui/features/chat/data/models/chat_model.dart';
+import 'package:Page.ui/features/chat/data/models/message_model.dart';
+import 'package:Page.ui/features/chat/domain/params/create_chat_params.dart';
+import 'package:Page.ui/features/chat/domain/params/send_message_params.dart';
 
 abstract class ChatDataSource {
   Future<ChatModel> createChat({required CreateChatParams params});

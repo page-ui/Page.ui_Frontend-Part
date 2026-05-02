@@ -1,7 +1,7 @@
+import 'package:Page.ui/core/helpers/custom_modal_progress_hud.dart';
+import 'package:Page.ui/features/auth/presentation/widgets/custom_auth_screen_theme.dart';
+import 'package:Page.ui/features/auth/presentation/widgets/register_view_body.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/core/helpers/custom_modal_progress_hud.dart';
-import 'package:pageui/features/auth/presentation/widgets/custom_auth_screen_theme.dart';
-import 'package:pageui/features/auth/presentation/widgets/register_view_body.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});

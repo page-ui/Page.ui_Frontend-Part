@@ -1,7 +1,7 @@
+import 'package:Page.ui/features/auth/data/repos/auth_repo_impl.dart';
+import 'package:Page.ui/features/auth/domain/params/login_params.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:pageui/features/auth/data/repos/auth_repo_impl.dart';
-import 'package:pageui/features/auth/domain/params/login_params.dart';
 
 part 'login_state.dart';
 

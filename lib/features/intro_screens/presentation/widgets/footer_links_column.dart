@@ -1,8 +1,8 @@
+import 'package:Page.ui/config/routes/on_generate_routes.dart';
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/config/themes/app_text_style.dart';
+import 'package:Page.ui/core/helpers/open_external_link.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/routes/on_generate_routes.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_text_style.dart';
-import 'package:pageui/core/helpers/open_external_link.dart';
 
 class FooterLinksColumn extends StatelessWidget {
   final String title;
@@ -22,7 +22,7 @@ class FooterLinksColumn extends StatelessWidget {
       case 'GitHub':
         return 'https://github.com/page-ui/codebase-demo-repository';
       case 'Support':
-        return 'https://mail.google.com/mail/?view=cm&fs=1&to=pageui.service@gmail.com';
+        return 'https://mail.google.com/mail/?view=cm&fs=1&to=Page.ui.service@gmail.com';
       default:
         return null;
     }
@@ -58,42 +58,40 @@ class FooterLinksColumn extends StatelessWidget {
               )
             : titleLabel,
         const SizedBox(height: 14),
-        ...links.map(
-          (link) {
-            final target = _linkTarget(link);
+        ...links.map((link) {
+          final target = _linkTarget(link);
 
-            final linkLabel = Text(
-              link,
-              style: AppTextStyles.titleMedium?.copyWith(
-                color: AppColors.white.withValues(alpha: 0.6),
-                fontSize: linkFont,
+          final linkLabel = Text(
+            link,
+            style: AppTextStyles.titleMedium?.copyWith(
+              color: AppColors.white.withValues(alpha: 0.6),
+              fontSize: linkFont,
+            ),
+          );
+
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: TextButton(
+              onPressed: () {
+                if (link == 'Developers') {
+                  AppRoutes.pushDevelopersView(context);
+                  return;
+                }
+
+                if (target != null) {
+                  openExternalLink(target);
+                }
+              },
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                alignment: Alignment.centerLeft,
               ),
-            );
-
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: TextButton(
-                onPressed: () {
-                  if (link == 'Developers') {
-                    AppRoutes.pushDevelopersView(context);
-                    return;
-                  }
-
-                  if (target != null) {
-                    openExternalLink(target);
-                  }
-                },
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  minimumSize: Size.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  alignment: Alignment.centerLeft,
-                ),
-                child: linkLabel,
-              ),
-            );
-          },
-        ),
+              child: linkLabel,
+            ),
+          );
+        }),
       ],
     );
   }

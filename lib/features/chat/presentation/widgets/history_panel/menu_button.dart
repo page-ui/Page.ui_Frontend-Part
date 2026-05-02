@@ -1,6 +1,6 @@
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/core/constants/borders.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/core/constants/borders.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 enum _ChatRoomAction { rename, delete }
@@ -38,16 +38,11 @@ class MenuButton extends StatelessWidget {
 
       final action = await showMenu<_ChatRoomAction>(
         context: context,
-        position: RelativeRect.fromRect(
-          rect,
-          Offset.zero & overlayBox.size,
-        ),
+        position: RelativeRect.fromRect(rect, Offset.zero & overlayBox.size),
         color: AppColors.primaryColor.withValues(alpha: 0.96),
         shape: RoundedRectangleBorder(
           borderRadius: AppBorders.xxxs,
-          side: BorderSide(
-            color: AppColors.darkGreen.withValues(alpha: 0.35),
-          ),
+          side: BorderSide(color: AppColors.darkGreen.withValues(alpha: 0.35)),
         ),
         items: const [
           PopupMenuItem(

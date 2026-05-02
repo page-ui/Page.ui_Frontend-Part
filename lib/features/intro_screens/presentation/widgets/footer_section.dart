@@ -1,8 +1,8 @@
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/config/themes/app_text_style.dart';
+import 'package:Page.ui/core/constants/constants.dart';
+import 'package:Page.ui/features/intro_screens/presentation/widgets/footer_links_column.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_text_style.dart';
-import 'package:pageui/core/constants/constants.dart';
-import 'package:pageui/features/intro_screens/presentation/widgets/footer_links_column.dart';
 
 class FooterSection extends StatelessWidget {
   const FooterSection({super.key});
@@ -18,24 +18,24 @@ class FooterSection extends StatelessWidget {
         final headFont = compact
             ? 18.0
             : medium
-                ? 20.0
-                : 22.0;
+            ? 20.0
+            : 22.0;
         final bodyFont = compact
             ? 14.0
             : medium
-                ? 15.0
-                : 16.0;
+            ? 15.0
+            : 16.0;
         final linkFont = compact
             ? 13.0
             : medium
-                ? 14.0
-                : 15.0;
+            ? 14.0
+            : 15.0;
         final smallFont = compact ? 11.0 : 13.0;
         final hPad = compact
             ? 20.0
             : medium
-                ? 48.0
-                : 120.0;
+            ? 48.0
+            : 120.0;
 
         return Container(
           width: double.infinity,

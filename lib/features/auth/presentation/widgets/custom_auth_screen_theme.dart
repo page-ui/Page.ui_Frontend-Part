@@ -1,11 +1,11 @@
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/core/constants/borders.dart';
+import 'package:Page.ui/core/custom_widget/custom_divider.dart';
+import 'package:Page.ui/core/custom_widget/dots.dart';
+import 'package:Page.ui/core/custom_widget/logo_widget.dart';
+import 'package:Page.ui/core/custom_widget/scramb_animated_title_text.dart';
+import 'package:Page.ui/core/enum/screen_type.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/core/constants/borders.dart';
-import 'package:pageui/core/custom_widget/custom_divider.dart';
-import 'package:pageui/core/custom_widget/dots.dart';
-import 'package:pageui/core/custom_widget/logo_widget.dart';
-import 'package:pageui/core/custom_widget/scramb_animated_title_text.dart';
-import 'package:pageui/core/enum/screen_type.dart';
 
 class CustomAuthScreenTheme extends StatelessWidget {
   const CustomAuthScreenTheme({
@@ -59,7 +59,9 @@ class CustomAuthScreenTheme extends StatelessWidget {
                           blurStyle: BlurStyle.outer,
                         ),
                       ],
-                      borderRadius: isMobile ? AppBorders.zero : AppBorders.xxxxs,
+                      borderRadius: isMobile
+                          ? AppBorders.zero
+                          : AppBorders.xxxxs,
                       border: Border.all(
                         color: AppColors.primaryColor,
                         width: 2,

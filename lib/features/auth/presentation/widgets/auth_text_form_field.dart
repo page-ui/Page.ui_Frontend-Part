@@ -1,8 +1,8 @@
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/config/themes/app_icons.dart';
+import 'package:Page.ui/config/themes/app_text_style.dart';
+import 'package:Page.ui/core/constants/borders.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_icons.dart';
-import 'package:pageui/config/themes/app_text_style.dart';
-import 'package:pageui/core/constants/borders.dart';
 
 class AuthTextFormField extends StatelessWidget {
   const AuthTextFormField({

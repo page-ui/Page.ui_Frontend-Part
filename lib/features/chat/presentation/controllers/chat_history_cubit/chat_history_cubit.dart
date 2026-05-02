@@ -1,10 +1,10 @@
+import 'package:Page.ui/core/errors/app_operation.dart';
+import 'package:Page.ui/core/errors/failure.dart';
+import 'package:Page.ui/features/chat/domain/entities/chat_entity.dart';
+import 'package:Page.ui/features/chat/domain/repos/chat_repo.dart';
+import 'package:Page.ui/features/chat/presentation/controllers/chat_history_cubit/chat_history_state.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pageui/core/errors/app_operation.dart';
-import 'package:pageui/core/errors/failure.dart';
-import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
-import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
-import 'package:pageui/features/chat/presentation/controllers/chat_history_cubit/chat_history_state.dart';
 
 class ChatHistoryCubit extends Cubit<ChatHistoryState> {
   static const int _pageSize = 15;

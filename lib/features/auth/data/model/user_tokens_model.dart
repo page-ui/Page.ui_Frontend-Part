@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:pageui/core/constants/constants.dart';
-import 'package:pageui/core/database/cache/secure_storage.dart';
+import 'package:Page.ui/core/constants/constants.dart';
+import 'package:Page.ui/core/database/cache/secure_storage.dart';
 
 class UserTokensModel {
   final String? accessToken;

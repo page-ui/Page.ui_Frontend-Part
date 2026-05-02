@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:pageui/features/chat/domain/entities/message_entity.dart';
+import 'package:Page.ui/features/chat/domain/entities/message_entity.dart';
 
 class ChatSession {
   List<MessageEntity> messages = const [];

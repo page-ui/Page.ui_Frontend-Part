@@ -1,10 +1,10 @@
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/config/themes/app_icons.dart';
+import 'package:Page.ui/core/constants/borders.dart';
+import 'package:Page.ui/core/helpers/format_date_time.dart';
+import 'package:Page.ui/features/chat/domain/entities/chat_entity.dart';
+import 'package:Page.ui/features/chat/presentation/widgets/history_panel/menu_button.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_icons.dart';
-import 'package:pageui/core/constants/borders.dart';
-import 'package:pageui/core/helpers/format_date_time.dart';
-import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
-import 'package:pageui/features/chat/presentation/widgets/history_panel/menu_button.dart';
 
 class ChatRoom extends StatelessWidget {
   const ChatRoom({
@@ -43,8 +43,9 @@ class ChatRoom extends StatelessWidget {
               width: 1.2,
             ),
           ),
-          child: InkWell(                    onTap: onTap,
-                    borderRadius: AppBorders.xxxs,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: AppBorders.xxxs,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

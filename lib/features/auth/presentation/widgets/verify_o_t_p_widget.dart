@@ -1,5 +1,5 @@
+import 'package:Page.ui/config/themes/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
 
 class VerifyOTPWidget extends StatefulWidget {
   const VerifyOTPWidget({super.key, required this.controllers});

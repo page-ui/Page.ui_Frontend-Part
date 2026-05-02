@@ -1,5 +1,5 @@
+import 'package:Page.ui/features/auth/domain/repos/auth_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pageui/features/auth/domain/repos/auth_repo.dart';
 
 part 'settings_state.dart';
 

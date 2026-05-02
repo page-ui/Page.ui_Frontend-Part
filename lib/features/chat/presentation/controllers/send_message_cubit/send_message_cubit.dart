@@ -1,13 +1,13 @@
 import 'dart:typed_data';
 
+import 'package:Page.ui/core/errors/app_operation.dart';
+import 'package:Page.ui/core/errors/failure.dart';
+import 'package:Page.ui/core/helpers/app_logger.dart';
+import 'package:Page.ui/features/chat/domain/params/send_message_params.dart';
+import 'package:Page.ui/features/chat/domain/usecases/send_message_usecase.dart';
+import 'package:Page.ui/features/chat/domain/usecases/upload_attachment_usecase.dart';
+import 'package:Page.ui/features/chat/presentation/controllers/send_message_cubit/send_message_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pageui/core/errors/app_operation.dart';
-import 'package:pageui/core/errors/failure.dart';
-import 'package:pageui/core/helpers/app_logger.dart';
-import 'package:pageui/features/chat/domain/params/send_message_params.dart';
-import 'package:pageui/features/chat/domain/usecases/send_message_usecase.dart';
-import 'package:pageui/features/chat/domain/usecases/upload_attachment_usecase.dart';
-import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_state.dart';
 
 class SendMessageCubit extends Cubit<SendMessageState> {
   final SendMessageUseCase _sendMessage;

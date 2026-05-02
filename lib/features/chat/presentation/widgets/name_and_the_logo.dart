@@ -1,8 +1,8 @@
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/config/themes/app_images.dart';
+import 'package:Page.ui/config/themes/app_text_style.dart';
+import 'package:Page.ui/core/constants/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_images.dart';
-import 'package:pageui/config/themes/app_text_style.dart';
-import 'package:pageui/core/constants/constants.dart';
 
 class NameAndTheLogo extends StatelessWidget {
   final VoidCallback? onTap;

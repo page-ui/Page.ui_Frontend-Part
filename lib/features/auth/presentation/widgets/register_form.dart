@@ -1,17 +1,17 @@
+import 'package:Page.ui/config/routes/on_generate_routes.dart';
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/core/custom_widget/custom_button.dart';
+import 'package:Page.ui/core/helpers/custom_show_snack_bar.dart';
+import 'package:Page.ui/features/auth/domain/params/login_params.dart';
+import 'package:Page.ui/features/auth/domain/params/register_params.dart';
+import 'package:Page.ui/features/auth/presentation/controllers/register_cubit/register_cubit.dart';
+import 'package:Page.ui/features/auth/presentation/widgets/auth_text_form_field.dart';
+import 'package:Page.ui/features/auth/presentation/widgets/custom_row_auth.dart';
+import 'package:Page.ui/features/auth/presentation/widgets/email_validator.dart';
+import 'package:Page.ui/features/auth/presentation/widgets/have_an_account_widget.dart';
+import 'package:Page.ui/features/auth/presentation/widgets/password_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pageui/config/routes/on_generate_routes.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/core/custom_widget/custom_button.dart';
-import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
-import 'package:pageui/features/auth/domain/params/login_params.dart';
-import 'package:pageui/features/auth/domain/params/register_params.dart';
-import 'package:pageui/features/auth/presentation/controllers/register_cubit/register_cubit.dart';
-import 'package:pageui/features/auth/presentation/widgets/auth_text_form_field.dart';
-import 'package:pageui/features/auth/presentation/widgets/custom_row_auth.dart';
-import 'package:pageui/features/auth/presentation/widgets/email_validator.dart';
-import 'package:pageui/features/auth/presentation/widgets/have_an_account_widget.dart';
-import 'package:pageui/features/auth/presentation/widgets/password_text_form_field.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({

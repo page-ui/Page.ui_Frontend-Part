@@ -1,7 +1,7 @@
+import 'package:Page.ui/core/errors/error_model.dart';
+import 'package:Page.ui/core/errors/exceptions.dart';
 import 'package:graphql_flutter/graphql_flutter.dart' hide ServerException;
 import 'package:logger/logger.dart';
-import 'package:pageui/core/errors/error_model.dart';
-import 'package:pageui/core/errors/exceptions.dart';
 
 /// This Link is used to show GraphQL request and response logs
 class GraphQLLoggerLink extends Link {

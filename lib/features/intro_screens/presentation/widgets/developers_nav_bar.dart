@@ -1,10 +1,10 @@
 import 'dart:ui';
 
+import 'package:Page.ui/config/routes/on_generate_routes.dart';
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/config/themes/app_text_style.dart';
+import 'package:Page.ui/features/chat/presentation/widgets/name_and_the_logo.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/routes/on_generate_routes.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_text_style.dart';
-import 'package:pageui/features/chat/presentation/widgets/name_and_the_logo.dart';
 
 class DevelopersNavBar extends StatelessWidget {
   const DevelopersNavBar({super.key});

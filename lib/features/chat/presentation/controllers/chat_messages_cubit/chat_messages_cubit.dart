@@ -1,14 +1,14 @@
 import 'dart:async';
 
+import 'package:Page.ui/core/database/api/graph_ql_config.dart';
+import 'package:Page.ui/core/helpers/app_logger.dart';
+import 'package:Page.ui/features/chat/domain/constants/message_types.dart';
+import 'package:Page.ui/features/chat/domain/entities/message_entity.dart';
+import 'package:Page.ui/features/chat/domain/repos/chat_repo.dart';
+import 'package:Page.ui/features/chat/presentation/controllers/chat_messages_cubit/_chat_session.dart';
+import 'package:Page.ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
+import 'package:Page.ui/features/chat/presentation/controllers/chat_messages_cubit/chat_typewriter_registry.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pageui/core/database/api/graph_ql_config.dart';
-import 'package:pageui/core/helpers/app_logger.dart';
-import 'package:pageui/features/chat/domain/constants/message_types.dart';
-import 'package:pageui/features/chat/domain/entities/message_entity.dart';
-import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
-import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/_chat_session.dart';
-import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
-import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_typewriter_registry.dart';
 
 class ChatMessagesCubit extends Cubit<ChatMessagesState> {
   ChatMessagesCubit({required ChatRepo chatRepo})

@@ -1,12 +1,12 @@
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/core/constants/borders.dart';
+import 'package:Page.ui/core/helpers/custom_show_snack_bar.dart';
+import 'package:Page.ui/features/chat/domain/entities/chat_entity.dart';
+import 'package:Page.ui/features/chat/presentation/controllers/chat_history_cubit/chat_history_cubit.dart';
+import 'package:Page.ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
+import 'package:Page.ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/core/constants/borders.dart';
-import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
-import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
-import 'package:pageui/features/chat/presentation/controllers/chat_history_cubit/chat_history_cubit.dart';
-import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
-import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
 
 Future<void> onDeleteChatRoom(BuildContext context, ChatEntity chat) async {
   final historyCubit = context.read<ChatHistoryCubit>();

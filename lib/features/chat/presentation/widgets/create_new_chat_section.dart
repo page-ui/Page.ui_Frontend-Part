@@ -1,8 +1,8 @@
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/config/themes/app_icons.dart';
+import 'package:Page.ui/config/themes/app_text_style.dart';
+import 'package:Page.ui/features/chat/presentation/widgets/chat_panel/chat_input_builder.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_icons.dart';
-import 'package:pageui/config/themes/app_text_style.dart';
-import 'package:pageui/features/chat/presentation/widgets/chat_panel/chat_input_builder.dart';
 
 class CreateNewChatSection extends StatelessWidget {
   const CreateNewChatSection({

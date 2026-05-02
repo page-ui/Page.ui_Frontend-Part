@@ -12,8 +12,8 @@ class IframeView extends StatelessWidget {
   static final Set<String> _registeredViewTypes = <String>{};
 
   String get _viewType => url.isEmpty
-      ? 'pageui-iframe-empty'
-      : 'pageui-iframe-${Uri.encodeComponent(url)}';
+      ? 'Page.ui-iframe-empty'
+      : 'Page.ui-iframe-${Uri.encodeComponent(url)}';
 
   void _ensureRegistered() {
     if (_registeredViewTypes.contains(_viewType)) return;

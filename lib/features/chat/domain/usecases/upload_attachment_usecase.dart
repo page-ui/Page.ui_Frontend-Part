@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:pageui/features/chat/data/data_source/upload_service.dart';
+import 'package:Page.ui/features/chat/data/data_source/upload_service.dart';
 
 class UploadAttachmentInput {
   final Uint8List bytes;

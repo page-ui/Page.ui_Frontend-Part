@@ -1,8 +1,8 @@
+import 'package:Page.ui/features/auth/data/repos/auth_repo_impl.dart';
+import 'package:Page.ui/features/auth/domain/params/reset_password.dart';
+import 'package:Page.ui/features/auth/domain/params/verify_reset_code_params.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:pageui/features/auth/data/repos/auth_repo_impl.dart';
-import 'package:pageui/features/auth/domain/params/reset_password.dart';
-import 'package:pageui/features/auth/domain/params/verify_reset_code_params.dart';
 
 part 'forget_password_state.dart';
 

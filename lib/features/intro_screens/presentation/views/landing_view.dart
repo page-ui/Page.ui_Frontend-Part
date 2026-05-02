@@ -1,9 +1,9 @@
+import 'package:Page.ui/features/intro_screens/presentation/widgets/about_section.dart';
+import 'package:Page.ui/features/intro_screens/presentation/widgets/features_section.dart';
+import 'package:Page.ui/features/intro_screens/presentation/widgets/footer_section.dart';
+import 'package:Page.ui/features/intro_screens/presentation/widgets/hero_section.dart';
+import 'package:Page.ui/features/intro_screens/presentation/widgets/landing_nav_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/features/intro_screens/presentation/widgets/about_section.dart';
-import 'package:pageui/features/intro_screens/presentation/widgets/features_section.dart';
-import 'package:pageui/features/intro_screens/presentation/widgets/footer_section.dart';
-import 'package:pageui/features/intro_screens/presentation/widgets/hero_section.dart';
-import 'package:pageui/features/intro_screens/presentation/widgets/landing_nav_bar.dart';
 
 class LandingView extends StatefulWidget {
   static const String routeName = "LandingView";

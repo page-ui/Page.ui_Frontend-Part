@@ -1,4 +1,4 @@
-import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
+import 'package:Page.ui/features/chat/domain/entities/chat_entity.dart';
 
 class ChatModel extends ChatEntity {
   const ChatModel({required super.id, required super.name, super.createdAt});

@@ -1,17 +1,17 @@
+import 'package:Page.ui/core/database/api/graph_ql_config.dart';
+import 'package:Page.ui/core/errors/app_operation.dart';
+import 'package:Page.ui/core/errors/exceptions.dart';
+import 'package:Page.ui/core/errors/failure.dart';
+import 'package:Page.ui/core/helpers/app_logger.dart';
+import 'package:Page.ui/core/network/network_info.dart';
+import 'package:Page.ui/features/auth/data/data_source/auth_data_source.dart';
+import 'package:Page.ui/features/auth/data/model/user_tokens_model.dart';
+import 'package:Page.ui/features/auth/domain/params/login_params.dart';
+import 'package:Page.ui/features/auth/domain/params/register_params.dart';
+import 'package:Page.ui/features/auth/domain/params/reset_password.dart';
+import 'package:Page.ui/features/auth/domain/params/verify_reset_code_params.dart';
+import 'package:Page.ui/features/auth/domain/repos/auth_repo.dart';
 import 'package:dartz/dartz.dart';
-import 'package:pageui/core/database/api/graph_ql_config.dart';
-import 'package:pageui/core/errors/app_operation.dart';
-import 'package:pageui/core/errors/exceptions.dart';
-import 'package:pageui/core/errors/failure.dart';
-import 'package:pageui/core/helpers/app_logger.dart';
-import 'package:pageui/core/network/network_info.dart';
-import 'package:pageui/features/auth/data/data_source/auth_data_source.dart';
-import 'package:pageui/features/auth/data/model/user_tokens_model.dart';
-import 'package:pageui/features/auth/domain/params/login_params.dart';
-import 'package:pageui/features/auth/domain/params/register_params.dart';
-import 'package:pageui/features/auth/domain/params/reset_password.dart';
-import 'package:pageui/features/auth/domain/params/verify_reset_code_params.dart';
-import 'package:pageui/features/auth/domain/repos/auth_repo.dart';
 
 class AuthRepoImpl extends AuthRepo {
   final AuthDataSource dataSource;

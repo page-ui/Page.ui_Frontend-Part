@@ -1,7 +1,7 @@
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/config/themes/app_text_style.dart';
+import 'package:Page.ui/features/intro_screens/presentation/widgets/feature_card.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_text_style.dart';
-import 'package:pageui/features/intro_screens/presentation/widgets/feature_card.dart';
 
 class FeaturesSection extends StatelessWidget {
   const FeaturesSection({super.key});
@@ -18,41 +18,44 @@ class FeaturesSection extends StatelessWidget {
         final headFont = compact
             ? 24.0
             : medium
-                ? 32.0
-                : 42.0;
+            ? 32.0
+            : 42.0;
         final titleFont = compact
             ? 18.0
             : medium
-                ? 20.0
-                : 22.0;
+            ? 20.0
+            : 22.0;
         final bodyFont = compact
             ? 14.0
             : medium
-                ? 15.0
-                : 16.0;
+            ? 15.0
+            : 16.0;
         final iconSize = compact
             ? 28.0
             : medium
-                ? 30.0
-                : 32.0;
+            ? 30.0
+            : 32.0;
         final hPad = compact
             ? 20.0
             : medium
-                ? 48.0
-                : 120.0;
+            ? 48.0
+            : 120.0;
 
         const cardSpacing = 24.0;
-        final availableW =
-            (w - hPad * 2).clamp(0.0, double.infinity).toDouble();
+        final availableW = (w - hPad * 2)
+            .clamp(0.0, double.infinity)
+            .toDouble();
         final double cardW;
         if (compact) {
           cardW = availableW;
         } else if (medium) {
-          cardW =
-              ((availableW - cardSpacing) / 2).clamp(0.0, double.infinity).toDouble();
+          cardW = ((availableW - cardSpacing) / 2)
+              .clamp(0.0, double.infinity)
+              .toDouble();
         } else {
-          cardW =
-              ((availableW - cardSpacing * 2) / 3).clamp(0.0, double.infinity).toDouble();
+          cardW = ((availableW - cardSpacing * 2) / 3)
+              .clamp(0.0, double.infinity)
+              .toDouble();
         }
 
         return Container(

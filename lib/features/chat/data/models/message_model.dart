@@ -1,8 +1,8 @@
-import 'package:pageui/core/errors/app_operation.dart';
-import 'package:pageui/core/errors/error_model.dart';
-import 'package:pageui/core/errors/exceptions.dart';
-import 'package:pageui/features/chat/domain/entities/message_entity.dart';
-import 'package:pageui/features/chat/domain/params/message_content_codec.dart';
+import 'package:Page.ui/core/errors/app_operation.dart';
+import 'package:Page.ui/core/errors/error_model.dart';
+import 'package:Page.ui/core/errors/exceptions.dart';
+import 'package:Page.ui/features/chat/domain/entities/message_entity.dart';
+import 'package:Page.ui/features/chat/domain/params/message_content_codec.dart';
 
 class MessageModel extends MessageEntity {
   static const String defaultStatus = 'sent';

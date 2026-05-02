@@ -1,6 +1,6 @@
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/config/themes/app_text_style.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
@@ -59,23 +59,23 @@ class _AboutSectionState extends State<AboutSection> {
         final headFont = compact
             ? 22.0
             : medium
-                ? 28.0
-                : 36.0;
+            ? 28.0
+            : 36.0;
         final bodyFont = compact
             ? 14.0
             : medium
-                ? 16.0
-                : 18.0;
+            ? 16.0
+            : 18.0;
         final hPad = compact
             ? 20.0
             : medium
-                ? 48.0
-                : 120.0;
+            ? 48.0
+            : 120.0;
         final videoHeight = compact
             ? 220.0
             : medium
-                ? 300.0
-                : 380.0;
+            ? 300.0
+            : 380.0;
 
         final textContent = Column(
           crossAxisAlignment: compact
@@ -150,11 +150,7 @@ class _AboutSectionState extends State<AboutSection> {
           padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 80),
           child: compact
               ? Column(
-                  children: [
-                    visual,
-                    const SizedBox(height: 40),
-                    textContent,
-                  ],
+                  children: [visual, const SizedBox(height: 40), textContent],
                 )
               : Row(
                   crossAxisAlignment: CrossAxisAlignment.center,

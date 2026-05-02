@@ -1,8 +1,8 @@
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/config/themes/app_text_style.dart';
+import 'package:Page.ui/core/helpers/open_external_link.dart';
+import 'package:Page.ui/features/intro_screens/presentation/widgets/developer_profile.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_text_style.dart';
-import 'package:pageui/core/helpers/open_external_link.dart';
-import 'package:pageui/features/intro_screens/presentation/widgets/developer_profile.dart';
 
 class DeveloperCard extends StatelessWidget {
   final DeveloperProfile developer;

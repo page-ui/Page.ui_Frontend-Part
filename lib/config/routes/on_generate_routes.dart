@@ -1,15 +1,15 @@
+import 'package:Page.ui/features/auth/domain/params/login_params.dart';
+import 'package:Page.ui/features/auth/presentation/views/email_verfication_view.dart';
+import 'package:Page.ui/features/auth/presentation/views/forget_pasword_view.dart';
+import 'package:Page.ui/features/auth/presentation/views/login_view.dart';
+import 'package:Page.ui/features/auth/presentation/views/register_view.dart';
+import 'package:Page.ui/features/auth/presentation/views/train_view.dart';
+import 'package:Page.ui/features/chat/presentation/views/home_view.dart';
+import 'package:Page.ui/features/intro_screens/presentation/views/developers_view.dart';
+import 'package:Page.ui/features/intro_screens/presentation/views/landing_view.dart';
+import 'package:Page.ui/features/intro_screens/presentation/views/splash_view.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pageui/features/auth/domain/params/login_params.dart';
-import 'package:pageui/features/auth/presentation/views/email_verfication_view.dart';
-import 'package:pageui/features/auth/presentation/views/forget_pasword_view.dart';
-import 'package:pageui/features/auth/presentation/views/login_view.dart';
-import 'package:pageui/features/auth/presentation/views/register_view.dart';
-import 'package:pageui/features/auth/presentation/views/train_view.dart';
-import 'package:pageui/features/chat/presentation/views/home_view.dart';
-import 'package:pageui/features/intro_screens/presentation/views/developers_view.dart';
-import 'package:pageui/features/intro_screens/presentation/views/landing_view.dart';
-import 'package:pageui/features/intro_screens/presentation/views/splash_view.dart';
 
 sealed class AppRoutes {
   const AppRoutes();

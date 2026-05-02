@@ -1,9 +1,9 @@
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/config/themes/app_text_style.dart';
+import 'package:Page.ui/features/intro_screens/presentation/widgets/developer_profile.dart';
+import 'package:Page.ui/features/intro_screens/presentation/widgets/developer_section.dart';
+import 'package:Page.ui/features/intro_screens/presentation/widgets/developers_nav_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_text_style.dart';
-import 'package:pageui/features/intro_screens/presentation/widgets/developer_profile.dart';
-import 'package:pageui/features/intro_screens/presentation/widgets/developer_section.dart';
-import 'package:pageui/features/intro_screens/presentation/widgets/developers_nav_bar.dart';
 
 class DevelopersView extends StatelessWidget {
   static const String routeName = 'DevelopersView';

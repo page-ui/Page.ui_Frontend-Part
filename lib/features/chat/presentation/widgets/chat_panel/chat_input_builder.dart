@@ -1,17 +1,17 @@
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/core/helpers/custom_show_snack_bar.dart';
+import 'package:Page.ui/core/helpers/setup_service_locator_getit.dart';
+import 'package:Page.ui/features/chat/domain/params/send_message_params.dart';
+import 'package:Page.ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
+import 'package:Page.ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
+import 'package:Page.ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
+import 'package:Page.ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
+import 'package:Page.ui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
+import 'package:Page.ui/features/chat/presentation/controllers/send_message_cubit/send_message_cubit.dart';
+import 'package:Page.ui/features/chat/presentation/controllers/send_message_cubit/send_message_state.dart';
+import 'package:Page.ui/features/chat/presentation/widgets/chat_panel/chat_input_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
-import 'package:pageui/core/helpers/setup_service_locator_getit.dart';
-import 'package:pageui/features/chat/domain/params/send_message_params.dart';
-import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
-import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
-import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
-import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
-import 'package:pageui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
-import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_cubit.dart';
-import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_state.dart';
-import 'package:pageui/features/chat/presentation/widgets/chat_panel/chat_input_bar.dart';
 
 class ChatInputBuilder extends StatefulWidget {
   const ChatInputBuilder({super.key, this.onSend});

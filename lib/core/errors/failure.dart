@@ -1,5 +1,5 @@
-import 'package:pageui/core/errors/app_operation.dart';
-import 'package:pageui/core/errors/exceptions.dart';
+import 'package:Page.ui/core/errors/app_operation.dart';
+import 'package:Page.ui/core/errors/exceptions.dart';
 
 class Failure {
   final String message;

@@ -1,12 +1,12 @@
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/config/themes/app_icons.dart';
+import 'package:Page.ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
+import 'package:Page.ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
+import 'package:Page.ui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
+import 'package:Page.ui/features/chat/presentation/widgets/ui_frame/iframe_view.dart';
+import 'package:Page.ui/features/chat/presentation/widgets/ui_frame/open_ui_url.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_icons.dart';
-import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
-import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
-import 'package:pageui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
-import 'package:pageui/features/chat/presentation/widgets/ui_frame/iframe_view.dart';
-import 'package:pageui/features/chat/presentation/widgets/ui_frame/open_ui_url.dart';
 
 class UIFrameBody extends StatelessWidget {
   const UIFrameBody({

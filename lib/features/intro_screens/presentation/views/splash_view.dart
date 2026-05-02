@@ -1,11 +1,11 @@
+import 'package:Page.ui/config/routes/on_generate_routes.dart';
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/config/themes/app_text_style.dart';
+import 'package:Page.ui/core/constants/constants.dart';
+import 'package:Page.ui/core/database/api/graph_ql_config.dart';
+import 'package:Page.ui/features/auth/data/model/user_tokens_model.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/routes/on_generate_routes.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_text_style.dart';
-import 'package:pageui/core/constants/constants.dart';
-import 'package:pageui/core/database/api/graph_ql_config.dart';
-import 'package:pageui/features/auth/data/model/user_tokens_model.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});

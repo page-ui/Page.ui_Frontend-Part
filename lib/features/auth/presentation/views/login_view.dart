@@ -1,8 +1,8 @@
+import 'package:Page.ui/config/routes/on_generate_routes.dart';
+import 'package:Page.ui/core/helpers/custom_modal_progress_hud.dart';
+import 'package:Page.ui/features/auth/presentation/widgets/custom_auth_screen_theme.dart';
+import 'package:Page.ui/features/auth/presentation/widgets/login_view_body.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/routes/on_generate_routes.dart';
-import 'package:pageui/core/helpers/custom_modal_progress_hud.dart';
-import 'package:pageui/features/auth/presentation/widgets/custom_auth_screen_theme.dart';
-import 'package:pageui/features/auth/presentation/widgets/login_view_body.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});

@@ -1,8 +1,8 @@
+import 'package:Page.ui/core/helpers/custom_modal_progress_hud.dart';
+import 'package:Page.ui/features/auth/domain/params/login_params.dart';
+import 'package:Page.ui/features/auth/presentation/widgets/custom_auth_screen_theme.dart';
+import 'package:Page.ui/features/auth/presentation/widgets/email_verfication_view_body.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/core/helpers/custom_modal_progress_hud.dart';
-import 'package:pageui/features/auth/domain/params/login_params.dart';
-import 'package:pageui/features/auth/presentation/widgets/custom_auth_screen_theme.dart';
-import 'package:pageui/features/auth/presentation/widgets/email_verfication_view_body.dart';
 
 class EmailVerficationView extends StatefulWidget {
   const EmailVerficationView({super.key, required this.param});

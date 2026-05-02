@@ -1,12 +1,12 @@
+import 'package:Page.ui/config/routes/on_generate_routes.dart';
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/core/constants/borders.dart';
+import 'package:Page.ui/core/helpers/custom_show_snack_bar.dart';
+import 'package:Page.ui/core/helpers/setup_service_locator_getit.dart';
+import 'package:Page.ui/features/auth/data/repos/auth_repo_impl.dart';
+import 'package:Page.ui/features/auth/presentation/controllers/settings_cubit/settings_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pageui/config/routes/on_generate_routes.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/core/constants/borders.dart';
-import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
-import 'package:pageui/core/helpers/setup_service_locator_getit.dart';
-import 'package:pageui/features/auth/data/repos/auth_repo_impl.dart';
-import 'package:pageui/features/auth/presentation/controllers/settings_cubit/settings_cubit.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 enum _SettingsAction { signOut, deleteAccount }
@@ -44,16 +44,11 @@ class _SettingsMenuButtonContent extends StatelessWidget {
 
       final action = await showMenu<_SettingsAction>(
         context: context,
-        position: RelativeRect.fromRect(
-          rect,
-          Offset.zero & overlayBox.size,
-        ),
+        position: RelativeRect.fromRect(rect, Offset.zero & overlayBox.size),
         color: AppColors.primaryColor.withValues(alpha: 0.96),
         shape: RoundedRectangleBorder(
           borderRadius: AppBorders.xxxs,
-          side: BorderSide(
-            color: AppColors.darkGreen.withValues(alpha: 0.35),
-          ),
+          side: BorderSide(color: AppColors.darkGreen.withValues(alpha: 0.35)),
         ),
         items: const [
           PopupMenuItem(

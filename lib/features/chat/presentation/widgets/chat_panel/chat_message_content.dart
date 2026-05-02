@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/core/constants/borders.dart';
+import 'package:Page.ui/features/chat/domain/constants/message_types.dart';
+import 'package:Page.ui/features/chat/domain/entities/message_entity.dart';
+import 'package:Page.ui/features/chat/presentation/controllers/chat_messages_cubit/chat_typewriter_registry.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/core/constants/borders.dart';
-import 'package:pageui/features/chat/domain/constants/message_types.dart';
-import 'package:pageui/features/chat/domain/entities/message_entity.dart';
-import 'package:pageui/features/chat/presentation/controllers/chat_messages_cubit/chat_typewriter_registry.dart';
 
 class ChatMessageContent extends StatelessWidget {
   const ChatMessageContent({super.key, required this.message});

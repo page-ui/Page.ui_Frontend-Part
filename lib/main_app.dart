@@ -1,10 +1,10 @@
+import 'package:Page.ui/config/routes/on_generate_routes.dart';
+import 'package:Page.ui/config/themes/app_colors.dart';
+import 'package:Page.ui/config/themes/app_text_style.dart';
+import 'package:Page.ui/core/constants/constants.dart';
+import 'package:Page.ui/core/custom_widget/animated_starfield_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pageui/config/routes/on_generate_routes.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_text_style.dart';
-import 'package:pageui/core/constants/constants.dart';
-import 'package:pageui/core/custom_widget/animated_starfield_background.dart';
 
 class PageDotUi extends StatelessWidget {
   const PageDotUi({super.key});
