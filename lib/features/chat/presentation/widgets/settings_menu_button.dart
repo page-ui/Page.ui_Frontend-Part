@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_ui/config/routes/on_generate_routes.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/core/constants/borders.dart';
@@ -5,8 +7,6 @@ import 'package:page_ui/core/helpers/custom_show_snack_bar.dart';
 import 'package:page_ui/core/helpers/setup_service_locator_getit.dart';
 import 'package:page_ui/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:page_ui/features/auth/presentation/controllers/settings_cubit/settings_cubit.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 enum _SettingsAction { signOut, deleteAccount }
@@ -93,7 +93,7 @@ class _SettingsMenuButtonContent extends StatelessWidget {
         if (state is SettingsSuccess) {
           AppRoutes.pushLoginView(context);
         } else if (state is SettingsError) {
-          showWebSnackBar(context: context, message: state.message);
+          showSnackBar(context: context, message: state.message);
         }
       },
       child: SizedBox(

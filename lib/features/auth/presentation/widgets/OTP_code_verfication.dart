@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/config/themes/app_text_style.dart';
 import 'package:page_ui/core/custom_widget/custom_button.dart';
@@ -6,8 +8,6 @@ import 'package:page_ui/features/auth/domain/params/verify_reset_code_params.dar
 import 'package:page_ui/features/auth/presentation/controllers/forget_password_cubit/forget_password_cubit.dart';
 import 'package:page_ui/features/auth/presentation/widgets/resend_the_verfication_code_button.dart';
 import 'package:page_ui/features/auth/presentation/widgets/verify_o_t_p_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OTPCodeVerfication extends StatefulWidget {
   const OTPCodeVerfication({
@@ -49,13 +49,13 @@ class _OTPCodeVerficationState extends State<OTPCodeVerfication> {
           setState(() {
             isLoading = false;
           });
-          showWebSnackBar(context: context, message: 'OTP Verified.');
+          showSnackBar(context: context, message: 'OTP Verified.');
           widget.nextStep?.call();
         } else if (state is ForgetPasswordFailure) {
           setState(() {
             isLoading = false;
           });
-          showWebSnackBar(
+          showSnackBar(
             context: context,
             message: state.message,
             backgroundColor: AppColors.red,
@@ -96,7 +96,7 @@ class _OTPCodeVerficationState extends State<OTPCodeVerfication> {
               onPressed: () {
                 for (var controller in widget.controllers) {
                   if (controller.text.isEmpty) {
-                    showWebSnackBar(
+                    showSnackBar(
                       context: context,
                       message: 'OTP not completed.',
                       backgroundColor: AppColors.red,

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_ui/config/routes/on_generate_routes.dart';
 import 'package:page_ui/core/custom_widget/custom_button.dart';
 import 'package:page_ui/core/helpers/custom_show_snack_bar.dart';
@@ -8,8 +10,6 @@ import 'package:page_ui/features/auth/presentation/widgets/do_not_have_an_accoun
 import 'package:page_ui/features/auth/presentation/widgets/email_validator.dart';
 import 'package:page_ui/features/auth/presentation/widgets/forget_password_widget.dart';
 import 'package:page_ui/features/auth/presentation/widgets/password_text_form_field.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginViewForm extends StatefulWidget {
   LoginViewForm({
@@ -49,11 +49,11 @@ class _LoginViewFormState extends State<LoginViewForm> {
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state is LoginSuccess) {
-          showWebSnackBar(context: context, message: "Login Success");
+          showSnackBar(context: context, message: "Login Success");
           widget.onChangeLoadingValue!(false);
           AppRoutes.pushTrainView(context);
         } else if (state is LoginFailure) {
-          showWebSnackBar(context: context, message: state.message);
+          showSnackBar(context: context, message: state.message);
           widget.onChangeLoadingValue!(false);
         } else if (state is LoginLoading) {
           widget.onChangeLoadingValue!(true);

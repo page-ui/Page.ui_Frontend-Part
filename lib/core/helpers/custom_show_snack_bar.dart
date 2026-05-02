@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/config/themes/app_text_style.dart';
 import 'package:page_ui/core/constants/borders.dart';
-import 'package:flutter/material.dart';
+import 'package:page_ui/core/enum/screen_type.dart';
 
-void showWebSnackBar({
+void showSnackBar({
   required BuildContext context,
   required String message,
   Duration duration = const Duration(seconds: 6),
@@ -11,6 +13,54 @@ void showWebSnackBar({
   Color textColor = AppColors.primaryColor,
   IconData? icon,
 }) {
+  final isMobileScreen = context.isMobile;
+  final platform = Theme.of(context).platform;
+  final isMobilePlatform =
+      platform == TargetPlatform.android || platform == TargetPlatform.iOS;
+
+  if (!kIsWeb || isMobileScreen || isMobilePlatform) {
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    if (messenger == null) return;
+
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              if (icon != null) ...[
+                Icon(icon, color: textColor),
+                const SizedBox(width: 12),
+              ],
+              Expanded(
+                child: Text(
+                  message,
+                  style: AppTextStyles.bodyMedium?.copyWith(color: textColor),
+                ),
+              ),
+              const SizedBox(width: 8),
+              GestureDetector(
+                onTap: messenger.hideCurrentSnackBar,
+                child: Icon(Icons.close, size: 18, color: textColor),
+              ),
+            ],
+          ),
+          duration: duration,
+          backgroundColor: backgroundColor,
+          behavior: SnackBarBehavior.floating,
+          elevation: 12,
+          dismissDirection: DismissDirection.horizontal,
+          margin: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: AppBorders.xxxxs,
+            side: BorderSide(color: textColor.withValues(alpha: 0.5)),
+          ),
+        ),
+      );
+    return;
+  }
+
   final overlay = Overlay.of(context);
   late OverlayEntry overlayEntry;
 

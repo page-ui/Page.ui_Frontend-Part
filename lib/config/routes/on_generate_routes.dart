@@ -1,4 +1,5 @@
-import 'package:page_ui/features/auth/data/model/user_tokens_model.dart';
+import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:page_ui/features/auth/domain/params/login_params.dart';
 import 'package:page_ui/features/auth/presentation/views/email_verfication_view.dart';
 import 'package:page_ui/features/auth/presentation/views/forget_pasword_view.dart';
@@ -9,8 +10,6 @@ import 'package:page_ui/features/chat/presentation/views/home_view.dart';
 import 'package:page_ui/features/intro_screens/presentation/views/developers_view.dart';
 import 'package:page_ui/features/intro_screens/presentation/views/landing_view.dart';
 import 'package:page_ui/features/intro_screens/presentation/views/splash_view.dart';
-import 'package:flutter/widgets.dart';
-import 'package:go_router/go_router.dart';
 
 sealed class AppRoutes {
   const AppRoutes();
@@ -42,9 +41,7 @@ sealed class AppRoutes {
             ).animate(
               CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
             );
-
         final fade = Tween<double>(begin: 0, end: 1).animate(animation);
-
         return FadeTransition(
           opacity: fade,
           child: SlideTransition(position: slide, child: child),
@@ -53,32 +50,8 @@ sealed class AppRoutes {
     );
   }
 
-  static const _protectedRoutes = {homePath, trainPath};
-  static const _authRoutes = {
-    loginPath,
-    registerPath,
-    forgetPasswordPath,
-    emailVerificationPath,
-    splashPath,
-    landingPath,
-  };
-
-  static Future<String?> _redirect(
-    BuildContext context,
-    GoRouterState state,
-  ) async {
-    final tokens = await returnTokensFromSecureDB();
-    final isLoggedIn = !tokens.isEmpty();
-    final location = state.matchedLocation;
-
-    if (isLoggedIn && _authRoutes.contains(location)) return homePath;
-    if (!isLoggedIn && _protectedRoutes.contains(location)) return loginPath;
-    return null;
-  }
-
   static final GoRouter router = GoRouter(
     initialLocation: landingPath,
-    redirect: _redirect,
     routes: <RouteBase>[
       GoRoute(
         path: landingPath,

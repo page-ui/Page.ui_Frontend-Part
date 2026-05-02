@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_ui/config/routes/on_generate_routes.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/core/custom_widget/custom_button.dart';
@@ -6,8 +8,6 @@ import 'package:page_ui/features/auth/domain/params/reset_password.dart';
 import 'package:page_ui/features/auth/presentation/controllers/forget_password_cubit/forget_password_cubit.dart';
 import 'package:page_ui/features/auth/presentation/widgets/custom_row_auth.dart';
 import 'package:page_ui/features/auth/presentation/widgets/password_text_form_field.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PasswordReset extends StatefulWidget {
   const PasswordReset({super.key, required this.email, required this.token});
@@ -39,7 +39,7 @@ class _PasswordResetState extends State<PasswordReset> {
           setState(() {
             isLoading = false;
           });
-          showWebSnackBar(
+          showSnackBar(
             context: context,
             message: 'Password Reset Successfully.',
           );
@@ -49,7 +49,7 @@ class _PasswordResetState extends State<PasswordReset> {
           setState(() {
             isLoading = false;
           });
-          showWebSnackBar(
+          showSnackBar(
             context: context,
             message: state.message,
             backgroundColor: AppColors.red,
@@ -98,7 +98,7 @@ class _PasswordResetState extends State<PasswordReset> {
                         ),
                       );
                     } else {
-                      showWebSnackBar(
+                      showSnackBar(
                         context: context,
                         message: "Password and Confirm Password must be same.",
                         backgroundColor: AppColors.red,

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/core/enum/screen_type.dart';
 import 'package:page_ui/core/helpers/custom_cli_loading_indicator.dart';
@@ -16,8 +18,6 @@ import 'package:page_ui/features/chat/presentation/widgets/custom_panel_for_mobi
 import 'package:page_ui/features/chat/presentation/widgets/history_panel/history_panel.dart';
 import 'package:page_ui/features/chat/presentation/widgets/home_appbar.dart';
 import 'package:page_ui/features/chat/presentation/widgets/ui_frame/u_i_frame.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeViewBody extends StatefulWidget {
   const HomeViewBody({super.key});
@@ -145,7 +145,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
         },
         listener: (context, state) {
           if (state is ChatHomeError) {
-            showWebSnackBar(
+            showSnackBar(
               context: context,
               message: state.message,
               backgroundColor: AppColors.red,

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/core/custom_widget/custom_button.dart';
 import 'package:page_ui/core/helpers/custom_show_snack_bar.dart';
@@ -6,8 +8,6 @@ import 'package:page_ui/features/auth/presentation/widgets/auth_text_form_field.
 import 'package:page_ui/features/auth/presentation/widgets/custom_row_auth.dart';
 import 'package:page_ui/features/auth/presentation/widgets/email_validator.dart';
 import 'package:page_ui/features/auth/presentation/widgets/have_an_account_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ForgetPasswordRequest extends StatefulWidget {
   const ForgetPasswordRequest({
@@ -41,13 +41,13 @@ class _ForgetPasswordRequestState extends State<ForgetPasswordRequest> {
           setState(() {
             isLoading = false;
           });
-          showWebSnackBar(context: context, message: 'Check Your Email.');
+          showSnackBar(context: context, message: 'Check Your Email.');
           widget.nextStep();
         } else if (state is ForgetPasswordFailure) {
           setState(() {
             isLoading = false;
           });
-          showWebSnackBar(
+          showSnackBar(
             context: context,
             message: state.message,
             backgroundColor: AppColors.red,

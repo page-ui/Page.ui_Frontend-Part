@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_ui/config/routes/on_generate_routes.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/config/themes/app_text_style.dart';
@@ -8,8 +10,6 @@ import 'package:page_ui/features/auth/domain/params/verify_reset_code_params.dar
 import 'package:page_ui/features/auth/presentation/controllers/email_verfication_cubit/email_verfication_cubit.dart';
 import 'package:page_ui/features/auth/presentation/widgets/resend_the_verfication_code_button.dart';
 import 'package:page_ui/features/auth/presentation/widgets/verify_o_t_p_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EmailVerficationForm extends StatefulWidget {
   const EmailVerficationForm({
@@ -60,14 +60,14 @@ class _EmailVerficationFormState extends State<EmailVerficationForm> {
             isLoading = false;
             widget.onChangeLoadingValue!(isLoading);
           });
-          showWebSnackBar(context: context, message: 'OTP Verified.');
+          showSnackBar(context: context, message: 'OTP Verified.');
           AppRoutes.pushTrainView(context);
         } else if (state is EmailVerificationFailure) {
           setState(() {
             isLoading = false;
             widget.onChangeLoadingValue!(isLoading);
           });
-          showWebSnackBar(
+          showSnackBar(
             context: context,
             message: state.message,
             backgroundColor: AppColors.red,
@@ -79,7 +79,7 @@ class _EmailVerficationFormState extends State<EmailVerficationForm> {
             widget.onChangeLoadingValue!(isLoading);
           });
         } else if (state is ResendTheCodeSuccess) {
-          showWebSnackBar(context: context, message: 'Check Your Email.');
+          showSnackBar(context: context, message: 'Check Your Email.');
           setState(() {
             isLoading = false;
             widget.onChangeLoadingValue!(isLoading);
@@ -115,7 +115,7 @@ class _EmailVerficationFormState extends State<EmailVerficationForm> {
               onPressed: () {
                 for (var controller in controllers) {
                   if (controller.text.isEmpty) {
-                    showWebSnackBar(
+                    showSnackBar(
                       context: context,
                       message: 'OTP not completed.',
                       backgroundColor: AppColors.red,
