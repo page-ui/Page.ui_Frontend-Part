@@ -8,7 +8,7 @@ class TrainView extends StatefulWidget {
   const TrainView({super.key});
   static String routeName = "TrainView";
 
-  static const String _slUrl = 'https://polymath000.github.io/sl-command-web/';
+  static const String _slUrl = '/train/index.html';
 
   @override
   State<TrainView> createState() => _TrainViewState();

@@ -67,7 +67,7 @@ class _LoginViewFormState extends State<LoginViewForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const customRowAuth(hint: "mail"),
+            const customRowAuth(hint: "Email"),
             const SizedBox(height: 4),
             AuthTextFormField(
               controller: _emailController,
