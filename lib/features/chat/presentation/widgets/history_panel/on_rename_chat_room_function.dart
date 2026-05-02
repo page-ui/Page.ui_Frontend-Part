@@ -77,13 +77,16 @@ Future<void> onRenameChatRoom(BuildContext context, ChatEntity chat) async {
     pageBuilder: (dialogContext, animation, secondaryAnimation) {
       final media = MediaQuery.of(dialogContext);
       final overlaySize = overlayBox?.size ?? media.size;
+      const historyPanelWidth = 260.0;
 
-      final double maxWidth = (overlaySize.width * 0.9).clamp(240, 360);
+      final double dialogWidth = overlaySize.width <= historyPanelWidth + 24
+          ? overlaySize.width - 24
+          : historyPanelWidth;
       final double left = anchorRect == null
-          ? (overlaySize.width - maxWidth) / 2
-          : (anchorRect.left - (maxWidth - anchorRect.width)).clamp(
+          ? (overlaySize.width - dialogWidth) / 2
+          : (anchorRect.right - dialogWidth).clamp(
               12.0,
-              overlaySize.width - maxWidth - 12.0,
+              overlaySize.width - dialogWidth - 12.0,
             );
       final double top = anchorRect == null
           ? (overlaySize.height * 0.2)
@@ -96,7 +99,7 @@ Future<void> onRenameChatRoom(BuildContext context, ChatEntity chat) async {
             Positioned(
               left: left,
               top: top,
-              width: maxWidth,
+              width: dialogWidth,
               child: Material(
                 color: AppColors.primaryColor.withValues(alpha: 0.96),
                 surfaceTintColor: AppColors.transparent,

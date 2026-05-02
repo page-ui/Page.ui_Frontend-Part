@@ -1,8 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:page_ui/config/routes/on_generate_routes.dart';
 import 'package:page_ui/core/helpers/custom_modal_progress_hud.dart';
 import 'package:page_ui/features/auth/presentation/widgets/custom_auth_screen_theme.dart';
 import 'package:page_ui/features/auth/presentation/widgets/login_view_body.dart';
-import 'package:flutter/material.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -20,7 +20,6 @@ class _LoginViewState extends State<LoginView> {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
         AppRoutes.pushLandingView(context);
       },
       child: Scaffold(

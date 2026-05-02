@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:page_ui/core/constants/constants.dart';
+import 'package:page_ui/core/database/cache/secure_storage.dart';
 import 'package:page_ui/features/auth/domain/params/login_params.dart';
 import 'package:page_ui/features/auth/presentation/views/email_verfication_view.dart';
 import 'package:page_ui/features/auth/presentation/views/forget_pasword_view.dart';
@@ -52,6 +54,30 @@ sealed class AppRoutes {
 
   static final GoRouter router = GoRouter(
     initialLocation: landingPath,
+     redirect: (context, state)async {
+    bool isLoggedIn = await SecureStorage.checkData(key: tokensKey);
+
+    final location = state.matchedLocation;
+
+    final isAuthPage = location == loginPath ||
+        location == registerPath ||
+        location == forgetPasswordPath;
+
+    final isSplash = location == splashPath;
+    final isHome = location == homePath;
+
+    // 🔐 If NOT logged in → block home
+    if (!isLoggedIn && isHome) {
+      return loginPath;
+    }
+
+    // 🔐 If logged in → block auth pages & splash
+    if (isLoggedIn && (isAuthPage || isSplash)) {
+      return homePath;
+    }
+
+    return null;
+  },
     routes: <RouteBase>[
       GoRoute(
         path: landingPath,
@@ -118,53 +144,35 @@ sealed class AppRoutes {
     context.pop<T>(result);
   }
 
-  static Future<T?> pushNamed<T extends Object?>(
-    BuildContext context,
-    String routeName, {
-    Object? arguments,
-  }) {
-    return context.pushNamed<T>(routeName, extra: arguments);
-  }
-
-  static Future<T?> pushPageReplacementNamed<T extends Object?>(
-    BuildContext context,
-    String newRouteName, {
-    Object? arguments,
-  }) async {
-    context.pushReplacementNamed(newRouteName, extra: arguments);
-    return null;
-  }
-
   static Future<void> pushSplashView(BuildContext context) async =>
-      pushNamed(context, SplashView.routeName);
+      context.goNamed(SplashView.routeName);
 
   static Future<void> pushRegisterView(BuildContext context) async =>
-      pushNamed(context, RegisterView.routeName);
+      context.goNamed(RegisterView.routeName);
 
   static Future<void> pushLoginView(BuildContext context) async =>
-      pushPageReplacementNamed(context, LoginView.routeName);
+      context.goNamed(LoginView.routeName);
 
   static Future<void> pushLoginViewWithReturn(BuildContext context) async =>
-      pushNamed(context, LoginView.routeName);
+      context.goNamed(LoginView.routeName);
 
   static Future<void> pushHomeView(BuildContext context) async =>
-      pushPageReplacementNamed(context, HomeView.routeName);
+      context.goNamed(HomeView.routeName);
 
   static Future<void> pushTrainView(BuildContext context) async =>
-      pushPageReplacementNamed(context, TrainView.routeName);
+      context.goNamed(TrainView.routeName);
 
   static Future<void> pushLandingView(BuildContext context) async =>
-      pushPageReplacementNamed(context, LandingView.routeName);
+      context.goNamed(LandingView.routeName);
 
   static Future<void> pushDevelopersView(BuildContext context) async =>
-      pushNamed(context, DevelopersView.routeName);
+      context.goNamed(DevelopersView.routeName);
 
   static Future<void> pushForgetPasswordView(BuildContext context) async =>
-      pushNamed(context, ForgetPaswordView.routeName);
+      context.goNamed(ForgetPaswordView.routeName);
 
   static Future<void> pushEmailVerficationView(
     BuildContext context, {
     required LoginParams param,
-  }) async =>
-      pushNamed(context, EmailVerficationView.routeName, arguments: param);
+  }) async => context.goNamed(EmailVerficationView.routeName, extra: param);
 }
