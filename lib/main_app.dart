@@ -5,7 +5,6 @@ import 'package:pageui/config/themes/app_colors.dart';
 import 'package:pageui/config/themes/app_text_style.dart';
 import 'package:pageui/core/constants/constants.dart';
 import 'package:pageui/core/custom_widget/animated_starfield_background.dart';
-import 'package:pageui/features/intro_screens/presentation/views/landing_view.dart';
 
 class PageDotUi extends StatelessWidget {
   const PageDotUi({super.key});
@@ -16,9 +15,8 @@ class PageDotUi extends StatelessWidget {
         designSize: const Size(1920, 1080),
         minTextAdapt: true,
         splitScreenMode: true,
-        child: MaterialApp(
-          initialRoute: LandingView.routeName,
-          onGenerateRoute: AppRoutes.onGenerateRoute,
+        child: MaterialApp.router(
+          routerConfig: AppRoutes.router,
           title: 'Page.ui',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(

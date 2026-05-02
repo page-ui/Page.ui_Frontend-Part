@@ -4,6 +4,7 @@ import 'package:pageui/core/database/api/graph_ql_config.dart';
 import 'package:pageui/core/network/network_info.dart';
 import 'package:pageui/features/auth/data/data_source/auth_data_source.dart';
 import 'package:pageui/features/auth/data/repos/auth_repo_impl.dart';
+import 'package:pageui/features/chat/data/data_source/abstract_chat_data_source.dart';
 import 'package:pageui/features/chat/data/data_source/chat_data_source.dart';
 import 'package:pageui/features/chat/data/data_source/upload_service.dart';
 import 'package:pageui/features/chat/data/repos/chat_repo_impl.dart';

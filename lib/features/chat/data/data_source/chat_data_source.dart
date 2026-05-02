@@ -3,33 +3,11 @@ import 'package:pageui/core/database/api/graph_ql_config.dart';
 import 'package:pageui/core/database/api/queries.dart';
 import 'package:pageui/core/errors/app_operation.dart';
 import 'package:pageui/core/errors/exceptions.dart';
+import 'package:pageui/features/chat/data/data_source/abstract_chat_data_source.dart';
 import 'package:pageui/features/chat/data/models/chat_model.dart';
 import 'package:pageui/features/chat/data/models/message_model.dart';
 import 'package:pageui/features/chat/domain/params/create_chat_params.dart';
 import 'package:pageui/features/chat/domain/params/send_message_params.dart';
-
-abstract class ChatDataSource {
-  Future<ChatModel> createChat({required CreateChatParams params});
-
-  Future<({List<ChatModel> chats, bool hasNextPage, String? endCursor})>
-  getChats({required int first, String? after});
-
-  Future<List<ChatModel>> searchChats({
-    required String name,
-    required int first,
-  });
-
-  Future<({List<MessageModel> messages, bool hasNextPage, String? endCursor})>
-  getMessages({required String chatId, required int first, String? after});
-
-  Stream<MessageModel> subscribeToMessages({required String chatId});
-
-  Future<void> sendMessage({required SendMessageParams params});
-
-  Future<void> deleteChat({required String chatId});
-
-  Future<ChatModel> renameChat({required String chatId, required String name});
-}
 
 class ChatDataSourceImpl extends ChatDataSource {
   GraphQLClient get _client => GraphQLConfig.client.value;

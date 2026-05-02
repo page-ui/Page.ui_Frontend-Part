@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pageui/features/auth/domain/params/login_params.dart';
 import 'package:pageui/features/auth/presentation/views/email_verfication_view.dart';
 import 'package:pageui/features/auth/presentation/views/forget_pasword_view.dart';
@@ -13,114 +14,119 @@ import 'package:pageui/features/intro_screens/presentation/views/splash_view.dar
 sealed class AppRoutes {
   const AppRoutes();
 
-  // Pop current page
+  static const String landingPath = '/';
+  static const String splashPath = '/splash';
+  static const String developersPath = '/developers';
+  static const String loginPath = '/login';
+  static const String registerPath = '/register';
+  static const String forgetPasswordPath = '/forget-password';
+  static const String emailVerificationPath = '/email-verification';
+  static const String homePath = '/home';
+  static const String trainPath = '/train';
+
+  static final GoRouter router = GoRouter(
+    initialLocation: landingPath,
+    routes: <RouteBase>[
+      GoRoute(
+        path: landingPath,
+        name: LandingView.routeName,
+        builder: (_, __) => const LandingView(),
+      ),
+      GoRoute(
+        path: splashPath,
+        name: SplashView.routeName,
+        builder: (_, __) => const SplashView(),
+      ),
+      GoRoute(
+        path: developersPath,
+        name: DevelopersView.routeName,
+        builder: (_, __) => const DevelopersView(),
+      ),
+      GoRoute(
+        path: loginPath,
+        name: LoginView.routeName,
+        builder: (_, __) => const LoginView(),
+      ),
+      GoRoute(
+        path: registerPath,
+        name: RegisterView.routeName,
+        builder: (_, __) => const RegisterView(),
+      ),
+      GoRoute(
+        path: forgetPasswordPath,
+        name: ForgetPaswordView.routeName,
+        builder: (_, __) => const ForgetPaswordView(),
+      ),
+      GoRoute(
+        path: emailVerificationPath,
+        name: EmailVerficationView.routeName,
+        builder: (_, state) =>
+            EmailVerficationView(param: state.extra as LoginParams),
+      ),
+      GoRoute(
+        path: homePath,
+        name: HomeView.routeName,
+        builder: (_, __) => const HomeView(),
+      ),
+      GoRoute(
+        path: trainPath,
+        name: TrainView.routeName,
+        builder: (_, __) => const TrainView(),
+      ),
+    ],
+  );
+
   static void pop<T extends Object?>(BuildContext context, [T? result]) {
-    Navigator.pop<T>(context, result);
+    context.pop<T>(result);
   }
 
-  // Push named route (updates browser URL)
   static Future<T?> pushNamed<T extends Object?>(
     BuildContext context,
     String routeName, {
     Object? arguments,
   }) {
-    return Navigator.pushNamed<T>(context, routeName, arguments: arguments);
+    return context.pushNamed<T>(routeName, extra: arguments);
   }
 
-  // Push named route and remove all previous routes
   static Future<T?> pushNamedAndRemoveAll<T extends Object?>(
     BuildContext context,
     String newRouteName, {
     Object? arguments,
-  }) {
-    return Navigator.pushNamedAndRemoveUntil<T>(
-      context,
-      newRouteName,
-      (_) => false,
-      arguments: arguments,
-    );
+  }) async {
+    context.goNamed(newRouteName, extra: arguments);
+    return null;
   }
 
-  static Future<void> pushSplashView(BuildContext context) =>
+  static Future<void> pushSplashView(BuildContext context) async =>
       pushNamed(context, SplashView.routeName);
 
-  static Future<void> pushRegisterView(BuildContext context) =>
+  static Future<void> pushRegisterView(BuildContext context) async =>
       pushNamed(context, RegisterView.routeName);
 
-  static Future<void> pushLoginView(BuildContext context) =>
+  static Future<void> pushLoginView(BuildContext context) async =>
       pushNamedAndRemoveAll(context, LoginView.routeName);
 
-  static Future<void> pushLoginViewFromLanding(BuildContext context) =>
+  static Future<void> pushLoginViewFromLanding(BuildContext context) async =>
       pushNamed(context, LoginView.routeName);
 
-  static Future<void> pushHomeView(BuildContext context) =>
+  static Future<void> pushHomeView(BuildContext context) async =>
       pushNamedAndRemoveAll(context, HomeView.routeName);
 
-  static Future<void> pushTrainView(BuildContext context) =>
+  static Future<void> pushTrainView(BuildContext context) async =>
       pushNamedAndRemoveAll(context, TrainView.routeName);
 
-  static Future<void> pushLandingView(BuildContext context) =>
+  static Future<void> pushLandingView(BuildContext context) async =>
       pushNamedAndRemoveAll(context, LandingView.routeName);
 
-  static Future<void> pushDevelopersView(BuildContext context) =>
+  static Future<void> pushDevelopersView(BuildContext context) async =>
       pushNamed(context, DevelopersView.routeName);
 
-  static Future<void> pushForgetPasswordView(BuildContext context) =>
+  static Future<void> pushForgetPasswordView(BuildContext context) async =>
       pushNamed(context, ForgetPaswordView.routeName);
+
   static Future<void> pushEmailVerficationView(
     BuildContext context, {
     required LoginParams param,
-  }) => pushNamed(context, EmailVerficationView.routeName, arguments: param);
-
-  // Named routes map
-  static final Map<String, Widget Function(BuildContext, Object?)> routes = {
-    LandingView.routeName: (_, __) => const LandingView(),
-    DevelopersView.routeName: (_, __) => const DevelopersView(),
-    LoginView.routeName: (_, __) => const LoginView(),
-    TrainView.routeName: (_, __) => const TrainView(),
-    SplashView.routeName: (_, __) => const SplashView(),
-    RegisterView.routeName: (_, __) => const RegisterView(),
-    ForgetPaswordView.routeName: (_, __) => const ForgetPaswordView(),
-    HomeView.routeName: (_, __) => const HomeView(),
-    EmailVerficationView.routeName: (_, args) =>
-        EmailVerficationView(param: args as LoginParams),
-  };
-
-  // onGenerateRoute for MaterialApp
-  static Route<dynamic>? Function(RouteSettings) onGenerateRoute =
-      (RouteSettings settings) {
-        final builder =
-            routes[settings.name] ??
-            (_, __) =>
-                const Scaffold(body: Center(child: Text('Page not found')));
-        return customRouteBuilder(
-          settings: settings,
-          builder: (context) => builder(context, settings.arguments),
-        );
-      };
-}
-
-PageRouteBuilder<T> customRouteBuilder<T>({
-  required Widget Function(BuildContext) builder,
-  int duration = 500,
-  RouteSettings? settings,
-}) {
-  return PageRouteBuilder<T>(
-    settings: settings,
-    transitionDuration: Duration(milliseconds: duration),
-    pageBuilder: (context, _, __) => builder(context),
-    transitionsBuilder: (_, animation, __, child) {
-      final slide = Tween<Offset>(
-        begin: const Offset(1.8, 0),
-        end: Offset.zero,
-      ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic));
-
-      final fade = Tween<double>(begin: 0, end: 1).animate(animation);
-
-      return FadeTransition(
-        opacity: fade,
-        child: SlideTransition(position: slide, child: child),
-      );
-    },
-  );
+  }) async =>
+      pushNamed(context, EmailVerficationView.routeName, arguments: param);
 }
