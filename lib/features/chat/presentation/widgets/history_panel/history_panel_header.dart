@@ -25,7 +25,6 @@ class HistoryPanelHeader extends StatelessWidget {
               ),
             ),
             CustomButtonIconForPanels(
-              isLeftPanel: false,
               onPressed: widget.onPressed,
             ),
           ],

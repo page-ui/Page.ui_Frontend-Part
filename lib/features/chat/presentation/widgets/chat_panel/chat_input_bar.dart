@@ -1,8 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/core/constants/borders.dart';
 import 'package:page_ui/features/chat/presentation/widgets/chat_panel/image_preview_chat_input_bar.dart';
 import 'package:page_ui/features/chat/presentation/widgets/chat_panel/pick_image_button.dart';
-import 'package:flutter/material.dart';
 
 class ChatInputBar extends StatelessWidget {
   const ChatInputBar({
@@ -29,7 +29,7 @@ class ChatInputBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
         color: AppColors.black,
-        borderRadius: AppBorders.xxxxs,
+        borderRadius: AppBorders.xxxs,
         border: Border.all(color: AppColors.darkGrey, width: 0.5),
       ),
       child: Column(
@@ -59,8 +59,8 @@ class ChatInputBar extends StatelessWidget {
                     ),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 8,
+                      horizontal: 4,
+                      vertical: 4,
                     ),
                     isDense: true,
                   ),
@@ -90,8 +90,8 @@ class ChatInputBar extends StatelessWidget {
                   color: AppColors.white,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(
-                    minWidth: 36,
-                    minHeight: 36,
+                    minWidth: 30,
+                    minHeight: 30,
                   ),
                 ),
               ),

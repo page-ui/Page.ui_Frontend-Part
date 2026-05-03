@@ -1,9 +1,9 @@
-import 'package:page_ui/config/themes/app_colors.dart';
-import 'package:page_ui/config/themes/app_icons.dart';
-import 'package:page_ui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/config/themes/app_icons.dart';
+import 'package:page_ui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
 
 class PickImageButton extends StatelessWidget {
   const PickImageButton({super.key});
@@ -26,7 +26,7 @@ class PickImageButton extends StatelessWidget {
         size: 20,
       ),
       padding: EdgeInsets.zero,
-      constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+      constraints: const BoxConstraints(minWidth: 30, minHeight: 30),
     );
   }
 }

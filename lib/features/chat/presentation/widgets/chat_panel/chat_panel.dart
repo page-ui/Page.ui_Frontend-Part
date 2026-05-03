@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:page_ui/core/enum/screen_type.dart';
 import 'package:page_ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
 import 'package:page_ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
 import 'package:page_ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
@@ -66,7 +67,7 @@ class _ChatPanelState extends State<ChatPanel> {
         _messagesCubit!.openChat(chatId: chatId);
       },
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: EdgeInsets.only(top: context.isMobile?0: 10),
         child: Column(
           children: [
             ChatPanelHeader(onPressed: widget.onPressed),

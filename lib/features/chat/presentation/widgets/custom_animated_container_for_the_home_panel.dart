@@ -1,21 +1,19 @@
+import 'package:flutter/material.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/core/constants/borders.dart';
 import 'package:page_ui/features/chat/presentation/widgets/home_panel_on_closed.dart';
-import 'package:flutter/material.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class CustomAnimatedContainerForTheHomePanel extends StatefulWidget {
   const CustomAnimatedContainerForTheHomePanel({
     super.key,
     required this.isOpen,
-    required this.isLeft,
     this.onPressed,
     required this.width,
     required this.child,
   });
 
   final bool isOpen;
-  final bool isLeft;
   final void Function()? onPressed;
   final double width;
   final Widget child;
@@ -53,11 +51,11 @@ class _CustomAnimatedContainerForTheHomePanelState
       duration: const Duration(milliseconds: 500),
       curve: Curves.decelerate,
       width: widget.isOpen ? widget.width : 40,
-      margin: EdgeInsets.only(
+      margin: const EdgeInsets.only(
         top: 10,
         bottom: 10,
-        right: widget.isLeft ? 0 : 10,
-        left: widget.isLeft ? 10 : 0,
+        right: 0,
+        left: 10,
       ),
       padding: EdgeInsets.all(widget.isOpen ? 0 : 4),
       decoration: BoxDecoration(
@@ -70,7 +68,6 @@ class _CustomAnimatedContainerForTheHomePanelState
         child: (widget.isOpen && !_isAnimating)
             ? widget.child
             : HomePanelOnClosed(
-                isLeftPanel: widget.isLeft,
                 onPressed: widget.onPressed,
                 isOpen: widget.isOpen,
               ),

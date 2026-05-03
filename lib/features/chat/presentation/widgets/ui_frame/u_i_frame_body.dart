@@ -36,7 +36,6 @@ class UIFrameBody extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         CustomButtonIconForPanels(
-                          isLeftPanel: false,
                           onPressed: onRightButtonPressed,
                         ),
                       ],

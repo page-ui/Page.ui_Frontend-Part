@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/config/themes/app_icons.dart';
 import 'package:page_ui/features/chat/presentation/controllers/chat_history_cubit/chat_history_cubit.dart';
@@ -8,8 +10,6 @@ import 'package:page_ui/features/chat/presentation/controllers/chat_home_cubit/c
 import 'package:page_ui/features/chat/presentation/widgets/history_panel/history_panel_header.dart';
 import 'package:page_ui/features/chat/presentation/widgets/history_panel/history_search_text_field.dart';
 import 'package:page_ui/features/chat/presentation/widgets/history_panel/list_of_chat_rooms.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HistoryPanelBody extends StatefulWidget {
   const HistoryPanelBody({super.key, this.onPressed});
@@ -41,7 +41,7 @@ class _HistoryPanelBodyState extends State<HistoryPanelBody> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.only(right:  10, left: 10, top: 8, bottom: 4),
       child: Column(
         children: [
           HistoryPanelHeader(widget: widget),

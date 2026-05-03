@@ -7,12 +7,10 @@ class HomePanelOnClosed extends StatelessWidget {
   const HomePanelOnClosed({
     super.key,
     required this.onPressed,
-    required this.isLeftPanel,
     required this.isOpen,
   });
 
   final void Function()? onPressed;
-  final bool isLeftPanel;
   final bool isOpen;
 
   @override
@@ -21,7 +19,6 @@ class HomePanelOnClosed extends StatelessWidget {
       children: [
         CustomButtonIconForPanels(
           onPressed: onPressed,
-          isLeftPanel: isLeftPanel,
         ),
         const Spacer(flex: 1),
 
@@ -41,9 +38,9 @@ class HomePanelOnClosed extends StatelessWidget {
               curve: Curves.decelerate,
 
               child: RotatedBox(
-                quarterTurns: isLeftPanel ? 3 : 1,
+                quarterTurns: 1,
                 child: Text(
-                  isLeftPanel ? "Chat" : "History",
+                  "Chat" ,
                   style: AppTextStyles.headlineSmall!.copyWith(
                     letterSpacing: 8,
                     color: AppColors.primaryColor,

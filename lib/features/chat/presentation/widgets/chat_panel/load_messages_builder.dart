@@ -1,11 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/core/helpers/panel_scrollbar.dart';
 import 'package:page_ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
 import 'package:page_ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
 import 'package:page_ui/features/chat/presentation/widgets/chat_panel/message_bubble.dart';
 import 'package:page_ui/features/chat/presentation/widgets/chat_panel/thinking_bubble.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoadMessagesBuilder extends StatefulWidget {
   const LoadMessagesBuilder({super.key});
@@ -76,7 +76,7 @@ class _LoadMessagesBuilderState extends State<LoadMessagesBuilder> {
               bottom: 16,
               child: Material(
                 color: AppColors.white.withValues(alpha: 0.12),
-                shape: const CircleBorder(),
+                shape:  const CircleBorder(),
                 child: InkWell(
                   customBorder: const CircleBorder(),
                   onTap: _scrollToBottom,
@@ -144,7 +144,7 @@ class _LoadMessagesBuilderState extends State<LoadMessagesBuilder> {
         return ListView.builder(
           controller: _scrollController,
           reverse: true,
-          padding: const EdgeInsets.only(top: 4, bottom: 8, right: 16),
+          padding: const EdgeInsets.only(top: 4, bottom: 8, right: 16, left: 16),
           itemCount: messages.length + thinkingOffset + loadMoreOffset,
           itemBuilder: (context, index) {
             if (thinkingOffset == 1 && index == 0) {

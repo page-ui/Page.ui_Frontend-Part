@@ -81,11 +81,14 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
                     final isSending =
                         isSendLoading || isAwaitingAi || isCreatingChat;
 
-                    return ChatInputBar(
-                      controller: _controller,
-                      focusNode: _focusNode,
-                      isSending: isSending,
-                      onSend: () => _handleSend(context),
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0, left: 8, right: 8),
+                      child: ChatInputBar(
+                        controller: _controller,
+                        focusNode: _focusNode,
+                        isSending: isSending,
+                        onSend: () => _handleSend(context),
+                      ),
                     );
                   },
                 );

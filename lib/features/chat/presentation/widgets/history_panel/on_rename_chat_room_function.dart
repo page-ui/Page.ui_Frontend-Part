@@ -77,11 +77,11 @@ Future<void> onRenameChatRoom(BuildContext context, ChatEntity chat) async {
     pageBuilder: (dialogContext, animation, secondaryAnimation) {
       final media = MediaQuery.of(dialogContext);
       final overlaySize = overlayBox?.size ?? media.size;
-      const historyPanelWidth = 260.0;
+      final historyPanelWidth = MediaQuery.sizeOf(context).width < 270.0 ? MediaQuery.sizeOf(context).width  : 270;
 
-      final double dialogWidth = overlaySize.width <= historyPanelWidth + 24
+      final double dialogWidth = overlaySize.width <= historyPanelWidth.toDouble() + 24
           ? overlaySize.width - 24
-          : historyPanelWidth;
+          : historyPanelWidth.toDouble();
       final double left = anchorRect == null
           ? (overlaySize.width - dialogWidth) / 2
           : (anchorRect.right - dialogWidth).clamp(
@@ -117,14 +117,6 @@ Future<void> onRenameChatRoom(BuildContext context, ChatEntity chat) async {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          'Rename chat',
-                          style: TextStyle(color: AppColors.white),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: TextField(
@@ -152,7 +144,6 @@ Future<void> onRenameChatRoom(BuildContext context, ChatEntity chat) async {
                               submitRename(dialogContext, value),
                         ),
                       ),
-                      const SizedBox(height: 12),
                       Padding(
                         padding: const EdgeInsets.only(right: 8),
                         child: Row(

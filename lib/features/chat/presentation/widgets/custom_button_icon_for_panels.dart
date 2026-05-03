@@ -7,11 +7,9 @@ class CustomButtonIconForPanels extends StatelessWidget {
   const CustomButtonIconForPanels({
     super.key,
     required this.onPressed,
-    required this.isLeftPanel,
   });
 
   final void Function()? onPressed;
-  final bool isLeftPanel;
 
   @override
   Widget build(BuildContext context) {
