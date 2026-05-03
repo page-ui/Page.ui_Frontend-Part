@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
-import 'package:page_ui/core/constants/borders.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
-class CustomPanelForMobileMode extends StatelessWidget {
-  const CustomPanelForMobileMode({
+class HistoryPanelOverlay extends StatelessWidget {
+  const HistoryPanelOverlay({
     super.key,
     required this.width,
     required this.panel,
     required this.onClose,
-    this.isRight = false,
   });
+
   final double width;
   final Widget panel;
   final VoidCallback onClose;
-  final bool isRight;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -30,23 +29,18 @@ class CustomPanelForMobileMode extends StatelessWidget {
           ),
         ),
         Positioned(
-          left: isRight ? null : 0,
-          right: isRight ? 0 : null,
+          left: 0,
           top: 0,
           bottom: 0,
           child: PointerInterceptor(
             child: Container(
               width: width,
-              margin: EdgeInsets.only(
-                top: isRight ? 28 : 0,
-                bottom: isRight ? 20 : 0,
-                left: 0,
-                right: isRight ? 20 : 0,
-              ),
               decoration: BoxDecoration(
-                borderRadius: AppBorders.xxxxs,
-                shape: BoxShape.rectangle,
-                color: AppColors.anotherGray.withValues(alpha: 0.6),
+                borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(8),
+                  bottomRight: Radius.circular(8),
+                ),
+                color: AppColors.anotherGray.withValues(alpha: 0.95),
                 border: Border.all(color: AppColors.darkGrey, width: 0.5),
               ),
               clipBehavior: Clip.antiAlias,

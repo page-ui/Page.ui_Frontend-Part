@@ -102,7 +102,7 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
     if (sendMessageCubit.state is SendMessageLoading) return;
 
     final pickFileCubit = context.read<PickFileCubit>();
-    final message = _normalizeOutgoingMessage(_controller.text);
+    final message = _controller.text;
     if (message.isEmpty && !pickFileCubit.isImagePicked) return;
 
     if (widget.onSend != null) {
@@ -130,7 +130,7 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
     );
   }
 
-  String _normalizeOutgoingMessage(String rawMessage) {
-    return rawMessage.replaceAll('\r\n', '\n').replaceAll('\r', '\n').trim();
-  }
+  // String _normalizeOutgoingMessage(String rawMessage) {
+  //   return rawMessage.replaceAll('\r\n', '\n').replaceAll('\r', '\n').trim();
+  // }
 }

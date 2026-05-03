@@ -43,7 +43,7 @@ class HomePanelOnClosed extends StatelessWidget {
               child: RotatedBox(
                 quarterTurns: isLeftPanel ? 3 : 1,
                 child: Text(
-                  isLeftPanel ? "History" : "Chat",
+                  isLeftPanel ? "Chat" : "History",
                   style: AppTextStyles.headlineSmall!.copyWith(
                     letterSpacing: 8,
                     color: AppColors.primaryColor,

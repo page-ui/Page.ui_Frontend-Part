@@ -22,8 +22,8 @@ class AppIcons {
 
   static const IconData visibilityOff = FontAwesomeIcons.eyeLowVision;
   static const IconData visibilityOn = FontAwesomeIcons.solidEye;
-  // static final IconData gridIcon = FontAwesomeIcons.gripVertical;
-  // static final IconData listIcon = FontAwesomeIcons.listUl;
+  static const IconData gridIcon = FontAwesomeIcons.gripVertical;
+  static const IconData listIcon = FontAwesomeIcons.listUl;
   // static final IconData title = FontAwesomeIcons.alignLeft;
   // static final IconData url = FontAwesomeIcons.link;
   // static final IconData phone = FontAwesomeIcons.phone;
@@ -42,8 +42,9 @@ class AppIcons {
   static const IconData search = FontAwesomeIcons.magnifyingGlass;
   static const IconData file = Icons.attach_file_rounded;
   static const IconData plus = FontAwesomeIcons.plus;
-
+static const IconData swapping = FontAwesomeIcons.arrowRightArrowLeft;
   static const IconData close = Icons.close;
   static const IconData image = Icons.image;
   static const IconData openInNew = Icons.open_in_new_rounded;
+  static const IconData history = Icons.history_rounded;
 }

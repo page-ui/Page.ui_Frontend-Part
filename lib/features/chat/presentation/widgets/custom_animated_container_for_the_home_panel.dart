@@ -54,12 +54,12 @@ class _CustomAnimatedContainerForTheHomePanelState
       curve: Curves.decelerate,
       width: widget.isOpen ? widget.width : 40,
       margin: EdgeInsets.only(
-        top: 28,
-        bottom: 20,
-        right: widget.isLeft ? 0 : 20,
-        left: widget.isLeft ? 20 : 0,
+        top: 10,
+        bottom: 10,
+        right: widget.isLeft ? 0 : 10,
+        left: widget.isLeft ? 10 : 0,
       ),
-      padding: EdgeInsets.all(widget.isOpen ? 0 : 6),
+      padding: EdgeInsets.all(widget.isOpen ? 0 : 4),
       decoration: BoxDecoration(
         borderRadius: AppBorders.xxxxs,
         color: AppColors.anotherGray.withValues(alpha: 0.6),

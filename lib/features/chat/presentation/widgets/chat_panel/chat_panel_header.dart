@@ -1,8 +1,8 @@
-import 'package:page_ui/config/themes/app_colors.dart';
-import 'package:page_ui/config/themes/app_icons.dart';
-import 'package:page_ui/config/themes/app_text_style.dart';
-import 'package:page_ui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
 import 'package:flutter/material.dart';
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/config/themes/app_text_style.dart';
+import 'package:page_ui/core/enum/screen_type.dart';
+import 'package:page_ui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
 
 class ChatPanelHeader extends StatelessWidget {
   const ChatPanelHeader({super.key, required this.onPressed});
@@ -11,14 +11,13 @@ class ChatPanelHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = context.isMobile;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(AppIcons.arrowForward, size: 12, color: AppColors.white),
-            const SizedBox(width: 8),
             Text(
               "Chat Prompt",
               style: AppTextStyles.bodyLarge!.copyWith(
@@ -28,7 +27,10 @@ class ChatPanelHeader extends StatelessWidget {
             ),
           ],
         ),
-        CustomButtonIconForPanels(isLeftPanel: true, onPressed: onPressed),
+        CustomButtonIconForPanels(
+          isLeftPanel: isMobile ? true : false,
+          onPressed: onPressed,
+        ),
       ],
     );
   }

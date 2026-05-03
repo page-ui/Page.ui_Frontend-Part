@@ -23,11 +23,17 @@ class _LoginViewState extends State<LoginView> {
         AppRoutes.pushLandingView(context);
       },
       child: Scaffold(
-        body: CustomModalProgressHud(
+        resizeToAvoidBottomInset: false,
+
+        body: 
+        
+        CustomModalProgressHud(
           isLoading: isLoading,
           child: CustomAuthScreenTheme(
             viewTitle: 'Login',
-            child: LoginViewBody(
+            child: 
+            
+            LoginViewBody(
               onChangeLoadingValue: (bool p1) {
                 setState(() {
                   isLoading = p1;

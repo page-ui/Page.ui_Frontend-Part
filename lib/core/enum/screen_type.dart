@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppBreakpoints {
-  static const double mobile = 600;
-  static const double tablet = 1000;
+  static const double mobile = 700;
+  static const double tablet = 1050;
   static const double desktop = 1400;
 }
 
