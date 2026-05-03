@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_ui/config/routes/on_generate_routes.dart';
 import 'package:page_ui/core/helpers/setup_service_locator_getit.dart';
+import 'package:page_ui/features/chat/domain/entities/chat_entity.dart';
 import 'package:page_ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
 import 'package:page_ui/features/chat/presentation/widgets/home_view_body.dart';
 
 class HomeView extends StatelessWidget {
-  const HomeView({super.key});
+  const HomeView({super.key, this.initialChat});
+
   static const String routeName = "HomeView";
+
+  /// When navigating to `/app/chat/:chatName`, this carries the [ChatEntity].
+  final ChatEntity? initialChat;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,13 @@ class HomeView extends StatelessWidget {
         AppRoutes.goLanding(context);
       },
       child: BlocProvider(
-        create: (_) => getit.get<ChatHomeCubit>(),
+        create: (_) {
+          final cubit = getit.get<ChatHomeCubit>();
+          if (initialChat != null) {
+            cubit.selectChat(chat: initialChat!);
+          }
+          return cubit;
+        },
         child: const Scaffold(
           backgroundColor: Colors.transparent,
           extendBody: true,

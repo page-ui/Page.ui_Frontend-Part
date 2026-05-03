@@ -7,6 +7,7 @@ import 'package:page_ui/features/auth/presentation/views/forget_pasword_view.dar
 import 'package:page_ui/features/auth/presentation/views/login_view.dart';
 import 'package:page_ui/features/auth/presentation/views/register_view.dart';
 import 'package:page_ui/features/auth/presentation/views/train_view.dart';
+import 'package:page_ui/features/chat/domain/entities/chat_entity.dart';
 import 'package:page_ui/features/chat/presentation/views/home_view.dart';
 import 'package:page_ui/features/intro_screens/presentation/views/developers_view.dart';
 import 'package:page_ui/features/intro_screens/presentation/views/landing_view.dart';
@@ -27,6 +28,7 @@ sealed class AppRoutes {
   static const String forgetPasswordPath = '/auth/forgot-password';
   static const String emailVerificationPath = '/auth/verify-email';
   static const String homePath = '/app';
+  static const String chatPath = '/app/chat/:chatName';
   static const String trainPath = '/onboarding';
 
   static const _protectedPaths = {homePath, trainPath};
@@ -109,7 +111,10 @@ sealed class AppRoutes {
     redirect: (context, state) {
       final location = state.matchedLocation;
 
-      if (!AuthState.isLoggedIn && _protectedPaths.contains(location)) {
+      final isProtected = _protectedPaths.contains(location) ||
+          location.startsWith('/app/');
+
+      if (!AuthState.isLoggedIn && isProtected) {
         return loginPath;
       }
 
@@ -182,6 +187,24 @@ sealed class AppRoutes {
         name: HomeView.routeName,
         pageBuilder: (_, state) =>
             _instantTransition(key: state.pageKey, child: const HomeView()),
+        routes: [
+          GoRoute(
+            path: 'chat/:chatName',
+            name: 'chat',
+            redirect: (context, state) {
+              // Deep-linking without ChatEntity data → fall back to /app
+              if (state.extra == null) return homePath;
+              return null;
+            },
+            pageBuilder: (_, state) {
+              final chat = state.extra! as ChatEntity;
+              return _instantTransition(
+                key: state.pageKey,
+                child: HomeView(initialChat: chat),
+              );
+            },
+          ),
+        ],
       ),
       GoRoute(
         path: trainPath,
@@ -221,6 +244,15 @@ sealed class AppRoutes {
 
   static void goHome(BuildContext context) =>
       context.goNamed(HomeView.routeName);
+
+  static void goChat(BuildContext context, {required ChatEntity chat}) {
+    // final encodedName = Uri.encodeComponent(chat.name);
+    context.goNamed(
+      'chat',
+      pathParameters: {'chatName': chat.name},
+      extra: chat,
+    );
+  }
 
   static void goTrain(BuildContext context) =>
       context.goNamed(TrainView.routeName);

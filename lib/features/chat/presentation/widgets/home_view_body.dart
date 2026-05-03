@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/core/constants/borders.dart';
@@ -6,6 +7,7 @@ import 'package:page_ui/core/enum/screen_type.dart';
 import 'package:page_ui/core/helpers/custom_cli_loading_indicator.dart';
 import 'package:page_ui/core/helpers/custom_show_snack_bar.dart';
 import 'package:page_ui/core/helpers/setup_service_locator_getit.dart';
+import 'package:page_ui/features/chat/domain/entities/chat_entity.dart';
 import 'package:page_ui/features/chat/domain/usecases/upload_attachment_usecase.dart';
 import 'package:page_ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
 import 'package:page_ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
@@ -36,6 +38,20 @@ class _HomeViewBodyState extends State<HomeViewBody> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  // ── URL sync ────────────────────────────────────────────────────────
+
+  /// Updates the browser URL to `/app/chat/<name>` without rebuilding routes.
+  void _updateUrlForChat(ChatEntity chat) {
+    // final encoded = Uri.encodeComponent(chat.name);
+    final targetPath = '/app/chat/${chat.name}';
+
+    // Silently replace the URL in the browser bar without triggering navigation
+    SystemNavigator.routeInformationUpdated(
+      uri: Uri.parse(targetPath),
+      replace: true,
+    );
   }
 
   // ── Toggle helpers ──────────────────────────────────────────────────
@@ -162,6 +178,8 @@ class _HomeViewBodyState extends State<HomeViewBody> {
       if (context.isMobile && _pageController.hasClients) {
         _pageController.jumpToPage(0);
       }
+      // Silently update the browser URL without triggering a rebuild
+      _updateUrlForChat(state.chat);
     }
   }
 
