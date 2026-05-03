@@ -143,7 +143,7 @@ class HeroSection extends StatelessWidget {
                 runSpacing: 16,
                 children: [
                   ElevatedButton(
-                    onPressed: () => AppRoutes.pushLoginViewWithReturn(context),
+                    onPressed: () => AppRoutes.goLogin(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.green,
                       foregroundColor: AppColors.black,

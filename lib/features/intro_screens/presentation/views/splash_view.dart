@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
-  static String routeName = "SplashView";
+  static const String routeName = "SplashView";
 
   @override
   State<SplashView> createState() => _SplashViewState();
@@ -31,8 +31,8 @@ class _SplashViewState extends State<SplashView> {
     Future.delayed(const Duration(milliseconds: 4500), () {
       if (!mounted) return;
       userTokenModel.isEmpty()
-          ? AppRoutes.pushLoginViewWithReturn(context)
-          : AppRoutes.pushHomeView(context);
+          ? AppRoutes.goLogin(context)
+          : AppRoutes.goHome(context);
     });
   }
 
@@ -42,7 +42,7 @@ class _SplashViewState extends State<SplashView> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
-        AppRoutes.pushLandingView(context);
+        AppRoutes.goLanding(context);
       },
       child: Scaffold(
         body: Padding(

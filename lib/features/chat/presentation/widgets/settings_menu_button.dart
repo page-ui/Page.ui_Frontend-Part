@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_ui/config/routes/on_generate_routes.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/core/helpers/auth_state.dart';
 import 'package:page_ui/core/constants/borders.dart';
 import 'package:page_ui/core/helpers/custom_show_snack_bar.dart';
 import 'package:page_ui/core/helpers/setup_service_locator_getit.dart';
@@ -91,7 +92,8 @@ class _SettingsMenuButtonContent extends StatelessWidget {
     return BlocListener<SettingsCubit, SettingsState>(
       listener: (context, state) {
         if (state is SettingsSuccess) {
-          AppRoutes.pushLoginView(context);
+          AuthState.setLoggedIn(false);
+          AppRoutes.goLogin(context);
         } else if (state is SettingsError) {
           showSnackBar(context: context, message: state.message);
         }

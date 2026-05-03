@@ -13,7 +13,7 @@ class ForgetPasswordWidget extends StatelessWidget {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         GestureDetector(
-          onTap: () => AppRoutes.pushForgetPasswordView(context),
+          onTap: () => AppRoutes.pushForgetPassword(context),
           child: Text(
             "[ Forget Password ]",
             style: AppTextStyles.bodySmall!.copyWith(

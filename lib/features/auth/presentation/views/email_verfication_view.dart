@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class EmailVerficationView extends StatefulWidget {
   const EmailVerficationView({super.key, required this.param});
   final LoginParams param;
-  static String routeName = "EmailVerficationView";
+  static const String routeName = "EmailVerficationView";
 
   @override
   State<EmailVerficationView> createState() => _EmailVerficationViewState();

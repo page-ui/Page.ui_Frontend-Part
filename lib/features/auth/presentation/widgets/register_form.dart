@@ -59,7 +59,7 @@ class _RegisterFormState extends State<RegisterForm> {
         if (state is RegisterSuccess) {
           showSnackBar(context: context, message: "Check Your Email.");
           widget.onChangeLoadingValue!(false);
-          AppRoutes.pushEmailVerficationView(
+          AppRoutes.pushEmailVerification(
             context,
             param: LoginParams(
               email: _emailController.text,

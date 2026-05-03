@@ -7,7 +7,7 @@ import 'package:page_ui/features/chat/presentation/widgets/home_view_body.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
-  static String routeName = "HomeView";
+  static const String routeName = "HomeView";
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class HomeView extends StatelessWidget {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
-        AppRoutes.pushLandingView(context);
+        AppRoutes.goLanding(context);
       },
       child: BlocProvider(
         create: (_) => getit.get<ChatHomeCubit>(),

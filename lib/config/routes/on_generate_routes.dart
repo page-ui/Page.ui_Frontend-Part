@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:page_ui/core/constants/constants.dart';
-import 'package:page_ui/core/database/cache/secure_storage.dart';
+import 'package:page_ui/core/helpers/auth_state.dart';
 import 'package:page_ui/features/auth/domain/params/login_params.dart';
 import 'package:page_ui/features/auth/presentation/views/email_verfication_view.dart';
 import 'package:page_ui/features/auth/presentation/views/forget_pasword_view.dart';
@@ -11,22 +10,39 @@ import 'package:page_ui/features/auth/presentation/views/train_view.dart';
 import 'package:page_ui/features/chat/presentation/views/home_view.dart';
 import 'package:page_ui/features/intro_screens/presentation/views/developers_view.dart';
 import 'package:page_ui/features/intro_screens/presentation/views/landing_view.dart';
+import 'package:page_ui/features/intro_screens/presentation/views/not_found_view.dart';
 import 'package:page_ui/features/intro_screens/presentation/views/splash_view.dart';
 
 sealed class AppRoutes {
   const AppRoutes();
 
+  // ──────────────────────────────────────────────────────────────────────
+  // Path constants
+  // ──────────────────────────────────────────────────────────────────────
   static const String landingPath = '/';
   static const String splashPath = '/splash';
   static const String developersPath = '/developers';
-  static const String loginPath = '/login';
-  static const String registerPath = '/register';
-  static const String forgetPasswordPath = '/forget-password';
-  static const String emailVerificationPath = '/email-verification';
-  static const String homePath = '/home';
-  static const String trainPath = '/train';
+  static const String loginPath = '/auth/login';
+  static const String registerPath = '/auth/register';
+  static const String forgetPasswordPath = '/auth/forgot-password';
+  static const String emailVerificationPath = '/auth/verify-email';
+  static const String homePath = '/app';
+  static const String trainPath = '/onboarding';
 
-  static CustomTransitionPage<T> _transitionPage<T>({
+  static const _protectedPaths = {homePath, trainPath};
+
+  static const _authPaths = {
+    loginPath,
+    registerPath,
+    forgetPasswordPath,
+    emailVerificationPath,
+  };
+
+  // ──────────────────────────────────────────────────────────────────────
+  // Page transitions
+  // ──────────────────────────────────────────────────────────────────────
+
+  static CustomTransitionPage<T> _slideTransition<T>({
     required LocalKey key,
     required Widget child,
     int durationMs = 500,
@@ -52,67 +68,98 @@ sealed class AppRoutes {
     );
   }
 
+  static CustomTransitionPage<T> _fadeTransition<T>({
+    required LocalKey key,
+    required Widget child,
+    int durationMs = 300,
+  }) {
+    return CustomTransitionPage<T>(
+      key: key,
+      transitionDuration: Duration(milliseconds: durationMs),
+      child: child,
+      transitionsBuilder: (_, animation, __, child) {
+        return FadeTransition(
+          opacity:
+              CurvedAnimation(parent: animation, curve: Curves.easeInOut)
+                  .drive(Tween<double>(begin: 0, end: 1)),
+          child: child,
+        );
+      },
+    );
+  }
+
+  static CustomTransitionPage<T> _instantTransition<T>({
+    required LocalKey key,
+    required Widget child,
+  }) {
+    return CustomTransitionPage<T>(
+      key: key,
+      transitionDuration: Duration.zero,
+      child: child,
+      transitionsBuilder: (_, __, ___, child) => child,
+    );
+  }
+
+  // ──────────────────────────────────────────────────────────────────────
+  // Router
+  // ──────────────────────────────────────────────────────────────────────
   static final GoRouter router = GoRouter(
     initialLocation: landingPath,
-     redirect: (context, state)async {
-    bool isLoggedIn = await SecureStorage.checkData(key: tokensKey);
 
-    final location = state.matchedLocation;
+    redirect: (context, state) {
+      final location = state.matchedLocation;
 
-    final isAuthPage = location == loginPath ||
-        location == registerPath ||
-        location == forgetPasswordPath;
+      if (!AuthState.isLoggedIn && _protectedPaths.contains(location)) {
+        return loginPath;
+      }
 
-    final isSplash = location == splashPath;
-    final isHome = location == homePath;
+      if (AuthState.isLoggedIn &&
+          (_authPaths.contains(location) || location == splashPath)) {
+        return homePath;
+      }
 
-    // 🔐 If NOT logged in → block home
-    if (!isLoggedIn && isHome) {
-      return loginPath;
-    }
+      return null;
+    },
 
-    // 🔐 If logged in → block auth pages & splash
-    if (isLoggedIn && (isAuthPage || isSplash)) {
-      return homePath;
-    }
+    errorBuilder: (context, state) => const NotFoundView(),
 
-    return null;
-  },
     routes: <RouteBase>[
       GoRoute(
         path: landingPath,
         name: LandingView.routeName,
         pageBuilder: (_, state) =>
-            _transitionPage(key: state.pageKey, child: const LandingView()),
-      ),
-      GoRoute(
-        path: splashPath,
-        name: SplashView.routeName,
-        pageBuilder: (_, state) =>
-            _transitionPage(key: state.pageKey, child: const SplashView()),
+            _fadeTransition(key: state.pageKey, child: const LandingView()),
       ),
       GoRoute(
         path: developersPath,
         name: DevelopersView.routeName,
         pageBuilder: (_, state) =>
-            _transitionPage(key: state.pageKey, child: const DevelopersView()),
+            _fadeTransition(key: state.pageKey, child: const DevelopersView()),
       ),
+
+      GoRoute(
+        path: splashPath,
+        name: SplashView.routeName,
+        pageBuilder: (_, state) =>
+            _slideTransition(key: state.pageKey, child: const SplashView()),
+      ),
+
       GoRoute(
         path: loginPath,
         name: LoginView.routeName,
         pageBuilder: (_, state) =>
-            _transitionPage(key: state.pageKey, child: const LoginView()),
+            _slideTransition(key: state.pageKey, child: const LoginView()),
       ),
       GoRoute(
         path: registerPath,
         name: RegisterView.routeName,
         pageBuilder: (_, state) =>
-            _transitionPage(key: state.pageKey, child: const RegisterView()),
+            _slideTransition(key: state.pageKey, child: const RegisterView()),
       ),
       GoRoute(
         path: forgetPasswordPath,
         name: ForgetPaswordView.routeName,
-        pageBuilder: (_, state) => _transitionPage(
+        pageBuilder: (_, state) => _slideTransition(
           key: state.pageKey,
           child: const ForgetPaswordView(),
         ),
@@ -120,22 +167,27 @@ sealed class AppRoutes {
       GoRoute(
         path: emailVerificationPath,
         name: EmailVerficationView.routeName,
-        pageBuilder: (_, state) => _transitionPage(
+        redirect: (context, state) {
+          if (state.extra == null) return loginPath;
+          return null;
+        },
+        pageBuilder: (_, state) => _slideTransition(
           key: state.pageKey,
-          child: EmailVerficationView(param: state.extra as LoginParams),
+          child: EmailVerficationView(param: state.extra! as LoginParams),
         ),
       ),
+
       GoRoute(
         path: homePath,
         name: HomeView.routeName,
         pageBuilder: (_, state) =>
-            _transitionPage(key: state.pageKey, child: const HomeView()),
+            _instantTransition(key: state.pageKey, child: const HomeView()),
       ),
       GoRoute(
         path: trainPath,
         name: TrainView.routeName,
         pageBuilder: (_, state) =>
-            _transitionPage(key: state.pageKey, child: const TrainView()),
+            _instantTransition(key: state.pageKey, child: const TrainView()),
       ),
     ],
   );
@@ -144,35 +196,32 @@ sealed class AppRoutes {
     context.pop<T>(result);
   }
 
-  static Future<void> pushSplashView(BuildContext context) async =>
-      context.goNamed(SplashView.routeName);
-
-  static Future<void> pushRegisterView(BuildContext context) async =>
-      context.goNamed(RegisterView.routeName);
-
-  static Future<void> pushLoginView(BuildContext context) async =>
-      context.goNamed(LoginView.routeName);
-
-  static Future<void> pushLoginViewWithReturn(BuildContext context) async =>
-      context.goNamed(LoginView.routeName);
-
-  static Future<void> pushHomeView(BuildContext context) async =>
-      context.goNamed(HomeView.routeName);
-
-  static Future<void> pushTrainView(BuildContext context) async =>
-      context.goNamed(TrainView.routeName);
-
-  static Future<void> pushLandingView(BuildContext context) async =>
+  static void goLanding(BuildContext context) =>
       context.goNamed(LandingView.routeName);
 
-  static Future<void> pushDevelopersView(BuildContext context) async =>
-      context.goNamed(DevelopersView.routeName);
+  static void goSplash(BuildContext context) =>
+      context.goNamed(SplashView.routeName);
 
-  static Future<void> pushForgetPasswordView(BuildContext context) async =>
-      context.goNamed(ForgetPaswordView.routeName);
+  static void pushDevelopersView(BuildContext context) =>
+      context.pushNamed(DevelopersView.routeName);
 
-  static Future<void> pushEmailVerficationView(
+  static void goLogin(BuildContext context) =>
+      context.goNamed(LoginView.routeName);
+
+  static void pushRegister(BuildContext context) =>
+      context.pushNamed(RegisterView.routeName);
+
+  static void pushForgetPassword(BuildContext context) =>
+      context.pushNamed(ForgetPaswordView.routeName);
+
+  static void pushEmailVerification(
     BuildContext context, {
     required LoginParams param,
-  }) async => context.goNamed(EmailVerficationView.routeName, extra: param);
+  }) => context.pushNamed(EmailVerficationView.routeName, extra: param);
+
+  static void goHome(BuildContext context) =>
+      context.goNamed(HomeView.routeName);
+
+  static void goTrain(BuildContext context) =>
+      context.goNamed(TrainView.routeName);
 }

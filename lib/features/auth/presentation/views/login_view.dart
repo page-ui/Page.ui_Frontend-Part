@@ -6,7 +6,7 @@ import 'package:page_ui/features/auth/presentation/widgets/login_view_body.dart'
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
-  static String routeName = "LoginView";
+  static const String routeName = "LoginView";
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -20,7 +20,7 @@ class _LoginViewState extends State<LoginView> {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
-        AppRoutes.pushLandingView(context);
+        AppRoutes.goLanding(context);
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,

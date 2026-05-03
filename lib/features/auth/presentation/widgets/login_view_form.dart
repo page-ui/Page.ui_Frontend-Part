@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_ui/config/routes/on_generate_routes.dart';
 import 'package:page_ui/core/custom_widget/custom_button.dart';
+import 'package:page_ui/core/helpers/auth_state.dart';
 import 'package:page_ui/core/helpers/custom_show_snack_bar.dart';
 import 'package:page_ui/features/auth/presentation/controllers/login_cubit/login_cubit.dart';
 import 'package:page_ui/features/auth/presentation/widgets/auth_text_form_field.dart';
@@ -51,7 +52,8 @@ class _LoginViewFormState extends State<LoginViewForm> {
         if (state is LoginSuccess) {
           showSnackBar(context: context, message: "Login Success");
           widget.onChangeLoadingValue!(false);
-          AppRoutes.pushTrainView(context);
+          AuthState.setLoggedIn(true);
+          AppRoutes.goTrain(context);
         } else if (state is LoginFailure) {
           showSnackBar(context: context, message: state.message);
           widget.onChangeLoadingValue!(false);

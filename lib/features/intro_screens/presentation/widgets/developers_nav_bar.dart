@@ -37,10 +37,10 @@ class DevelopersNavBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   NameAndTheLogo(
-                    onTap: () => AppRoutes.pushLandingView(context),
+                    onTap: () => AppRoutes.goLanding(context),
                   ),
                   TextButton(
-                    onPressed: () => AppRoutes.pushLoginViewWithReturn(context),
+                    onPressed: () => AppRoutes.goLogin(context),
                     child: Text(
                       'Log in',
                       style: AppTextStyles.titleMedium?.copyWith(

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class TrainView extends StatefulWidget {
   const TrainView({super.key});
-  static String routeName = "TrainView";
+  static const String routeName = "TrainView";
 
   static const String _slUrl = '/train/index.html';
 
@@ -32,7 +32,7 @@ class _TrainViewState extends State<TrainView> {
     }
     _timer = Timer(Duration(seconds: seconds), () {
       if (!mounted) return;
-      AppRoutes.pushHomeView(context);
+      AppRoutes.goHome(context);
     });
   }
 

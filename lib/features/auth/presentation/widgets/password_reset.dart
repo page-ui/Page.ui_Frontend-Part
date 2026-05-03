@@ -44,7 +44,7 @@ class _PasswordResetState extends State<PasswordReset> {
             message: 'Password Reset Successfully.',
           );
           formKeyPasswordReset.currentState!.reset();
-          AppRoutes.pushLoginView(context);
+          AppRoutes.goLogin(context);
         } else if (state is ForgetPasswordFailure) {
           setState(() {
             isLoading = false;
