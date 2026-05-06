@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/core/constants/borders.dart';
-import 'package:pageui/features/chat/presentation/widgets/chat_panel/image_preview_chat_input_bar.dart';
-import 'package:pageui/features/chat/presentation/widgets/chat_panel/pick_image_button.dart';
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/core/constants/borders.dart';
+import 'package:page_ui/features/chat/presentation/widgets/chat_panel/image_preview_chat_input_bar.dart';
+import 'package:page_ui/features/chat/presentation/widgets/chat_panel/pick_image_button.dart';
 
 class ChatInputBar extends StatelessWidget {
   const ChatInputBar({
@@ -11,14 +11,12 @@ class ChatInputBar extends StatelessWidget {
     required this.focusNode,
     required this.onSend,
     required this.isSending,
-    required this.hasSelectedImage,
   });
 
   final TextEditingController controller;
   final FocusNode focusNode;
   final void Function() onSend;
   final bool isSending;
-  final bool hasSelectedImage;
 
   void _handleSend() {
     if (isSending) return;
@@ -30,30 +28,28 @@ class ChatInputBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.black.withValues(alpha: 0.4),
-        borderRadius: AppBorders.xxxxs,
-        border: Border.all(
-          color: AppColors.darkGrey.withValues(alpha: 0.5),
-          width: 0.5,
-        ),
+        color: AppColors.black,
+        borderRadius: AppBorders.xxxs,
+        border: Border.all(color: AppColors.darkGrey, width: 0.5),
       ),
       child: Column(
         children: [
           const ImagePreviewChatInputBar(),
           Row(
             children: [
-              PickImageButton(),
+              const PickImageButton(),
               const SizedBox(width: 6),
               Expanded(
                 child: TextField(
+                  keyboardType: TextInputType.multiline,
                   controller: controller,
                   focusNode: focusNode,
-                  enabled: !isSending,
+                  textInputAction: TextInputAction.newline,
                   style: TextStyle(
                     color: AppColors.white.withValues(alpha: 0.9),
                     fontSize: 14,
                   ),
-                  maxLines: 5,
+                  maxLines: 6,
                   minLines: 1,
                   decoration: InputDecoration(
                     hintText: 'Type your prompt...',
@@ -63,15 +59,13 @@ class ChatInputBar extends StatelessWidget {
                     ),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 8,
+                      horizontal: 4,
+                      vertical: 4,
                     ),
                     isDense: true,
                   ),
-                  onSubmitted: (_) => _handleSend(),
                 ),
               ),
-
               const SizedBox(width: 6),
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
@@ -96,8 +90,8 @@ class ChatInputBar extends StatelessWidget {
                   color: AppColors.white,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(
-                    minWidth: 36,
-                    minHeight: 36,
+                    minWidth: 30,
+                    minHeight: 30,
                   ),
                 ),
               ),

@@ -1,9 +1,9 @@
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/config/themes/app_icons.dart';
+import 'package:page_ui/config/themes/app_text_style.dart';
+import 'package:page_ui/core/constants/borders.dart';
+import 'package:page_ui/features/auth/presentation/widgets/password_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_icons.dart';
-import 'package:pageui/config/themes/app_text_style.dart';
-import 'package:pageui/core/constants/borders.dart';
-import 'package:pageui/features/auth/presentation/widgets/password_validator.dart';
 
 class PasswordTextFormField extends StatefulWidget {
   const PasswordTextFormField({super.key, this.controller});
@@ -23,12 +23,12 @@ class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
       controller: widget.controller,
       style: AppTextStyles.bodyMedium!.copyWith(color: AppColors.white),
       cursorColor: AppColors.primaryColor,
-      // mouseCursor: SystemMouseCursors.click,
+      mouseCursor: SystemMouseCursors.click,
       obscureText: isSecure,
       obscuringCharacter: "*",
 
       decoration: InputDecoration(
-        prefixIcon: Icon(AppIcons.arrowForward, size: 10),
+        prefixIcon: const Icon(AppIcons.arrowForward, size: 10),
         suffixIcon: IconButton(
           icon: Icon(
             isSecure ? AppIcons.visibilityOff : AppIcons.visibilityOn,
@@ -41,19 +41,19 @@ class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
             });
           },
         ),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderRadius: AppBorders.xxxxs,
           borderSide: BorderSide(color: AppColors.darkSurface),
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderRadius: AppBorders.xxxxs,
           borderSide: BorderSide(color: AppColors.cyan),
         ),
-        errorBorder: OutlineInputBorder(
+        errorBorder: const OutlineInputBorder(
           borderRadius: AppBorders.xxxxs,
           borderSide: BorderSide(color: AppColors.red),
         ),
-        border: OutlineInputBorder(
+        border: const OutlineInputBorder(
           borderRadius: AppBorders.xxxxs,
           borderSide: BorderSide(color: AppColors.darkGrey),
         ),

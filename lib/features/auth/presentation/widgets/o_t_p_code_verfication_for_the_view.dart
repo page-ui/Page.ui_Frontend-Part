@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pageui/config/routes/on_generate_routes.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_text_style.dart';
-import 'package:pageui/core/custom_widget/custom_button.dart';
-import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
-import 'package:pageui/features/auth/domain/params/login_params.dart';
-import 'package:pageui/features/auth/domain/params/verify_reset_code_params.dart';
-import 'package:pageui/features/auth/presentation/controllers/email_verfication_cubit/email_verfication_cubit.dart';
-import 'package:pageui/features/auth/presentation/widgets/resend_the_verfication_code_button.dart';
-import 'package:pageui/features/auth/presentation/widgets/verify_o_t_p_widget.dart';
+import 'package:page_ui/config/routes/on_generate_routes.dart';
+import 'package:page_ui/core/helpers/auth_state.dart';
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/config/themes/app_text_style.dart';
+import 'package:page_ui/core/custom_widget/custom_button.dart';
+import 'package:page_ui/core/helpers/custom_show_snack_bar.dart';
+import 'package:page_ui/features/auth/domain/params/login_params.dart';
+import 'package:page_ui/features/auth/domain/params/verify_reset_code_params.dart';
+import 'package:page_ui/features/auth/presentation/controllers/email_verfication_cubit/email_verfication_cubit.dart';
+import 'package:page_ui/features/auth/presentation/widgets/resend_the_verfication_code_button.dart';
+import 'package:page_ui/features/auth/presentation/widgets/verify_o_t_p_widget.dart';
 
 class EmailVerficationForm extends StatefulWidget {
   const EmailVerficationForm({
@@ -60,14 +61,15 @@ class _EmailVerficationFormState extends State<EmailVerficationForm> {
             isLoading = false;
             widget.onChangeLoadingValue!(isLoading);
           });
-          showWebSnackBar(context: context, message: 'OTP Verified.');
-          AppRoutes.pushTrainView(context);
+          showSnackBar(context: context, message: 'OTP Verified.');
+          AuthState.setLoggedIn(true);
+          AppRoutes.goTrain(context);
         } else if (state is EmailVerificationFailure) {
           setState(() {
             isLoading = false;
             widget.onChangeLoadingValue!(isLoading);
           });
-          showWebSnackBar(
+          showSnackBar(
             context: context,
             message: state.message,
             backgroundColor: AppColors.red,
@@ -79,7 +81,7 @@ class _EmailVerficationFormState extends State<EmailVerficationForm> {
             widget.onChangeLoadingValue!(isLoading);
           });
         } else if (state is ResendTheCodeSuccess) {
-          showWebSnackBar(context: context, message: 'Check Your Email.');
+          showSnackBar(context: context, message: 'Check Your Email.');
           setState(() {
             isLoading = false;
             widget.onChangeLoadingValue!(isLoading);
@@ -109,13 +111,13 @@ class _EmailVerficationFormState extends State<EmailVerficationForm> {
               },
             ),
 
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             CustomButton(
               title: "VERIFY",
               onPressed: () {
                 for (var controller in controllers) {
                   if (controller.text.isEmpty) {
-                    showWebSnackBar(
+                    showSnackBar(
                       context: context,
                       message: 'OTP not completed.',
                       backgroundColor: AppColors.red,
@@ -140,7 +142,7 @@ class _EmailVerficationFormState extends State<EmailVerficationForm> {
                 }
               },
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Align(
               alignment: AlignmentGeometry.bottomLeft,
               child: Text(

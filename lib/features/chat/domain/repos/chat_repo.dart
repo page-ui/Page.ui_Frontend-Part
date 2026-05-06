@@ -1,9 +1,9 @@
+import 'package:page_ui/core/errors/failure.dart';
+import 'package:page_ui/features/chat/domain/entities/chat_entity.dart';
+import 'package:page_ui/features/chat/domain/entities/message_entity.dart';
+import 'package:page_ui/features/chat/domain/params/create_chat_params.dart';
+import 'package:page_ui/features/chat/domain/params/send_message_params.dart';
 import 'package:dartz/dartz.dart';
-import 'package:pageui/core/errors/failure.dart';
-import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
-import 'package:pageui/features/chat/domain/entities/message_entity.dart';
-import 'package:pageui/features/chat/domain/params/create_chat_params.dart';
-import 'package:pageui/features/chat/domain/params/send_message_params.dart';
 
 abstract class ChatRepo {
   Future<Either<Failure, ChatEntity>> createChat({
@@ -23,13 +23,24 @@ abstract class ChatRepo {
     required int first,
   });
 
-  Future<Either<Failure, List<MessageEntity>>> getMessages({
-    required String chatId,
-    required int first,
-    String? after,
-  });
+  Future<
+    Either<
+      Failure,
+      ({List<MessageEntity> messages, bool hasNextPage, String? endCursor})
+    >
+  >
+  getMessages({required String chatId, required int first, String? after});
+
+  Stream<MessageEntity> subscribeToMessages({required String chatId});
 
   Future<Either<Failure, void>> sendMessage({
     required SendMessageParams params,
+  });
+
+  Future<Either<Failure, void>> deleteChat({required String chatId});
+
+  Future<Either<Failure, ChatEntity>> renameChat({
+    required String chatId,
+    required String name,
   });
 }

@@ -1,6 +1,6 @@
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/config/themes/app_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_icons.dart';
 
 class Dots extends StatelessWidget {
   Dots({super.key});
@@ -12,9 +12,9 @@ class Dots extends StatelessWidget {
     return Row(
       children: [
         Icon(icon, color: color, size: size),
-        SizedBox(width: 4),
+        const SizedBox(width: 4),
         Icon(icon, color: color, size: size),
-        SizedBox(width: 4),
+        const SizedBox(width: 4),
         Icon(icon, color: color, size: size),
       ],
     );

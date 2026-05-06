@@ -1,24 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/core/helpers/setup_service_locator_getit.dart';
-import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
-import 'package:pageui/features/chat/presentation/widgets/home_view_body.dart';
+import 'package:page_ui/config/routes/on_generate_routes.dart';
+import 'package:page_ui/core/helpers/setup_service_locator_getit.dart';
+import 'package:page_ui/features/chat/domain/entities/chat_entity.dart';
+import 'package:page_ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
+import 'package:page_ui/features/chat/presentation/widgets/home_view_body.dart';
 
 class HomeView extends StatelessWidget {
-  const HomeView({super.key});
-  static String routeName = "HomeView";
+  const HomeView({super.key, this.initialChat});
+
+  static const String routeName = "HomeView";
+
+  /// When navigating to `/app/chat/:chatName`, this carries the [ChatEntity].
+  final ChatEntity? initialChat;
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      
-        create: (_) => getit.get<ChatHomeCubit>(),
-      
-      child: Scaffold(
-        backgroundColor: AppColors.black.withValues(alpha: 0.8),
-        extendBody: true,
-        body: const HomeViewBody(),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        AppRoutes.goLanding(context);
+      },
+      child: BlocProvider(
+        create: (_) {
+          final cubit = getit.get<ChatHomeCubit>();
+          if (initialChat != null) {
+            cubit.selectChat(chat: initialChat!);
+          }
+          return cubit;
+        },
+        child: const Scaffold(
+          backgroundColor: Colors.transparent,
+          extendBody: true,
+          body: HomeViewBody(),
+        ),
       ),
     );
   }

@@ -1,16 +1,19 @@
 import 'dart:async';
 
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/core/enum/screen_type.dart';
+import 'package:page_ui/core/helpers/panel_scrollbar.dart';
+import 'package:page_ui/features/chat/domain/entities/chat_entity.dart';
+import 'package:page_ui/features/chat/presentation/controllers/chat_history_cubit/chat_history_cubit.dart';
+import 'package:page_ui/features/chat/presentation/controllers/chat_history_cubit/chat_history_state.dart';
+import 'package:page_ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
+import 'package:page_ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
+import 'package:page_ui/features/chat/presentation/widgets/history_panel/chat_room.dart';
+import 'package:page_ui/features/chat/presentation/widgets/history_panel/chat_rooms_loading_indicators.dart';
+import 'package:page_ui/features/chat/presentation/widgets/history_panel/on_delete_chat_room_function.dart';
+import 'package:page_ui/features/chat/presentation/widgets/history_panel/on_rename_chat_room_function.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/core/enum/screen_type.dart';
-import 'package:pageui/features/chat/domain/entities/chat_entity.dart';
-import 'package:pageui/features/chat/presentation/controllers/chat_history_cubit/chat_history_cubit.dart';
-import 'package:pageui/features/chat/presentation/controllers/chat_history_cubit/chat_history_state.dart';
-import 'package:pageui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
-import 'package:pageui/features/chat/presentation/widgets/history_panel/chat_room.dart';
-import 'package:pageui/features/chat/presentation/widgets/history_panel/chat_rooms_loading_indecators.dart';
-import 'package:pageui/core/helpers/panel_scrollbar.dart';
 
 class ListOfChatRooms extends StatefulWidget {
   const ListOfChatRooms({
@@ -62,7 +65,7 @@ class _ListOfChatRoomsState extends State<ListOfChatRooms> {
       child: BlocBuilder<ChatHistoryCubit, ChatHistoryState>(
         builder: (context, state) {
           if (state is ChatHistoryLoading) {
-            return ChatRoomsLoadingIndecators();
+            return const ChatRoomsLoadingIndicators();
           }
 
           if (state is ChatHistoryFailure) {
@@ -93,17 +96,30 @@ class _ListOfChatRoomsState extends State<ListOfChatRooms> {
 
             return PanelScrollbar(
               controller: _scrollController,
-              child: ListView.builder(
-                controller: _scrollController,
-                padding: const EdgeInsets.only(right: 16),
-                itemCount: state.chats.length + (state.isLoadingMore ? 1 : 0),
-                itemBuilder: (context, index) {
-                  if (index == state.chats.length) {
-                    return ChatRoomsLoadingIndecators();
-                  }
-                  return ChatRoom(
-                    chat: state.chats[index],
-                    onTap: () => _onChatSelected(state.chats[index]),
+              child: BlocBuilder<ChatHomeCubit, ChatHomeState>(
+                builder: (context, homeState) {
+                  final selectedChatId = homeState.selectedChat?.id;
+
+                  return ListView.builder(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.only(right: 16),
+                    itemCount:
+                        state.chats.length + (state.isLoadingMore ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index == state.chats.length) {
+                        return const ChatRoomsLoadingIndicators();
+                      }
+                      final chat = state.chats[index];
+                      return ChatRoom(
+                        chat: chat,
+                        isSelected: chat.id == selectedChatId,
+                        onTap: () => _onChatSelected(chat),
+                        onRename: (menuButtonContext) =>
+                            onRenameChatRoom(menuButtonContext, chat),
+                        onDelete: (menuButtonContext) =>
+                            onDeleteChatRoom(menuButtonContext, chat),
+                      );
+                    },
                   );
                 },
               ),

@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_icons.dart';
-import 'package:pageui/config/themes/app_text_style.dart';
-import 'package:pageui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
-import 'package:pageui/features/chat/presentation/widgets/history_panel/history_panel_body.dart';
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/config/themes/app_text_style.dart';
+import 'package:page_ui/features/chat/presentation/widgets/custom_button_icon_for_panels.dart';
+import 'package:page_ui/features/chat/presentation/widgets/history_panel/history_panel_body.dart';
 
 class HistoryPanelHeader extends StatelessWidget {
-  const HistoryPanelHeader({
-    super.key,
-    required this.widget,
-  });
+  const HistoryPanelHeader({super.key, required this.widget});
 
   final HistoryPanelBody widget;
 
@@ -21,8 +17,6 @@ class HistoryPanelHeader extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            Icon(AppIcons.arrowForward, size: 12, color: AppColors.white),
-            const SizedBox(width: 8),
             Text(
               "History Interface",
               style: AppTextStyles.bodyLarge!.copyWith(
@@ -31,7 +25,6 @@ class HistoryPanelHeader extends StatelessWidget {
               ),
             ),
             CustomButtonIconForPanels(
-              isLeftPanel: false,
               onPressed: widget.onPressed,
             ),
           ],

@@ -1,21 +1,22 @@
 import 'dart:typed_data';
 
+import 'package:page_ui/core/errors/app_operation.dart';
+import 'package:page_ui/core/errors/failure.dart';
+import 'package:page_ui/core/helpers/app_logger.dart';
+import 'package:page_ui/features/chat/domain/params/send_message_params.dart';
+import 'package:page_ui/features/chat/domain/usecases/send_message_usecase.dart';
+import 'package:page_ui/features/chat/domain/usecases/upload_attachment_usecase.dart';
+import 'package:page_ui/features/chat/presentation/controllers/send_message_cubit/send_message_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pageui/features/chat/data/data_source/upload_service.dart';
-import 'package:pageui/features/chat/domain/params/send_message_params.dart';
-import 'package:pageui/features/chat/domain/repos/chat_repo.dart';
-import 'package:pageui/features/chat/presentation/controllers/send_message_cubit/send_message_state.dart';
 
 class SendMessageCubit extends Cubit<SendMessageState> {
-  final ChatRepo _chatRepo;
-  final UploadService _uploadService;
+  final SendMessageUseCase _sendMessage;
   Uint8List? _imageBytes;
   String? _imageFileName;
   String? _imageContentType;
 
-  SendMessageCubit({required ChatRepo chatRepo, UploadService? uploadService})
-    : _chatRepo = chatRepo,
-      _uploadService = uploadService ?? UploadService(),
+  SendMessageCubit({required SendMessageUseCase sendMessage})
+    : _sendMessage = sendMessage,
       super(const SendMessageInitial());
 
   void setImageData({
@@ -40,31 +41,37 @@ class SendMessageCubit extends Cubit<SendMessageState> {
     emit(const SendMessageLoading());
 
     try {
-      SendMessageParams finalParams = params;
-
+      UploadAttachmentInput? attachment;
       if (_imageBytes != null && _imageFileName != null) {
-        final downloadUrl = await _uploadService.upload(
-          fileBytes: _imageBytes!,
+        attachment = UploadAttachmentInput(
+          bytes: _imageBytes!,
           fileName: _imageFileName!,
           contentType: _imageContentType ?? 'image/png',
         );
-
-        finalParams = params.copyWith(attachmentUrl: downloadUrl);
-        clearImageData();
       }
 
-      final result = await _chatRepo.sendMessage(params: finalParams);
+      final result = await _sendMessage(params: params, attachment: attachment);
+      if (isClosed) return;
+
       result.fold(
         (failure) => emit(SendMessageError(message: failure.message)),
-        (_) => emit(const SendMessageSuccess()),
+        (_) {
+          if (attachment != null) clearImageData();
+          emit(const SendMessageSuccess());
+        },
       );
-    } catch (e) {
-      emit(SendMessageError(message: e.toString()));
+    } catch (e, stackTrace) {
+      appLogger.e(
+        'SendMessageCubit.sendMessage unexpected',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      if (isClosed) return;
+      emit(
+        SendMessageError(
+          message: ServerFailure.forOperation(AppOperation.sendMessage).message,
+        ),
+      );
     }
-  }
-
-  void reset() {
-    clearImageData();
-    emit(const SendMessageInitial());
   }
 }

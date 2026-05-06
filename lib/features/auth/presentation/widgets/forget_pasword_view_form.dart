@@ -1,7 +1,7 @@
+import 'package:page_ui/features/auth/presentation/widgets/OTP_code_verfication.dart';
+import 'package:page_ui/features/auth/presentation/widgets/forget_password_request.dart';
+import 'package:page_ui/features/auth/presentation/widgets/password_reset.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/features/auth/presentation/widgets/forget_password_request.dart';
-import 'package:pageui/features/auth/presentation/widgets/password_reset.dart';
-import 'package:pageui/features/auth/presentation/widgets/OTP_code_verfication.dart';
 
 class ForgetPaswordViewForm extends StatefulWidget {
   const ForgetPaswordViewForm({super.key});
@@ -40,30 +40,36 @@ class _ForgetPaswordViewFormState extends State<ForgetPaswordViewForm> {
             ),
           ),
         SizedBox(
-          height: 340,
+          height: 450,
           child: PageView(
             controller: _controller,
             physics: const NeverScrollableScrollPhysics(),
             children: [
-              ForgetPasswordRequest(
-                nextStep: nextStep,
-                onEmailChanged: (String e) {
-                  setState(() {
-                    email = e;
-                  });
-                },
+              SingleChildScrollView(
+                child: ForgetPasswordRequest(
+                  nextStep: nextStep,
+                  onEmailChanged: (String e) {
+                    setState(() {
+                      email = e;
+                    });
+                  },
+                ),
               ),
-              OTPCodeVerfication(
-                controllers: controllers,
-                nextStep: nextStep,
-                email: email ?? "",
-                onGetToken: (String value) {
-                  setState(() {
-                    token = value;
-                  });
-                },
+              SingleChildScrollView(
+                child: OTPCodeVerfication(
+                  controllers: controllers,
+                  nextStep: nextStep,
+                  email: email ?? "",
+                  onGetToken: (String value) {
+                    setState(() {
+                      token = value;
+                    });
+                  },
+                ),
               ),
-              PasswordReset(email: email ?? "", token: token ?? ""),
+              SingleChildScrollView(
+                child: PasswordReset(email: email ?? "", token: token ?? ""),
+              ),
             ],
           ),
         ),

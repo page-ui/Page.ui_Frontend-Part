@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/core/constants/borders.dart';
-import 'package:pageui/core/custom_widget/custom_divider.dart';
-import 'package:pageui/core/custom_widget/dots.dart';
-import 'package:pageui/core/custom_widget/logo_widget.dart';
-import 'package:pageui/core/custom_widget/scramb_animated_title_text.dart';
-import 'package:pageui/core/enum/screen_type.dart';
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/core/constants/borders.dart';
+import 'package:page_ui/core/custom_widget/custom_divider.dart';
+import 'package:page_ui/core/custom_widget/dots.dart';
+import 'package:page_ui/core/custom_widget/logo_widget.dart';
+import 'package:page_ui/core/custom_widget/scramb_animated_title_text.dart';
+import 'package:page_ui/core/enum/screen_type.dart';
 
 class CustomAuthScreenTheme extends StatelessWidget {
   const CustomAuthScreenTheme({
@@ -22,7 +22,6 @@ class CustomAuthScreenTheme extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         double maxWidth;
-        double maxHeight = 2000;
         bool isMobile = false;
         if (context.isDesktop) {
           maxWidth = 500;
@@ -30,7 +29,6 @@ class CustomAuthScreenTheme extends StatelessWidget {
           maxWidth = 500;
         } else if (context.isMobile) {
           maxWidth = double.infinity;
-          maxHeight = MediaQuery.sizeOf(context).height;
           isMobile = true;
         } else {
           maxWidth = constraints.maxWidth * 0.62;
@@ -48,7 +46,7 @@ class CustomAuthScreenTheme extends StatelessWidget {
                 ConstrainedBox(
                   constraints: BoxConstraints(
                     maxWidth: maxWidth,
-                    maxHeight: maxHeight,
+                    minHeight: isMobile ? MediaQuery.sizeOf(context).height : 0,
                   ),
                   child: Container(
                     decoration: BoxDecoration(
@@ -68,7 +66,9 @@ class CustomAuthScreenTheme extends StatelessWidget {
                         width: 2,
                         strokeAlign: BorderSide.strokeAlignOutside,
                       ),
-                      color: AppColors.mainBackgroundColor,
+                      color: isMobile
+                          ? AppColors.transparent
+                          : AppColors.mainBackgroundColor,
                     ),
                     child: Padding(
                       padding: EdgeInsets.symmetric(
@@ -76,20 +76,18 @@ class CustomAuthScreenTheme extends StatelessWidget {
                         horizontal: 24,
                       ),
                       child: Column(
-                        mainAxisSize: isMobile
-                            ? MainAxisSize.max
-                            : MainAxisSize.min,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Visibility(visible: !isMobile, child: Dots()),
                           Visibility(
                             visible: isMobile,
                             child: const LogoWidget(),
                           ),
-                          CustomDivider(),
+                          const CustomDivider(),
                           const SizedBox(height: 8),
                           ScrambAnimatedTitleText(viewTitle: viewTitle),
                           const SizedBox(height: 8),
-                          CustomDivider(),
+                          const CustomDivider(),
                           const SizedBox(height: 16),
                           child,
                         ],

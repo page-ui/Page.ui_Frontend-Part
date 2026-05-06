@@ -1,6 +1,6 @@
+import 'package:page_ui/core/helpers/custom_cli_loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:pageui/core/helpers/custom_cli_loading_indicator.dart';
 
 class CustomModalProgressHud extends StatelessWidget {
   const CustomModalProgressHud({
@@ -12,10 +12,10 @@ class CustomModalProgressHud extends StatelessWidget {
   final bool isLoading;
   @override
   Widget build(BuildContext context) {
-    return  ModalProgressHUD(
+    return ModalProgressHUD(
       blur: 3,
       inAsyncCall: isLoading,
-      progressIndicator: CustomCliLoadingIndicator(),
+      progressIndicator: const CustomCliLoadingIndicator(),
       child: child,
     );
   }

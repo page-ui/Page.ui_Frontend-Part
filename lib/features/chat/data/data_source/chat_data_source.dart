@@ -1,30 +1,13 @@
-import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:pageui/core/database/api/graph_ql_config.dart';
-import 'package:pageui/core/database/api/queries.dart';
-import 'package:pageui/features/chat/data/models/chat_model.dart';
-import 'package:pageui/features/chat/data/models/message_model.dart';
-import 'package:pageui/features/chat/domain/params/create_chat_params.dart';
-import 'package:pageui/features/chat/domain/params/send_message_params.dart';
-
-abstract class ChatDataSource {
-  Future<ChatModel> createChat({required CreateChatParams params});
-
-  Future<({List<ChatModel> chats, bool hasNextPage, String? endCursor})>
-  getChats({required int first, String? after});
-
-  Future<List<ChatModel>> searchChats({
-    required String name,
-    required int first,
-  });
-
-  Future<List<MessageModel>> getMessages({
-    required String chatId,
-    required int first,
-    String? after,
-  });
-
-  Future<void> sendMessage({required SendMessageParams params});
-}
+import 'package:graphql_flutter/graphql_flutter.dart' hide ServerException;
+import 'package:page_ui/core/database/api/graph_ql_config.dart';
+import 'package:page_ui/core/database/api/queries.dart';
+import 'package:page_ui/core/errors/app_operation.dart';
+import 'package:page_ui/core/errors/exceptions.dart';
+import 'package:page_ui/features/chat/data/data_source/abstract_chat_data_source.dart';
+import 'package:page_ui/features/chat/data/models/chat_model.dart';
+import 'package:page_ui/features/chat/data/models/message_model.dart';
+import 'package:page_ui/features/chat/domain/params/create_chat_params.dart';
+import 'package:page_ui/features/chat/domain/params/send_message_params.dart';
 
 class ChatDataSourceImpl extends ChatDataSource {
   GraphQLClient get _client => GraphQLConfig.client.value;
@@ -33,21 +16,20 @@ class ChatDataSourceImpl extends ChatDataSource {
   Future<ChatModel> createChat({required CreateChatParams params}) async {
     final result = await _client.mutate(
       MutationOptions(
-        document: gql(Queries.createChatRoomMutation),
+        document: gql(Queries.createChatMutation),
         variables: {'input': params.toInputJson()},
       ),
     );
 
-    if (result.exception != null) {
-      throw Exception('Failed to create chat: ${result.exception.toString()}');
-    }
-
-    if (result.data?['createChat'] == null) {
-      throw Exception('Failed to create chat. Server returned no data.');
+    if (result.hasException || result.data?['createChat'] == null) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.createChat,
+      );
     }
 
     return ChatModel.fromJson(
-      result.data!['createChat'] as Map<String, dynamic>,
+      result.data!['createChat']["chat"] as Map<String, dynamic>,
     );
   }
 
@@ -62,20 +44,19 @@ class ChatDataSourceImpl extends ChatDataSource {
       ),
     );
 
-    if (result.hasException) {
-      throw Exception('Failed to load chats: ${result.exception.toString()}');
-    }
-
-    if (result.data?['chats'] == null) {
-      throw Exception('Failed to load chats. Server returned no data.');
+    if (result.hasException || result.data?['chats'] == null) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.loadChats,
+      );
     }
 
     final data = result.data!['chats'] as Map<String, dynamic>;
     final pageInfo = data['pageInfo'] as Map<String, dynamic>;
-    final nodes = data['nodes'] as List;
+    final nodes = data['edges'] as List;
 
     final chats = nodes
-        .map((node) => ChatModel.fromJson(node as Map<String, dynamic>))
+        .map((node) => ChatModel.fromJson(node["node"] as Map<String, dynamic>))
         .toList();
 
     return (
@@ -98,22 +79,26 @@ class ChatDataSourceImpl extends ChatDataSource {
       ),
     );
 
-    if (result.exception != null || result.data?['searchChats'] == null) {
-      throw Exception('Failed to search chats.');
+    if (result.hasException || result.data?['searchChats'] == null) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.searchChats,
+      );
     }
 
     final data = result.data!['searchChats'] as Map<String, dynamic>;
-    final nodes = data['nodes'] as List;
+    final nodes = data['edges'] as List;
 
     final chats = nodes
-        .map((n) => ChatModel.fromJson(n as Map<String, dynamic>))
+        .map((node) => ChatModel.fromJson(node["node"] as Map<String, dynamic>))
         .toList();
 
     return chats;
   }
 
   @override
-  Future<List<MessageModel>> getMessages({
+  Future<({List<MessageModel> messages, bool hasNextPage, String? endCursor})>
+  getMessages({
     required String chatId,
     required int first,
     String? after,
@@ -122,7 +107,7 @@ class ChatDataSourceImpl extends ChatDataSource {
       QueryOptions(
         document: gql(Queries.getMessagesQuery),
         variables: {
-          'chatId': chatId,
+          'chatKey': chatId,
           'first': first,
           if (after != null) 'after': after,
         },
@@ -130,27 +115,60 @@ class ChatDataSourceImpl extends ChatDataSource {
       ),
     );
 
-    if (result.hasException) {
-      throw Exception(
-        'Failed to load messages: ${result.exception.toString()}',
+    if (result.hasException || result.data?['messages'] == null) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.loadMessages,
       );
     }
 
-    if (result.data?['messages'] == null) {
-      throw Exception('Failed to load messages. Server returned no data.');
-    }
-
     final data = result.data!['messages'] as Map<String, dynamic>;
-    final nodes = (data['nodes'] as List?) ?? const [];
+    final pageInfo = data['pageInfo'] as Map<String, dynamic>;
+    final edges = (data['edges'] as List?) ?? const [];
 
-    return nodes
+    final messages = edges
         .map(
-          (node) => MessageModel.fromJson(
-            node as Map<String, dynamic>,
+          (edge) => MessageModel.fromJson(
+            (edge as Map<String, dynamic>)['node'] as Map<String, dynamic>,
             fallbackChatId: chatId,
           ),
         )
         .toList();
+
+    return (
+      messages: messages,
+      hasNextPage: pageInfo['hasNextPage'] as bool,
+      endCursor: pageInfo['endCursor'] as String?,
+    );
+  }
+
+  @override
+  Stream<MessageModel> subscribeToMessages({required String chatId}) async* {
+    final stream = _client.subscribe(
+      SubscriptionOptions(
+        document: gql(Queries.onMessageCreatedSubscription),
+        variables: {'chatKey': chatId},
+      ),
+    );
+
+    await for (final result in stream) {
+      if (result.hasException) {
+        throw ServerException.fromGraphQL(
+          result.exception,
+          operation: AppOperation.subscribeMessages,
+        );
+      }
+
+      final payload = result.data?['onMessageCreated'];
+      if (payload == null) {
+        continue;
+      }
+
+      yield MessageModel.fromJson(
+        payload as Map<String, dynamic>,
+        fallbackChatId: chatId,
+      );
+    }
   }
 
   @override
@@ -163,7 +181,53 @@ class ChatDataSourceImpl extends ChatDataSource {
     );
 
     if (result.hasException || result.data?['createMessage'] == null) {
-      throw Exception('Failed to send message.');
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.sendMessage,
+      );
     }
+  }
+
+  @override
+  Future<void> deleteChat({required String chatId}) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(Queries.deleteChatMutation),
+        variables: {'chatKey': chatId},
+      ),
+    );
+
+    if (result.hasException) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.deleteChat,
+      );
+    }
+  }
+
+  @override
+  Future<ChatModel> renameChat({
+    required String chatId,
+    required String name,
+  }) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(Queries.renameChatMutation),
+        variables: {
+          'input': {'chatKey': chatId, 'name': name},
+        },
+      ),
+    );
+
+    if (result.hasException || result.data?['renameChat'] == null) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.renameChat,
+      );
+    }
+
+    return ChatModel.fromJson(
+      result.data!['renameChat'] as Map<String, dynamic>,
+    );
   }
 }

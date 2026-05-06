@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pageui/config/routes/on_generate_routes.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/core/custom_widget/custom_button.dart';
-import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
-import 'package:pageui/features/auth/presentation/controllers/login_cubit/login_cubit.dart';
-import 'package:pageui/features/auth/presentation/widgets/auth_text_form_field.dart';
-import 'package:pageui/features/auth/presentation/widgets/custom_row_auth.dart';
-import 'package:pageui/features/auth/presentation/widgets/do_not_have_an_account_widget.dart';
-import 'package:pageui/features/auth/presentation/widgets/email_validator.dart';
-import 'package:pageui/features/auth/presentation/widgets/forget_password_widget.dart';
-import 'package:pageui/features/auth/presentation/widgets/password_text_form_field.dart';
+import 'package:page_ui/config/routes/on_generate_routes.dart';
+import 'package:page_ui/core/custom_widget/custom_button.dart';
+import 'package:page_ui/core/helpers/auth_state.dart';
+import 'package:page_ui/core/helpers/custom_show_snack_bar.dart';
+import 'package:page_ui/features/auth/presentation/controllers/login_cubit/login_cubit.dart';
+import 'package:page_ui/features/auth/presentation/widgets/auth_text_form_field.dart';
+import 'package:page_ui/features/auth/presentation/widgets/custom_row_auth.dart';
+import 'package:page_ui/features/auth/presentation/widgets/do_not_have_an_account_widget.dart';
+import 'package:page_ui/features/auth/presentation/widgets/email_validator.dart';
+import 'package:page_ui/features/auth/presentation/widgets/forget_password_widget.dart';
+import 'package:page_ui/features/auth/presentation/widgets/password_text_form_field.dart';
 
 class LoginViewForm extends StatefulWidget {
   LoginViewForm({
@@ -50,11 +50,12 @@ class _LoginViewFormState extends State<LoginViewForm> {
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state is LoginSuccess) {
-          showWebSnackBar(context: context, message: "Login Success");
+          showSnackBar(context: context, message: "Login Success");
           widget.onChangeLoadingValue!(false);
-          AppRoutes.pushTrainView(context);
+          AuthState.setLoggedIn(true);
+          AppRoutes.goTrain(context);
         } else if (state is LoginFailure) {
-          showWebSnackBar(context: context, message: state.message);
+          showSnackBar(context: context, message: state.message);
           widget.onChangeLoadingValue!(false);
         } else if (state is LoginLoading) {
           widget.onChangeLoadingValue!(true);
@@ -68,21 +69,21 @@ class _LoginViewFormState extends State<LoginViewForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            customRowAuth(hint: "Email"),
-            SizedBox(height: 4),
+            const customRowAuth(hint: "Email"),
+            const SizedBox(height: 4),
             AuthTextFormField(
               controller: _emailController,
               validator: EmailValidator,
             ),
-            SizedBox(height: 16),
-            customRowAuth(hint: "Password"),
-            SizedBox(height: 4),
+            const SizedBox(height: 16),
+            const customRowAuth(hint: "Password"),
+            const SizedBox(height: 4),
             PasswordTextFormField(controller: _passwordController),
-            SizedBox(height: 6),
-            DoNotHaveAnAccountWidget(),
-            SizedBox(height: 8),
-            ForgetPasswordWidget(),
-            SizedBox(height: 20),
+            const SizedBox(height: 12),
+            const DoNotHaveAnAccountWidget(),
+            const SizedBox(height: 12),
+            const ForgetPasswordWidget(),
+            const SizedBox(height: 20),
             Center(
               child: CustomButton(
                 title: 'Login',
@@ -99,15 +100,6 @@ class _LoginViewFormState extends State<LoginViewForm> {
                     });
                   }
                 },
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                AppRoutes.pushHomeView(context);
-              },
-              child: Text(
-                "Go to Home View",
-                style: TextStyle(color: AppColors.amber),
               ),
             ),
           ],

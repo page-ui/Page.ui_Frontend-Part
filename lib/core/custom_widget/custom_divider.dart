@@ -1,5 +1,5 @@
+import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_colors.dart';
 
 class CustomDivider extends StatelessWidget {
   const CustomDivider({super.key});

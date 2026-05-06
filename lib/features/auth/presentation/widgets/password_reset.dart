@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pageui/config/routes/on_generate_routes.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/core/custom_widget/custom_button.dart';
-import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
-import 'package:pageui/features/auth/domain/params/reset_password.dart';
-import 'package:pageui/features/auth/presentation/controllers/forget_password_cubit/forget_password_cubit.dart';
-import 'package:pageui/features/auth/presentation/widgets/custom_row_auth.dart';
-import 'package:pageui/features/auth/presentation/widgets/password_text_form_field.dart';
+import 'package:page_ui/config/routes/on_generate_routes.dart';
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/core/custom_widget/custom_button.dart';
+import 'package:page_ui/core/helpers/custom_show_snack_bar.dart';
+import 'package:page_ui/features/auth/domain/params/reset_password.dart';
+import 'package:page_ui/features/auth/presentation/controllers/forget_password_cubit/forget_password_cubit.dart';
+import 'package:page_ui/features/auth/presentation/widgets/custom_row_auth.dart';
+import 'package:page_ui/features/auth/presentation/widgets/password_text_form_field.dart';
 
 class PasswordReset extends StatefulWidget {
   const PasswordReset({super.key, required this.email, required this.token});
@@ -39,17 +39,17 @@ class _PasswordResetState extends State<PasswordReset> {
           setState(() {
             isLoading = false;
           });
-          showWebSnackBar(
+          showSnackBar(
             context: context,
             message: 'Password Reset Successfully.',
           );
           formKeyPasswordReset.currentState!.reset();
-          AppRoutes.pushLoginView(context);
+          AppRoutes.goLogin(context);
         } else if (state is ForgetPasswordFailure) {
           setState(() {
             isLoading = false;
           });
-          showWebSnackBar(
+          showSnackBar(
             context: context,
             message: state.message,
             backgroundColor: AppColors.red,
@@ -67,11 +67,11 @@ class _PasswordResetState extends State<PasswordReset> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            customRowAuth(hint: "New Password"),
+            const customRowAuth(hint: "New Password"),
             const SizedBox(height: 4),
             PasswordTextFormField(controller: _passwordController),
             const SizedBox(height: 16),
-            customRowAuth(hint: "Confirm Password"),
+            const customRowAuth(hint: "Confirm Password"),
             const SizedBox(height: 4),
             PasswordTextFormField(controller: _confirmPasswordController),
             const SizedBox(height: 20),
@@ -98,7 +98,7 @@ class _PasswordResetState extends State<PasswordReset> {
                         ),
                       );
                     } else {
-                      showWebSnackBar(
+                      showSnackBar(
                         context: context,
                         message: "Password and Confirm Password must be same.",
                         backgroundColor: AppColors.red,

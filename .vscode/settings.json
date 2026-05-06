@@ -56,17 +56,18 @@
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
-      "editor.guides.bracketPairs": true,
-    "editor.bracketPairColorization.enabled": true,
-    "editor.autoClosingBrackets": "always",
-    "editor.quickSuggestions": {
-        "other": true,
-        "comments": false,
-        "strings": false
-    },
-    "editor.quickSuggestionsDelay": 50,
-    "editor.suggest.showWords": false,
-    "debug.internalConsoleOptions": "openOnSessionStart",
-    "dart.showTodos": true,
-    "breadcrumbs.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.autoClosingBrackets": "always",
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": false
+  },
+  "editor.quickSuggestionsDelay": 50,
+  "editor.suggest.showWords": false,
+  "debug.internalConsoleOptions": "openOnSessionStart",
+  "dart.showTodos": true,
+  "breadcrumbs.enabled": true,
+  "liveServer.settings.port": 5501,
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppBreakpoints {
-  static const double mobile = 600;
-  static const double tablet = 900;
+  static const double mobile = 700;
+  static const double tablet = 1050;
   static const double desktop = 1400;
 }
 
@@ -32,7 +32,7 @@ extension ResponsiveExtension on BuildContext {
   bool get isDesktop =>
       screenType == ScreenType.desktop || screenType == ScreenType.largeDesktop;
   bool get isLargeDesktop => screenType == ScreenType.largeDesktop;
-  
+
   double responsiveValue({
     required double mobile,
     double? tablet,

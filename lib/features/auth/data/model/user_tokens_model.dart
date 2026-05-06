@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:pageui/core/constants/constants.dart';
-import 'package:pageui/core/database/cache/secure_storage.dart';
+import 'package:page_ui/core/constants/constants.dart';
+import 'package:page_ui/core/database/cache/secure_storage.dart';
 
 class UserTokensModel {
   final String? accessToken;
@@ -32,13 +32,13 @@ Future<UserTokensModel> returnTokensFromSecureDB() async {
     refreshToken: null,
   );
   if (!tokens.isEmpty) {
-    Map<String, dynamic> tokensDecoder = JsonDecoder().convert(tokens);
+    Map<String, dynamic> tokensDecoder = const JsonDecoder().convert(tokens);
     userTokensModel = UserTokensModel.fromJson(tokensDecoder);
   }
   return userTokensModel;
 }
 
 Future<void> saveTokens(UserTokensModel userTokensModel) async {
-  var tokens = JsonEncoder().convert(userTokensModel.toJson());
+  var tokens = const JsonEncoder().convert(userTokensModel.toJson());
   await SecureStorage.writeData(key: tokensKey, value: tokens);
 }

@@ -1,5 +1,5 @@
+import 'package:page_ui/config/themes/app_images.dart';
 import 'package:flutter/material.dart';
-import 'package:pageui/config/themes/app_images.dart';
 
 class LogoWidget extends StatefulWidget {
   const LogoWidget({super.key, this.size = 96});

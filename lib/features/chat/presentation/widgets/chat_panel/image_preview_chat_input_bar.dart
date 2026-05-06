@@ -1,9 +1,9 @@
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/config/themes/app_icons.dart';
+import 'package:page_ui/core/constants/borders.dart';
+import 'package:page_ui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/config/themes/app_icons.dart';
-import 'package:pageui/core/constants/borders.dart';
-import 'package:pageui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
 
 class ImagePreviewChatInputBar extends StatelessWidget {
   const ImagePreviewChatInputBar({super.key});
@@ -23,7 +23,7 @@ class ImagePreviewChatInputBar extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
           margin: const EdgeInsets.only(bottom: 6),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: AppColors.lightGray,
             borderRadius: AppBorders.xxxxs,
           ),
@@ -37,7 +37,7 @@ class ImagePreviewChatInputBar extends StatelessWidget {
                   height: 56,
                   color: AppColors.black.withValues(alpha: 0.12),
                   child: fileBytes == null
-                      ? Icon(AppIcons.image, size: 18)
+                      ? const Icon(AppIcons.image, size: 18)
                       : Image.memory(fileBytes, fit: BoxFit.cover),
                 ),
               ),
@@ -68,7 +68,7 @@ class ImagePreviewChatInputBar extends StatelessWidget {
                 onTap: () {
                   context.read<PickFileCubit>().removeImage();
                 },
-                child: Icon(AppIcons.close, size: 18),
+                child: const Icon(AppIcons.close, size: 18),
               ),
             ],
           ),

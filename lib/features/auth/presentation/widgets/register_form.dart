@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pageui/config/routes/on_generate_routes.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/core/custom_widget/custom_button.dart';
-import 'package:pageui/core/helpers/custom_show_snack_bar.dart';
-import 'package:pageui/features/auth/domain/params/login_params.dart';
-import 'package:pageui/features/auth/domain/params/register_params.dart';
-import 'package:pageui/features/auth/presentation/controllers/register_cubit/register_cubit.dart';
-import 'package:pageui/features/auth/presentation/widgets/auth_text_form_field.dart';
-import 'package:pageui/features/auth/presentation/widgets/custom_row_auth.dart';
-import 'package:pageui/features/auth/presentation/widgets/email_validator.dart';
-import 'package:pageui/features/auth/presentation/widgets/have_an_account_widget.dart';
-import 'package:pageui/features/auth/presentation/widgets/password_text_form_field.dart';
+import 'package:page_ui/config/routes/on_generate_routes.dart';
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/core/custom_widget/custom_button.dart';
+import 'package:page_ui/core/helpers/custom_show_snack_bar.dart';
+import 'package:page_ui/features/auth/domain/params/login_params.dart';
+import 'package:page_ui/features/auth/domain/params/register_params.dart';
+import 'package:page_ui/features/auth/presentation/controllers/register_cubit/register_cubit.dart';
+import 'package:page_ui/features/auth/presentation/widgets/auth_text_form_field.dart';
+import 'package:page_ui/features/auth/presentation/widgets/custom_row_auth.dart';
+import 'package:page_ui/features/auth/presentation/widgets/email_validator.dart';
+import 'package:page_ui/features/auth/presentation/widgets/have_an_account_widget.dart';
+import 'package:page_ui/features/auth/presentation/widgets/password_text_form_field.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({
@@ -57,9 +57,9 @@ class _RegisterFormState extends State<RegisterForm> {
     return BlocListener<RegisterCubit, RegisterState>(
       listener: (context, state) {
         if (state is RegisterSuccess) {
-          showWebSnackBar(context: context, message: "Check Your Email.");
+          showSnackBar(context: context, message: "Check Your Email.");
           widget.onChangeLoadingValue!(false);
-          AppRoutes.pushEmailVerficationView(
+          AppRoutes.pushEmailVerification(
             context,
             param: LoginParams(
               email: _emailController.text,
@@ -67,7 +67,7 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
           );
         } else if (state is RegisterFailure) {
-          showWebSnackBar(context: context, message: state.message);
+          showSnackBar(context: context, message: state.message);
           widget.onChangeLoadingValue!(false);
         } else if (state is RegisterLoading) {
           widget.onChangeLoadingValue!(true);
@@ -81,8 +81,8 @@ class _RegisterFormState extends State<RegisterForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            customRowAuth(hint: "Name"),
-            SizedBox(height: 4),
+            const customRowAuth(hint: "Name"),
+            const SizedBox(height: 4),
             AuthTextFormField(
               controller: _nameController,
               validator: (value) {
@@ -96,32 +96,32 @@ class _RegisterFormState extends State<RegisterForm> {
               },
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-            customRowAuth(hint: "Email"),
-            SizedBox(height: 4),
+            const customRowAuth(hint: "Email"),
+            const SizedBox(height: 4),
             AuthTextFormField(
               controller: _emailController,
               validator: EmailValidator,
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-            customRowAuth(hint: "Password"),
-            SizedBox(height: 4),
+            const customRowAuth(hint: "Password"),
+            const SizedBox(height: 4),
             PasswordTextFormField(controller: _passwordController),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-            customRowAuth(hint: "Confirm Password"),
-            SizedBox(height: 4),
+            const customRowAuth(hint: "Confirm Password"),
+            const SizedBox(height: 4),
             PasswordTextFormField(controller: _confirmpasswordController),
 
-            SizedBox(height: 6),
+            const SizedBox(height: 12),
 
-            HaveAnAccountWidget(),
+            const HaveAnAccountWidget(),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             Center(
               child: CustomButton(
@@ -139,7 +139,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       );
                       FocusScope.of(context).unfocus();
                     } else {
-                      showWebSnackBar(
+                      showSnackBar(
                         context: context,
                         message: "Password and Confirm Password must be same",
                         backgroundColor: AppColors.red,

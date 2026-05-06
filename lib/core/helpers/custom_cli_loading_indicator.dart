@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:page_ui/config/themes/app_colors.dart';
+import 'package:page_ui/core/enum/screen_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pageui/config/themes/app_colors.dart';
-import 'package:pageui/core/enum/screen_type.dart';
 
 class CustomCliLoadingIndicator extends StatefulWidget {
   const CustomCliLoadingIndicator({

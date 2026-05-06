@@ -1,4 +1,4 @@
-package com.example.pageui
+package page.ui
 
 import io.flutter.embedding.android.FlutterActivity
 

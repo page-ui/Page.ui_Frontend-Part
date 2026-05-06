@@ -1,10 +1,10 @@
+import 'package:page_ui/core/errors/failure.dart';
+import 'package:page_ui/features/auth/data/model/user_tokens_model.dart';
+import 'package:page_ui/features/auth/domain/params/login_params.dart';
+import 'package:page_ui/features/auth/domain/params/register_params.dart';
+import 'package:page_ui/features/auth/domain/params/reset_password.dart';
+import 'package:page_ui/features/auth/domain/params/verify_reset_code_params.dart';
 import 'package:dartz/dartz.dart';
-import 'package:pageui/core/errors/failure.dart';
-import 'package:pageui/features/auth/data/model/user_tokens_model.dart';
-import 'package:pageui/features/auth/domain/params/login_params.dart';
-import 'package:pageui/features/auth/domain/params/reset_password.dart';
-import 'package:pageui/features/auth/domain/params/register_params.dart';
-import 'package:pageui/features/auth/domain/params/verify_reset_code_params.dart';
 
 abstract class AuthRepo {
   Future<Either<Failure, UserTokensModel>> login({required LoginParams param});
@@ -20,4 +20,7 @@ abstract class AuthRepo {
     required VerifyResetCodeParams params,
   });
   Future<Either<Failure, void>> resendVerficationCode({required String email});
+  Future<Either<Failure, void>> signOut();
+  Future<Either<Failure, bool>> requestAccountDeletion();
+  Future<Either<Failure, bool>> deleteAccount({required String code});
 }
