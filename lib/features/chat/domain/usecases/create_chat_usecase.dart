@@ -16,7 +16,6 @@ class CreateChatUseCase {
        _uploadAttachment = uploadAttachment;
 
   Future<Either<Failure, ChatEntity>> call({
-    required String name,
     required String content,
     UploadAttachmentInput? attachment,
   }) async {
@@ -26,7 +25,6 @@ class CreateChatUseCase {
     }
     return _chatRepo.createChat(
       params: CreateChatParams(
-        name: name,
         content: content,
         attachmentUrl: attachmentUrl,
       ),

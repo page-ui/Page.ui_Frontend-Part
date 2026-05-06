@@ -72,6 +72,12 @@ class ServerFailure extends Failure {
       return _notFoundFor(operation);
     }
 
+    if (exception is BadResponseException &&
+        exception.errorModel.errorMessage.isNotEmpty &&
+        exception.errorModel.errorMessage != operation.name) {
+      return exception.errorModel.errorMessage;
+    }
+
     return _operationDefaults[operation] ?? _defaultFriendly;
   }
 

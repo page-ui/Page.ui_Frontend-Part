@@ -15,7 +15,6 @@ class ChatHomeCubit extends Cubit<ChatHomeState> {
       super(const ChatHomeInitial());
 
   Future<void> createChat({
-    required String name,
     required String content,
     UploadAttachmentInput? attachment,
   }) async {
@@ -25,7 +24,6 @@ class ChatHomeCubit extends Cubit<ChatHomeState> {
 
     try {
       final result = await _createChat(
-        name: name,
         content: content,
         attachment: attachment,
       );

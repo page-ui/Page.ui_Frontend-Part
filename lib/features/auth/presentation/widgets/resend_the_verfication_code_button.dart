@@ -5,8 +5,13 @@ import 'package:page_ui/config/themes/app_text_style.dart';
 import 'package:flutter/material.dart';
 
 class ResendTheVerficationCodeButton extends StatefulWidget {
-  const ResendTheVerficationCodeButton({super.key, required this.onPressed});
+  const ResendTheVerficationCodeButton({
+    super.key,
+    required this.onPressed,
+    this.durationInSeconds = 120,
+  });
   final void Function()? onPressed;
+  final int durationInSeconds;
   @override
   State<ResendTheVerficationCodeButton> createState() =>
       _ResendTheVerficationCodeButtonState();
@@ -23,11 +28,11 @@ class _ResendTheVerficationCodeButtonState
     _startTimer();
   }
 
-  int _secondsRemaining = 120;
+  int _secondsRemaining = 0;
 
   void _startTimer() {
     _isDisabled = true;
-    _secondsRemaining = 120;
+    _secondsRemaining = widget.durationInSeconds;
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_secondsRemaining == 0) {

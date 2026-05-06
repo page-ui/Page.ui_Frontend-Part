@@ -16,7 +16,8 @@ enum AppOperation {
   renameChat,
   upload,
   parseMessage,
-  signOut,
+    signOut,
   deleteAccount,
+  requestDeleteAccount,
   generic,
 }

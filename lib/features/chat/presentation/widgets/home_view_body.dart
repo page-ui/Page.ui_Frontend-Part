@@ -94,7 +94,6 @@ class _HomeViewBodyState extends State<HomeViewBody> {
         : null;
 
     await chatHomeCubit.createChat(
-      name: _chatNameFrom(content),
       content: content,
       attachment: attachment,
     );
@@ -103,13 +102,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
     if (pickFileCubit.isImagePicked) pickFileCubit.removeImage();
   }
 
-  String _chatNameFrom(String content) {
-    final trimmed = content.trim();
-    if (trimmed.isEmpty) return 'Chat ${DateTime.now().millisecondsSinceEpoch}';
 
-    final name = trimmed.replaceAll(RegExp(r'\s+'), ' ');
-    return name.length > 40 ? '${name.substring(0, 40)}…' : name;
-  }
 
   // ── Build ───────────────────────────────────────────────────────────
 

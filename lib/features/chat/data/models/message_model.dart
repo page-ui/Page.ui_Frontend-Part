@@ -23,7 +23,7 @@ class MessageModel extends MessageEntity {
     Map<String, dynamic> json, {
     String? fallbackChatId,
   }) {
-    final chatId = (json['chatId'] as String?) ?? fallbackChatId;
+    final chatId = (json['chatKey'] as String?) ?? (json['chatId'] as String?) ?? fallbackChatId;
     if (chatId == null || chatId.trim().isEmpty) {
       throw BadResponseException(
         ErrorModel(status: 0, errorMessage: AppOperation.parseMessage.name),
@@ -32,10 +32,10 @@ class MessageModel extends MessageEntity {
     }
 
     return MessageModel(
-      id: json['id'] as String,
+      id: (json['messageKey'] ?? json['id']) as String,
       chatId: chatId,
-      senderId: json['senderId'] as String?,
-      content: decodeMessageContent(json['content'] as String),
+      senderId: (json['senderType'] ?? json['senderId']) as String?,
+      content: decodeMessageContent((json['content'] ?? '') as String),
       type: json['type'] as String,
       status: (json['status'] as String?) ?? defaultStatus,
       createdAt: DateTime.parse(json['createdAt'] as String),

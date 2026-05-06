@@ -1,12 +1,10 @@
 import 'message_content_codec.dart';
 
 class CreateChatParams {
-  final String name;
   final String content;
   final String? attachmentUrl;
 
   const CreateChatParams({
-    required this.name,
     required this.content,
     this.attachmentUrl,
   });
@@ -18,7 +16,6 @@ class CreateChatParams {
     );
 
     return {
-      'name': name,
       'initialUserMessage': {
         'content': normalizedContent,
         if (attachmentUrl != null && attachmentUrl!.trim().isNotEmpty)

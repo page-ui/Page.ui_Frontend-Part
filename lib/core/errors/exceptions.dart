@@ -35,7 +35,8 @@ class ServerException implements Exception {
       final status = statusRaw is int
           ? statusRaw
           : int.tryParse(statusRaw?.toString() ?? '') ?? _codeToStatus(code);
-      final model = ErrorModel(status: status, errorMessage: operation.name);
+      final errorMessage = first.message.isNotEmpty ? first.message : operation.name;
+      final model = ErrorModel(status: status, errorMessage: errorMessage);
 
       switch (code) {
         case 'AUTH_NOT_AUTHENTICATED':

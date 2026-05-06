@@ -7,6 +7,8 @@ import 'package:page_ui/core/constants/borders.dart';
 import 'package:page_ui/core/helpers/custom_show_snack_bar.dart';
 import 'package:page_ui/core/helpers/setup_service_locator_getit.dart';
 import 'package:page_ui/features/auth/data/repos/auth_repo_impl.dart';
+import 'package:page_ui/features/auth/domain/repos/auth_repo.dart';
+import 'package:page_ui/features/auth/presentation/controllers/delete_account_cubit/delete_account_cubit.dart';
 import 'package:page_ui/features/auth/presentation/controllers/settings_cubit/settings_cubit.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
@@ -17,8 +19,15 @@ class SettingsMenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SettingsCubit(getit.get<AuthRepoImpl>()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => SettingsCubit(getit.get<AuthRepoImpl>()),
+        ),
+        BlocProvider(
+          create: (context) => DeleteAccountCubit(getit.get<AuthRepoImpl>()),
+        ),
+      ],
       child: const _SettingsMenuButtonContent(),
     );
   }
@@ -85,19 +94,37 @@ class _SettingsMenuButtonContent extends StatelessWidget {
       if (action == _SettingsAction.signOut) {
         await context.read<SettingsCubit>().signOut();
       } else if (action == _SettingsAction.deleteAccount) {
-        // Just UI for now
+        await context.read<DeleteAccountCubit>().requestAccountDeletion();
       }
     }
 
-    return BlocListener<SettingsCubit, SettingsState>(
-      listener: (context, state) {
-        if (state is SettingsSuccess) {
-          AuthState.setLoggedIn(false);
-          AppRoutes.goLogin(context);
-        } else if (state is SettingsError) {
-          showSnackBar(context: context, message: state.message);
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<SettingsCubit, SettingsState>(
+          listener: (context, state) {
+            if (state is SettingsSuccess) {
+              AuthState.setLoggedIn(false);
+              AppRoutes.goLogin(context);
+            } else if (state is SettingsError) {
+              showSnackBar(context: context, message: state.message);
+            }
+          },
+        ),
+        BlocListener<DeleteAccountCubit, DeleteAccountState>(
+          listener: (context, state) {
+            if (state is DeleteAccountRequestSuccess) {
+              AppRoutes.pushDeleteAccountVerification(context);
+            } else if (state is DeleteAccountRequestError) {
+              showSnackBar(
+                context: context,
+                message: state.message,
+                backgroundColor: AppColors.red,
+                textColor: AppColors.white,
+              );
+            }
+          },
+        ),
+      ],
       child: SizedBox(
         height: 24,
         width: 24,

@@ -1,3 +1,4 @@
+import 'package:graphql_flutter/graphql_flutter.dart' hide ServerException;
 import 'package:page_ui/core/database/api/graph_ql_config.dart';
 import 'package:page_ui/core/database/api/queries.dart';
 import 'package:page_ui/core/errors/app_operation.dart';
@@ -7,7 +8,6 @@ import 'package:page_ui/features/chat/data/models/chat_model.dart';
 import 'package:page_ui/features/chat/data/models/message_model.dart';
 import 'package:page_ui/features/chat/domain/params/create_chat_params.dart';
 import 'package:page_ui/features/chat/domain/params/send_message_params.dart';
-import 'package:graphql_flutter/graphql_flutter.dart' hide ServerException;
 
 class ChatDataSourceImpl extends ChatDataSource {
   GraphQLClient get _client => GraphQLConfig.client.value;
@@ -16,7 +16,7 @@ class ChatDataSourceImpl extends ChatDataSource {
   Future<ChatModel> createChat({required CreateChatParams params}) async {
     final result = await _client.mutate(
       MutationOptions(
-        document: gql(Queries.createChatRoomMutation),
+        document: gql(Queries.createChatMutation),
         variables: {'input': params.toInputJson()},
       ),
     );
@@ -29,7 +29,7 @@ class ChatDataSourceImpl extends ChatDataSource {
     }
 
     return ChatModel.fromJson(
-      result.data!['createChat'] as Map<String, dynamic>,
+      result.data!['createChat']["chat"] as Map<String, dynamic>,
     );
   }
 
@@ -53,10 +53,10 @@ class ChatDataSourceImpl extends ChatDataSource {
 
     final data = result.data!['chats'] as Map<String, dynamic>;
     final pageInfo = data['pageInfo'] as Map<String, dynamic>;
-    final nodes = data['nodes'] as List;
+    final nodes = data['edges'] as List;
 
     final chats = nodes
-        .map((node) => ChatModel.fromJson(node as Map<String, dynamic>))
+        .map((node) => ChatModel.fromJson(node["node"] as Map<String, dynamic>))
         .toList();
 
     return (
@@ -87,10 +87,10 @@ class ChatDataSourceImpl extends ChatDataSource {
     }
 
     final data = result.data!['searchChats'] as Map<String, dynamic>;
-    final nodes = data['nodes'] as List;
+    final nodes = data['edges'] as List;
 
     final chats = nodes
-        .map((n) => ChatModel.fromJson(n as Map<String, dynamic>))
+        .map((node) => ChatModel.fromJson(node["node"] as Map<String, dynamic>))
         .toList();
 
     return chats;
@@ -107,8 +107,7 @@ class ChatDataSourceImpl extends ChatDataSource {
       QueryOptions(
         document: gql(Queries.getMessagesQuery),
         variables: {
-          //chatkey
-          'chatId': chatId,
+          'chatKey': chatId,
           'first': first,
           if (after != null) 'after': after,
         },
@@ -148,7 +147,7 @@ class ChatDataSourceImpl extends ChatDataSource {
     final stream = _client.subscribe(
       SubscriptionOptions(
         document: gql(Queries.onMessageCreatedSubscription),
-        variables: {'chatId': chatId},
+        variables: {'chatKey': chatId},
       ),
     );
 
@@ -194,8 +193,7 @@ class ChatDataSourceImpl extends ChatDataSource {
     final result = await _client.mutate(
       MutationOptions(
         document: gql(Queries.deleteChatMutation),
-        // chatkey
-        variables: {'chatId': chatId},
+        variables: {'chatKey': chatId},
       ),
     );
 
@@ -216,8 +214,7 @@ class ChatDataSourceImpl extends ChatDataSource {
       MutationOptions(
         document: gql(Queries.renameChatMutation),
         variables: {
-          // chatkey
-          'input': {'chatId': chatId, 'name': name},
+          'input': {'chatKey': chatId, 'name': name},
         },
       ),
     );

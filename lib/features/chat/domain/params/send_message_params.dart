@@ -30,7 +30,7 @@ class SendMessageParams {
     );
 
     return {
-      'chatId': chatId,
+      'chatKey': chatId,
       'content': normalizedContent,
       if (attachmentUrl != null && attachmentUrl!.trim().isNotEmpty)
         'attachmentUrl': attachmentUrl,

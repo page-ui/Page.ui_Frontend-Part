@@ -18,6 +18,8 @@ abstract class AuthDataSource {
   Future<bool> emailVerfication({required VerifyResetCodeParams params});
   Future<void> resendVerficationCode({required String email});
   Future<void> signOut({required String refreshToken});
+  Future<bool> requestAccountDeletion();
+  Future<bool> deleteAccount({required String code});
 }
 
 class AuthDataSourceImpl extends AuthDataSource {
@@ -197,5 +199,44 @@ class AuthDataSourceImpl extends AuthDataSource {
         operation: AppOperation.signOut,
       );
     }
+  }
+
+  @override
+  Future<bool> requestAccountDeletion() async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(Queries.requestDeleteMutation),
+      ),
+    );
+    if (result.hasException ||
+        result.data == null ||
+        !result.data!.containsKey('requestAccountDeletion') ||
+        result.data!['requestAccountDeletion'] == null) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.requestDeleteAccount,
+      );
+    }
+    return result.data!['requestAccountDeletion'];
+  }
+
+  @override
+  Future<bool> deleteAccount({required String code}) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(Queries.deleteAccountMutation),
+        variables: {"code": code},
+      ),
+    );
+    if (result.hasException ||
+        result.data == null ||
+        !result.data!.containsKey('deleteAccount') ||
+        result.data!['deleteAccount'] == null) {
+      throw ServerException.fromGraphQL(
+        result.exception,
+        operation: AppOperation.deleteAccount,
+      );
+    }
+    return result.data!['deleteAccount'];
   }
 }

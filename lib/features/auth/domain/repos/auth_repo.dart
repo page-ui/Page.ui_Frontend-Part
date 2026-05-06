@@ -21,4 +21,6 @@ abstract class AuthRepo {
   });
   Future<Either<Failure, void>> resendVerficationCode({required String email});
   Future<Either<Failure, void>> signOut();
+  Future<Either<Failure, bool>> requestAccountDeletion();
+  Future<Either<Failure, bool>> deleteAccount({required String code});
 }

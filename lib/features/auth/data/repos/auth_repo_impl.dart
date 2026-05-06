@@ -140,4 +140,26 @@ class AuthRepoImpl extends AuthRepo {
       await GraphQLConfig.clearTokens();
     });
   }
+
+  @override
+  Future<Either<Failure, bool>> requestAccountDeletion() {
+    return _guard(
+      AppOperation.requestDeleteAccount,
+      () => dataSource.requestAccountDeletion(),
+    );
+  }
+
+  @override
+  Future<Either<Failure, bool>> deleteAccount({required String code}) {
+    return _guard(
+      AppOperation.deleteAccount,
+      () async {
+        final result = await dataSource.deleteAccount(code: code);
+        if (result) {
+          await GraphQLConfig.clearTokens();
+        }
+        return result;
+      },
+    );
+  }
 }

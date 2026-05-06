@@ -13,6 +13,7 @@ import 'package:page_ui/features/intro_screens/presentation/views/developers_vie
 import 'package:page_ui/features/intro_screens/presentation/views/landing_view.dart';
 import 'package:page_ui/features/intro_screens/presentation/views/not_found_view.dart';
 import 'package:page_ui/features/intro_screens/presentation/views/splash_view.dart';
+import 'package:page_ui/features/auth/presentation/views/delete_account_verification_view.dart';
 
 sealed class AppRoutes {
   const AppRoutes();
@@ -30,8 +31,9 @@ sealed class AppRoutes {
   static const String homePath = '/app';
   static const String chatPath = '/app/chat/:chatName';
   static const String trainPath = '/onboarding';
+  static const String deleteAccountVerificationPath = '/app/delete-account-verify';
 
-  static const _protectedPaths = {homePath, trainPath};
+  static const _protectedPaths = {homePath, trainPath, deleteAccountVerificationPath};
 
   static const _authPaths = {
     loginPath,
@@ -212,6 +214,12 @@ sealed class AppRoutes {
         pageBuilder: (_, state) =>
             _instantTransition(key: state.pageKey, child: const TrainView()),
       ),
+      GoRoute(
+        path: deleteAccountVerificationPath,
+        name: 'DeleteAccountVerification',
+        pageBuilder: (_, state) =>
+            _slideTransition(key: state.pageKey, child: const DeleteAccountVerificationView()),
+      ),
     ],
   );
 
@@ -256,4 +264,7 @@ sealed class AppRoutes {
 
   static void goTrain(BuildContext context) =>
       context.goNamed(TrainView.routeName);
+
+  static void pushDeleteAccountVerification(BuildContext context) =>
+      context.pushNamed('DeleteAccountVerification');
 }
