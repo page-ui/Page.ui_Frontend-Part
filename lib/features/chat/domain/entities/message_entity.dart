@@ -8,6 +8,7 @@ class MessageEntity {
   final DateTime createdAt;
   final String? attachmentUrl;
   final bool isDeleted;
+  final bool isQuestion;
 
   const MessageEntity({
     required this.id,
@@ -19,5 +20,6 @@ class MessageEntity {
     required this.createdAt,
     this.attachmentUrl,
     this.isDeleted = false,
+    this.isQuestion = false,
   });
 }

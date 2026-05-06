@@ -14,6 +14,10 @@ class ChatSession {
   bool isLoadingMore = false;
   bool isAwaitingAiResponse = false;
 
+  /// True while a WebSocket subscription is open for this chat.
+  /// The UI uses this to block the send input.
+  bool isSubscriptionActive = false;
+
   /// Transient status bubble — shows animated bubble with dynamic content
   /// from backend. Cleared when AI_MESSAGE or AI_RUN arrives.
   MessageEntity? activeThinkingMessage;

@@ -16,7 +16,12 @@ import 'package:page_ui/features/chat/presentation/widgets/chat_panel/chat_input
 class ChatInputBuilder extends StatefulWidget {
   const ChatInputBuilder({super.key, this.onSend});
 
+  /// When provided the widget is in "landing" mode (create new chat).
+  /// The subscription-active block is skipped so the user can always
+  /// send a first message regardless of what the current chat is doing.
   final void Function(String content)? onSend;
+
+  bool get isLandingMode => onSend != null;
 
   @override
   State<ChatInputBuilder> createState() => _ChatInputBuilderState();
@@ -51,8 +56,8 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
 
             final messagesState = context.read<ChatMessagesCubit>().state;
             if (messagesState is ChatMessagesLoaded) {
-              context.read<ChatMessagesCubit>().markAwaitingAiResponse(
-                chatId: messagesState.chatId,
+              context.read<ChatMessagesCubit>().startMessageSubscription(
+                messagesState.chatId,
               );
             }
           }
@@ -70,10 +75,14 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
           selector: (state) => state is SendMessageLoading,
           builder: (context, isSendLoading) {
             return BlocSelector<ChatMessagesCubit, ChatMessagesState, bool>(
-              selector: (state) =>
-                  state is ChatMessagesLoaded &&
-                  (state.isAwaitingAiResponse ||
-                      state.activeThinkingMessage != null),
+              selector: (state) {
+                // In landing mode we never block — creating a chat is always allowed.
+                if (widget.isLandingMode) return false;
+                return state is ChatMessagesLoaded &&
+                    (state.isAwaitingAiResponse ||
+                        state.activeThinkingMessage != null ||
+                        state.isSubscriptionActive);
+              },
               builder: (context, isAwaitingAi) {
                 return BlocBuilder<ChatHomeCubit, ChatHomeState>(
                   builder: (context, homeState) {

@@ -24,6 +24,7 @@ final class ChatMessagesLoaded extends ChatMessagesState {
   final String? selectedAiRunMessageId;
   final bool isAwaitingAiResponse;
   final MessageEntity? activeThinkingMessage;
+  final bool isSubscriptionActive;
 
   const ChatMessagesLoaded({
     required this.chatId,
@@ -34,6 +35,7 @@ final class ChatMessagesLoaded extends ChatMessagesState {
     this.selectedAiRunMessageId,
     this.isAwaitingAiResponse = false,
     this.activeThinkingMessage,
+    this.isSubscriptionActive = false,
   });
 
   ChatMessagesLoaded copyWith({
@@ -45,6 +47,7 @@ final class ChatMessagesLoaded extends ChatMessagesState {
     String? selectedAiRunMessageId,
     bool? isAwaitingAiResponse,
     MessageEntity? activeThinkingMessage,
+    bool? isSubscriptionActive,
   }) {
     return ChatMessagesLoaded(
       chatId: chatId ?? this.chatId,
@@ -57,6 +60,7 @@ final class ChatMessagesLoaded extends ChatMessagesState {
       isAwaitingAiResponse: isAwaitingAiResponse ?? this.isAwaitingAiResponse,
       activeThinkingMessage:
           activeThinkingMessage ?? this.activeThinkingMessage,
+      isSubscriptionActive: isSubscriptionActive ?? this.isSubscriptionActive,
     );
   }
 }

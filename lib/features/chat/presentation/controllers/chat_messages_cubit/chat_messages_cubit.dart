@@ -24,10 +24,11 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
   ChatSession _session(String chatId) =>
       _sessions.putIfAbsent(chatId, ChatSession.new);
 
+  // ─── Open / close chat ────────────────────────────────────────────────────
+
   Future<void> openChat({required String chatId}) async {
     _activeChatId = chatId;
     final session = _session(chatId);
-    _ensureSubscription(chatId);
 
     if (session.isHydrated) {
       _emitLoaded(chatId);
@@ -86,12 +87,123 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     }
   }
 
+  // ─── Subscription lifecycle ───────────────────────────────────────────────
+
+  /// Called by the UI immediately after [SendMessageSuccess].
+  /// Opens the WebSocket subscription for this chat. The subscription will
+  /// auto-close when:
+  ///   - a message with `isQuestion == true` arrives, OR
+  ///   - an AI_RUN message arrives (the full response pair is complete).
+  void startMessageSubscription(String chatId) {
+    final session = _session(chatId);
+
+    // Cancel any stale subscription first.
+    _cancelSubscription(chatId);
+
+    session.isSubscriptionActive = true;
+    session.isAwaitingAiResponse = true;
+    session.activeThinkingMessage = null;
+    if (_activeChatId == chatId) _emitLoaded(chatId);
+
+    // ignore: cancel_subscriptions
+    session.subscription = _chatRepo
+        .subscribeToMessages(chatId: chatId)
+        .listen(
+          (message) {
+            if (isClosed) return;
+            _handleIncomingMessage(chatId, session, message);
+          },
+          onError: (Object error, StackTrace stackTrace) {
+            appLogger.e(
+              'Message subscription error for $chatId',
+              error: error,
+              stackTrace: stackTrace,
+            );
+            if (isClosed) return;
+            _closeSubscriptionInternal(chatId, session);
+            if (_activeChatId != chatId) return;
+            if (session.messages.isEmpty) {
+              emit(
+                ChatMessagesError(
+                  chatId: chatId,
+                  message: 'Live message stream interrupted: $error',
+                ),
+              );
+            } else {
+              _emitLoaded(chatId);
+            }
+          },
+          onDone: () {
+            if (isClosed) return;
+            _closeSubscriptionInternal(chatId, session);
+            if (_activeChatId == chatId) _emitLoaded(chatId);
+          },
+        );
+  }
+
+  void _handleIncomingMessage(
+    String chatId,
+    ChatSession session,
+    MessageEntity message,
+  ) {
+    final type = message.type.trim().toUpperCase();
+
+    if (type == MessageType.thinking) {
+      // Replace the active thinking bubble — only the latest one is shown.
+      session.activeThinkingMessage = message;
+      session.isAwaitingAiResponse = true;
+    } else if (type == MessageType.aiMessage) {
+      // Clear thinking, persist the AI text. Stay open — AI_RUN may follow.
+      session.activeThinkingMessage = null;
+      session.isAwaitingAiResponse = false;
+      session.messages = _mergeMessages(session.messages, [message]);
+      ChatTypewriterRegistry.markArrived(message.id);
+    } else if (type == MessageType.aiRun) {
+      // UI arrived — this is the terminal event. Add & close.
+      session.activeThinkingMessage = null;
+      session.isAwaitingAiResponse = false;
+      final isNew = !session.messages.any((m) => m.id == message.id);
+      session.messages = _mergeMessages(session.messages, [message]);
+      if (isNew) ChatTypewriterRegistry.markArrived(message.id);
+      _closeSubscriptionInternal(chatId, session);
+    } else {
+      // USER_MESSAGE or other — just persist it.
+      session.messages = _mergeMessages(session.messages, [message]);
+    }
+
+    // Any message flagged isQuestion = true → close subscription immediately.
+    if (message.isQuestion) {
+      session.activeThinkingMessage = null;
+      session.isAwaitingAiResponse = false;
+      _closeSubscriptionInternal(chatId, session);
+    }
+
+    if (_activeChatId == chatId) _emitLoaded(chatId);
+  }
+
+  /// Cancels the stream subscription and clears the active flag.
+  void _closeSubscriptionInternal(String chatId, ChatSession session) {
+    final sub = session.subscription;
+    session.subscription = null;
+    session.isSubscriptionActive = false;
+    sub?.cancel();
+
+    // Disconnect WebSocket if no other chat has an open subscription.
+    final anySubLeft = _sessions.values.any((s) => s.subscription != null);
+    if (!anySubLeft) {
+      GraphQLConfig.disconnectWebSocket();
+    }
+  }
+
   Future<void> _cancelSubscription(String chatId) async {
     final session = _sessions[chatId];
     final sub = session?.subscription;
     session?.subscription = null;
+    session?.isSubscriptionActive = false;
     if (sub != null) await sub.cancel();
   }
+
+  // ─── Load more ────────────────────────────────────────────────────────────
 
   Future<void> loadMoreMessages({required String chatId}) async {
     final session = _sessions[chatId];
@@ -124,67 +236,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     );
   }
 
-  void _ensureSubscription(String chatId) {
-    final session = _session(chatId);
-    if (session.subscription != null) return;
-
-    // ignore: cancel_subscriptions
-    session.subscription = _chatRepo
-        .subscribeToMessages(chatId: chatId)
-        .listen(
-          (message) {
-            if (isClosed) return;
-
-            final type = message.type.trim().toUpperCase();
-
-            if (type == MessageType.thinking) {
-              // Any THINKING message → show as transient animated bubble
-              session.activeThinkingMessage = message;
-              session.isAwaitingAiResponse = true;
-            } else if (type == MessageType.aiMessage) {
-              // AI text response → clear thinking bubble, add to messages
-              session.activeThinkingMessage = null;
-              session.isAwaitingAiResponse = false;
-              session.messages = _mergeMessages(session.messages, [message]);
-              ChatTypewriterRegistry.markArrived(message.id);
-            } else if (type == MessageType.aiRun) {
-              // UI arrived → clear thinking bubble, update iframe
-              session.activeThinkingMessage = null;
-              session.isAwaitingAiResponse = false;
-              session.selectedAiRunId = message.id;
-              final isNew = !session.messages.any((m) => m.id == message.id);
-              session.messages = _mergeMessages(session.messages, [message]);
-              if (isNew) ChatTypewriterRegistry.markArrived(message.id);
-            } else {
-              // USER_MESSAGE or other — add to messages
-              session.messages = _mergeMessages(session.messages, [message]);
-            }
-
-            if (_activeChatId == chatId) _emitLoaded(chatId);
-          },
-          onError: (Object error, StackTrace stackTrace) {
-            appLogger.e(
-              'Message subscription error for $chatId',
-              error: error,
-              stackTrace: stackTrace,
-            );
-            if (isClosed) return;
-            session.isAwaitingAiResponse = false;
-            session.activeThinkingMessage = null;
-            if (_activeChatId != chatId) return;
-            if (session.messages.isEmpty) {
-              emit(
-                ChatMessagesError(
-                  chatId: chatId,
-                  message: 'Live message stream interrupted: $error',
-                ),
-              );
-            } else {
-              _emitLoaded(chatId);
-            }
-          },
-        );
-  }
+  // ─── Misc helpers ─────────────────────────────────────────────────────────
 
   void selectAiRunMessage({required String chatId, required String messageId}) {
     final session = _sessions[chatId];
@@ -214,6 +266,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
         selectedAiRunMessageId: session.selectedAiRunId,
         isAwaitingAiResponse: session.isAwaitingAiResponse,
         activeThinkingMessage: session.activeThinkingMessage,
+        isSubscriptionActive: session.isSubscriptionActive,
       ),
     );
   }

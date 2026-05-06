@@ -17,6 +17,7 @@ class MessageModel extends MessageEntity {
     required super.createdAt,
     super.attachmentUrl,
     super.isDeleted,
+    super.isQuestion,
   });
 
   factory MessageModel.fromJson(
@@ -41,6 +42,7 @@ class MessageModel extends MessageEntity {
       createdAt: DateTime.parse(json['createdAt'] as String),
       attachmentUrl: json['attachmentUrl'] as String?,
       isDeleted: (json['isDeleted'] as bool?) ?? false,
+      isQuestion: (json['isQuestion'] as bool?) ?? false,
     );
   }
 }
