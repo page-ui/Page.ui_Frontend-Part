@@ -5,9 +5,9 @@ import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/core/enum/screen_type.dart';
 import 'package:page_ui/core/helpers/custom_show_snack_bar.dart';
 import 'package:page_ui/features/chat/domain/entities/chat_entity.dart';
-import 'package:page_ui/features/chat/domain/usecases/upload_attachment_usecase.dart';
 import 'package:page_ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
 import 'package:page_ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
+import 'package:page_ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
 import 'package:page_ui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
 import 'package:page_ui/features/chat/presentation/widgets/home_view_body.dart';
 
@@ -57,21 +57,19 @@ mixin HomeViewBodyMixin on State<HomeViewBody> {
     final pickFileCubit = context.read<PickFileCubit>();
     final chatHomeCubit = context.read<ChatHomeCubit>();
 
-    final attachment = pickFileCubit.isImagePicked
-        ? UploadAttachmentInput(
-            bytes: pickFileCubit.imageBytes!,
-            fileName: pickFileCubit.imageFileName!,
-            contentType: pickFileCubit.imageContentType!,
-          )
-        : null;
-
-    await chatHomeCubit.createChat(
+    await chatHomeCubit.createChatWithPicker(
       content: content,
-      attachment: attachment,
+      pickFileCubit: pickFileCubit,
     );
 
     if (!context.mounted) return;
-    if (pickFileCubit.isImagePicked) pickFileCubit.removeImage();
+
+    // Start the subscription immediately — the backend is already
+    // processing the initial message so the AI response will arrive soon.
+    final chatId = chatHomeCubit.state.selectedChat?.id;
+    if (chatId != null) {
+      context.read<ChatMessagesCubit>().startMessageSubscription(chatId);
+    }
   }
 
   void onHomeStateChanged(BuildContext context, ChatHomeState state) {

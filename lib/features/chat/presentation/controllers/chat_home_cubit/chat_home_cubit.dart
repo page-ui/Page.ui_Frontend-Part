@@ -5,6 +5,7 @@ import 'package:page_ui/features/chat/domain/entities/chat_entity.dart';
 import 'package:page_ui/features/chat/domain/usecases/create_chat_usecase.dart';
 import 'package:page_ui/features/chat/domain/usecases/upload_attachment_usecase.dart';
 import 'package:page_ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_state.dart';
+import 'package:page_ui/features/chat/presentation/controllers/pick_file_cubit/pick_file_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatHomeCubit extends Cubit<ChatHomeState> {
@@ -32,7 +33,7 @@ class ChatHomeCubit extends Cubit<ChatHomeState> {
         (failure) => emit(
           ChatHomeError(message: failure.message, previousChat: currentChat),
         ),
-        (chat) => emit(ChatHomeActive(chat: chat)),
+        (chat) => emit(ChatHomeActive(chat: chat, isNewlyCreated: true)),
       );
     } catch (e, stackTrace) {
       appLogger.e(
@@ -47,6 +48,28 @@ class ChatHomeCubit extends Cubit<ChatHomeState> {
           previousChat: currentChat,
         ),
       );
+    }
+  }
+
+  Future<void> createChatWithPicker({
+    required String content,
+    required PickFileCubit pickFileCubit,
+  }) async {
+    final attachment = pickFileCubit.isImagePicked
+        ? UploadAttachmentInput(
+            bytes: pickFileCubit.imageBytes!,
+            fileName: pickFileCubit.imageFileName!,
+            contentType: pickFileCubit.imageContentType!,
+          )
+        : null;
+
+    await createChat(
+      content: content,
+      attachment: attachment,
+    );
+
+    if (pickFileCubit.isImagePicked) {
+      pickFileCubit.removeImage();
     }
   }
 

@@ -30,11 +30,16 @@ class _ChatPanelState extends State<ChatPanel> {
   }
 
   void _openSelectedChat() {
-    final chatId = context.read<ChatHomeCubit>().state.selectedChat?.id;
+    final homeState = context.read<ChatHomeCubit>().state;
+    final chatId = homeState.selectedChat?.id;
     if (chatId == null) return;
 
     _messagesCubit = context.read<ChatMessagesCubit>();
     _openedChatId = chatId;
+
+    // Skip fetching messages for newly created chats — there are none to fetch.
+    if (homeState is ChatHomeActive && homeState.isNewlyCreated) return;
+
     _messagesCubit!.openChat(chatId: chatId);
   }
 
@@ -64,6 +69,10 @@ class _ChatPanelState extends State<ChatPanel> {
         if (chatId == null) return;
         _messagesCubit = context.read<ChatMessagesCubit>();
         _openedChatId = chatId;
+
+        // Skip fetching messages for newly created chats.
+        if (state is ChatHomeActive && state.isNewlyCreated) return;
+
         _messagesCubit!.openChat(chatId: chatId);
       },
       child: Padding(
