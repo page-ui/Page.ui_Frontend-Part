@@ -42,12 +42,8 @@ class _HomeViewBodyState extends State<HomeViewBody> {
 
   // ── URL sync ────────────────────────────────────────────────────────
 
-  /// Updates the browser URL to `/app/chat/<name>` without rebuilding routes.
   void _updateUrlForChat(ChatEntity chat) {
-    // final encoded = Uri.encodeComponent(chat.name);
     final targetPath = '/app/chat/${chat.name}';
-
-    // Silently replace the URL in the browser bar without triggering navigation
     SystemNavigator.routeInformationUpdated(
       uri: Uri.parse(targetPath),
       replace: true,
@@ -78,7 +74,6 @@ class _HomeViewBodyState extends State<HomeViewBody> {
       curve: Curves.easeInOut,
     );
   }
-
   // ── Create-chat handler ─────────────────────────────────────────────
 
   Future<void> _onSendFromLanding(BuildContext context, String content) async {
@@ -101,8 +96,6 @@ class _HomeViewBodyState extends State<HomeViewBody> {
     if (!context.mounted) return;
     if (pickFileCubit.isImagePicked) pickFileCubit.removeImage();
   }
-
-
 
   // ── Build ───────────────────────────────────────────────────────────
 
@@ -152,7 +145,6 @@ class _HomeViewBodyState extends State<HomeViewBody> {
   }
 
   // ── Listener ────────────────────────────────────────────────────────
-
   void _onHomeStateChanged(BuildContext context, ChatHomeState state) {
     if (state is ChatHomeError) {
       showSnackBar(
@@ -171,7 +163,6 @@ class _HomeViewBodyState extends State<HomeViewBody> {
       if (context.isMobile && _pageController.hasClients) {
         _pageController.jumpToPage(0);
       }
-      // Silently update the browser URL without triggering a rebuild
       _updateUrlForChat(state.chat);
     }
   }

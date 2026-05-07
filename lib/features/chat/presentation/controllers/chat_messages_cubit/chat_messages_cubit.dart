@@ -89,7 +89,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
 
   // ─── Subscription lifecycle ───────────────────────────────────────────────
 
-  /// Called by the UI immediately after [SendMessageSuccess].
+  /// Called by the UI immediately after .
   /// Opens the WebSocket subscription for this chat. The subscription will
   /// auto-close when:
   ///   - a message with `isQuestion == true` arrives, OR
