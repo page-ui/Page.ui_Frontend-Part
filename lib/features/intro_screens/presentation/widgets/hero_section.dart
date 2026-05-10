@@ -1,10 +1,11 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:flutter/material.dart';
 import 'package:page_ui/config/routes/on_generate_routes.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/config/themes/app_text_style.dart';
 import 'package:page_ui/core/constants/constants.dart';
+import 'package:page_ui/features/chat/presentation/widgets/ui_frame/iframe_view.dart';
 import 'package:page_ui/features/intro_screens/presentation/widgets/read_docs_button.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:flutter/material.dart';
 
 class HeroSection extends StatelessWidget {
   const HeroSection({super.key});
@@ -186,20 +187,22 @@ class HeroSection extends StatelessWidget {
                 width: compact
                     ? double.infinity
                     : (w * 0.6).clamp(400.0, 900.0),
-                height: compact ? 180 : 280,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
                       AppColors.white.withValues(alpha: 0.05),
-                      AppColors.transparent,
+                      AppColors.anotherGray,
                     ],
                   ),
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(20),
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(20),
                   ),
                   border: Border(
+                  bottom: BorderSide(
+                      color: AppColors.white.withValues(alpha: 0.1),
+                    ),
                     top: BorderSide(
                       color: AppColors.white.withValues(alpha: 0.1),
                     ),
@@ -211,24 +214,13 @@ class HeroSection extends StatelessWidget {
                     ),
                   ),
                 ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.code,
-                        color: AppColors.white.withValues(alpha: 0.2),
-                        size: compact ? 40 : 56,
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        "AI UI Generation Interface",
-                        style: AppTextStyles.titleMedium?.copyWith(
-                          color: AppColors.white.withValues(alpha: 0.4),
-                          fontSize: pillFont,
-                        ),
-                      ),
-                    ],
+                child: const AspectRatio(
+                  aspectRatio: 3 / 1,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                    child: IframeView(url: 'htmlFiles/index.html'),
                   ),
                 ),
               ),
