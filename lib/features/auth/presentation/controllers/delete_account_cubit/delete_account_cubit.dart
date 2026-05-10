@@ -14,7 +14,15 @@ class DeleteAccountCubit extends Cubit<DeleteAccountState> {
     result.fold(
       (failure) =>
           emit(DeleteAccountRequestError(message: failure.message)),
-      (_) => emit(DeleteAccountRequestSuccess()),
+      (isSuccess) {
+        if (isSuccess) {
+          emit(DeleteAccountRequestSuccess());
+        } else {
+          emit(DeleteAccountRequestError(
+              message:
+                  "you can't delete your account now please try again after minutes"));
+        }
+      },
     );
   }
 
@@ -22,9 +30,21 @@ class DeleteAccountCubit extends Cubit<DeleteAccountState> {
     emit(DeleteAccountVerifyLoading());
     final result = await authRepo.deleteAccount(code: code);
     result.fold(
-      (failure) =>
-          emit(DeleteAccountVerifyError(message: failure.message)),
-      (_) => emit(DeleteAccountVerifySuccess()),
+      (failure) {
+        String msg = failure.message;
+        if (msg.contains('Unexpected Execution Error')) {
+          msg = 'Invalid code or unexpected error occurred. Please try again.';
+        }
+        emit(DeleteAccountVerifyError(message: msg));
+      },
+      (isSuccess) {
+        if (isSuccess) {
+          emit(DeleteAccountVerifySuccess());
+        } else {
+          emit(DeleteAccountVerifyError(
+              message: "Invalid code or failed to delete account."));
+        }
+      },
     );
   }
 }

@@ -228,6 +228,7 @@ class AuthDataSourceImpl extends AuthDataSource {
         variables: {"code": code},
       ),
     );
+    
     if (result.hasException ||
         result.data == null ||
         !result.data!.containsKey('deleteAccount') ||
