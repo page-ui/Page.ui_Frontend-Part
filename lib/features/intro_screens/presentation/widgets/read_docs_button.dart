@@ -1,5 +1,6 @@
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/config/themes/app_text_style.dart';
+import 'package:page_ui/core/helpers/open_external_link.dart';
 import 'package:flutter/material.dart';
 
 class ReadDocsButton extends StatelessWidget {
@@ -15,7 +16,9 @@ class ReadDocsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-      onPressed: () {},
+      onPressed: () {
+        openExternalLink('https://capricious-sassafras-62e.notion.site/Page_Ui_Documentation-35cec4f17243809a89e1cef5ca00abc3?source=copy_link');
+      },
       style: OutlinedButton.styleFrom(
         foregroundColor: AppColors.white,
         side: BorderSide(color: AppColors.white.withValues(alpha: 0.3)),

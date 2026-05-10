@@ -19,6 +19,8 @@ class FooterLinksColumn extends StatelessWidget {
 
   String? _linkTarget(String link) {
     switch (link) {
+      case 'Documentation':
+        return 'https://capricious-sassafras-62e.notion.site/Page_Ui_Documentation-35cec4f17243809a89e1cef5ca00abc3?source=copy_link';
       case 'GitHub':
         return 'https://github.com/page-ui/codebase-demo-repository';
       case 'Support':
