@@ -1,3 +1,5 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:get_it/get_it.dart';
 import 'package:page_ui/core/database/api/graph_ql_config.dart';
 import 'package:page_ui/core/network/network_info.dart';
 import 'package:page_ui/features/auth/data/data_source/auth_data_source.dart';
@@ -14,8 +16,6 @@ import 'package:page_ui/features/chat/presentation/controllers/chat_history_cubi
 import 'package:page_ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
 import 'package:page_ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
 import 'package:page_ui/features/chat/presentation/controllers/send_message_cubit/send_message_cubit.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:get_it/get_it.dart';
 
 final getit = GetIt.instance;
 
