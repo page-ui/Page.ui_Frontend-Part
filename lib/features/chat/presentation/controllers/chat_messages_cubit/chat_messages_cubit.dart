@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_ui/core/database/api/graph_ql_config.dart';
 import 'package:page_ui/core/helpers/app_logger.dart';
 import 'package:page_ui/features/chat/domain/constants/message_types.dart';
@@ -8,7 +9,6 @@ import 'package:page_ui/features/chat/domain/repos/chat_repo.dart';
 import 'package:page_ui/features/chat/presentation/controllers/chat_messages_cubit/_chat_session.dart';
 import 'package:page_ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_state.dart';
 import 'package:page_ui/features/chat/presentation/controllers/chat_messages_cubit/chat_typewriter_registry.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatMessagesCubit extends Cubit<ChatMessagesState> {
   ChatMessagesCubit({required ChatRepo chatRepo})
@@ -95,6 +95,11 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
   ///   - a message with `isQuestion == true` arrives, OR
   ///   - an AI_RUN message arrives (the full response pair is complete).
   void startMessageSubscription(String chatId) {
+    // Always mark this chat as the active one.  For newly-created chats
+    // openChat() is intentionally skipped (nothing to fetch yet), so
+    // _activeChatId would otherwise remain stale and every incoming
+    // subscription message would be silently dropped.
+    _activeChatId = chatId;
     final session = _session(chatId);
 
     // Cancel any stale subscription first.
@@ -166,16 +171,23 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
       session.messages = _mergeMessages(session.messages, [message]);
       if (isNew) ChatTypewriterRegistry.markArrived(message.id);
       _closeSubscriptionInternal(chatId, session);
-    } else {
-      // USER_MESSAGE or other — just persist it.
-      session.messages = _mergeMessages(session.messages, [message]);
-    }
 
-    // Any message flagged isQuestion = true → close subscription immediately.
-    if (message.isQuestion) {
-      session.activeThinkingMessage = null;
-      session.isAwaitingAiResponse = false;
-      _closeSubscriptionInternal(chatId, session);
+      // Fetch the full history silently to ensure no messages (like AI_MESSAGE) 
+      // were missed due to subscription race conditions (especially for new chats).
+      _fetchMessagesSilently(chatId, session);
+    } else if (type == MessageType.userMessage) {
+      // Real USER_MESSAGE arrived — drop the client-side optimistic bubble
+      // (different temp-ID) and replace it with the authoritative server copy.
+      final optimisticId = session.optimisticMessageId;
+      if (optimisticId != null) {
+        session.messages =
+            session.messages.where((m) => m.id != optimisticId).toList();
+        session.optimisticMessageId = null;
+      }
+      session.messages = _mergeMessages(session.messages, [message]);
+    } else {
+      // Other unknown types — just persist.
+      session.messages = _mergeMessages(session.messages, [message]);
     }
 
     if (_activeChatId == chatId) _emitLoaded(chatId);
@@ -237,6 +249,62 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
   }
 
   // ─── Misc helpers ─────────────────────────────────────────────────────────
+
+  Future<void> _fetchMessagesSilently(String chatId, ChatSession session) async {
+    try {
+      final result = await _chatRepo.getMessages(chatId: chatId, first: 20);
+      if (isClosed) return;
+      result.fold(
+        (failure) {
+          appLogger.e('Silent fetch failed: ${failure.message}');
+        },
+        (response) {
+          session.isHydrated = true;
+
+          // If history contains real user messages, clear the optimistic bubble.
+          final hasRealUserMessage =
+              response.messages.any((m) => m.type == MessageType.userMessage);
+          final optId = session.optimisticMessageId;
+          if (hasRealUserMessage && optId != null) {
+            session.messages =
+                session.messages.where((m) => m.id != optId).toList();
+            session.optimisticMessageId = null;
+          }
+
+          session.messages = _mergeMessages(session.messages, response.messages);
+          if (_activeChatId == chatId) _emitLoaded(chatId);
+        },
+      );
+    } catch (e) {
+      appLogger.e('Silent fetch error', error: e);
+    }
+  }
+
+  /// Immediately inserts a client-side user message bubble so the UI shows
+  /// the outgoing message without waiting for the subscription to echo it back.
+  /// The temp ID is tracked so it can be swapped out when the real server
+  /// message arrives via `_handleIncomingMessage`.
+  void addOutgoingMessage({
+    required String chatId,
+    required String content,
+    String? attachmentUrl,
+  }) {
+    final tempId = 'opt_${DateTime.now().millisecondsSinceEpoch}';
+    final session = _session(chatId);
+    session.optimisticMessageId = tempId;
+    final optimistic = MessageEntity(
+      id: tempId,
+      chatId: chatId,
+      content: content,
+      type: MessageType.userMessage,
+      status: 'sent',
+      createdAt: DateTime.now(),
+      attachmentUrl: attachmentUrl,
+      isQuestion: true,
+    );
+    session.messages = _mergeMessages(session.messages, [optimistic]);
+    if (_activeChatId == chatId) _emitLoaded(chatId);
+  }
 
   void selectAiRunMessage({required String chatId, required String messageId}) {
     final session = _sessions[chatId];

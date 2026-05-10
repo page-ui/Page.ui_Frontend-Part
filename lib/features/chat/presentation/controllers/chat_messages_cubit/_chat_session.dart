@@ -9,6 +9,9 @@ class ChatSession {
   // ignore: cancel_subscriptions
   StreamSubscription<MessageEntity>? subscription;
   String? selectedAiRunId;
+  /// Temp ID of an optimistically-inserted outgoing message.
+  /// Cleared once a real USER_MESSAGE arrives via the subscription.
+  String? optimisticMessageId;
   bool isHydrated = false;
   bool isLoading = false;
   bool isLoadingMore = false;

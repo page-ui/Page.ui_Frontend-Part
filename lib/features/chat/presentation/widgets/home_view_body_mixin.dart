@@ -68,7 +68,15 @@ mixin HomeViewBodyMixin on State<HomeViewBody> {
     // processing the initial message so the AI response will arrive soon.
     final chatId = chatHomeCubit.state.selectedChat?.id;
     if (chatId != null) {
-      context.read<ChatMessagesCubit>().startMessageSubscription(chatId);
+      final messagesCubit = context.read<ChatMessagesCubit>();
+      // Show the user's message immediately (backend echoes it last via
+      // the subscription, after AI_RUN, so we add it optimistically).
+      messagesCubit.addOutgoingMessage(
+        chatId: chatId,
+        content: content,
+        attachmentUrl: pickFileCubit.isImagePicked ? null : null,
+      );
+      messagesCubit.startMessageSubscription(chatId);
     }
   }
 

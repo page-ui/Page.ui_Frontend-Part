@@ -139,7 +139,8 @@ class _LoadMessagesBuilderState extends State<LoadMessagesBuilder> {
           );
         }
 
-        final thinkingOffset = state.activeThinkingMessage != null ? 1 : 0;
+        final showThinking = state.isAwaitingAiResponse || state.activeThinkingMessage != null;
+        final thinkingOffset = showThinking ? 1 : 0;
         final loadMoreOffset = state.isLoadingMore ? 1 : 0;
         return ListView.builder(
           controller: _scrollController,
@@ -149,7 +150,7 @@ class _LoadMessagesBuilderState extends State<LoadMessagesBuilder> {
           itemBuilder: (context, index) {
             if (thinkingOffset == 1 && index == 0) {
               return ThinkingBubble(
-                label: state.activeThinkingMessage!.content,
+                label: state.activeThinkingMessage?.content ?? 'Thinking...',
               );
             }
             final messageIndex = index - thinkingOffset;

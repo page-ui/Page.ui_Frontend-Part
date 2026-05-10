@@ -30,6 +30,7 @@ class ChatInputBuilder extends StatefulWidget {
 class _ChatInputBuilderState extends State<ChatInputBuilder> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  String _lastSentContent = '';
 
   @override
   void dispose() {
@@ -52,13 +53,6 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
 
             if (pickFileCubit.isImagePicked) {
               pickFileCubit.removeImage();
-            }
-
-            final messagesState = context.read<ChatMessagesCubit>().state;
-            if (messagesState is ChatMessagesLoaded) {
-              context.read<ChatMessagesCubit>().startMessageSubscription(
-                messagesState.chatId,
-              );
             }
           }
 
@@ -117,6 +111,10 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
     final message = _controller.text;
     if (message.isEmpty && !pickFileCubit.isImagePicked) return;
 
+    // Capture the content now so the optimistic bubble can use it later
+    // even after the controller is cleared.
+    _lastSentContent = message.trim();
+
     if (widget.onSend != null) {
       widget.onSend!(message.isEmpty ? 'image' : message);
       return;
@@ -133,6 +131,19 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
         contentType: pickFileCubit.imageContentType!,
       );
     }
+
+    final messagesCubit = context.read<ChatMessagesCubit>();
+
+    // Show outgoing message immediately.
+    if (_lastSentContent.isNotEmpty) {
+      messagesCubit.addOutgoingMessage(
+        chatId: selectedChat.id,
+        content: _lastSentContent,
+      );
+    }
+
+    // Start subscription BEFORE sending to catch all AI_MESSAGE/THINKING chunks.
+    messagesCubit.startMessageSubscription(selectedChat.id);
 
     sendMessageCubit.sendMessage(
       params: SendMessageParams(
