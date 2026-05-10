@@ -22,7 +22,8 @@ final class ChatHomeLoading extends ChatHomeState {
 
 final class ChatHomeActive extends ChatHomeState {
   final ChatEntity chat;
-  const ChatHomeActive({required this.chat});
+  final bool isNewlyCreated;
+  const ChatHomeActive({required this.chat, this.isNewlyCreated = false});
 }
 
 final class ChatHomeError extends ChatHomeState {

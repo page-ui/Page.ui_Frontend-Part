@@ -7,7 +7,6 @@ import 'package:page_ui/core/constants/borders.dart';
 import 'package:page_ui/core/helpers/custom_show_snack_bar.dart';
 import 'package:page_ui/core/helpers/setup_service_locator_getit.dart';
 import 'package:page_ui/features/auth/data/repos/auth_repo_impl.dart';
-import 'package:page_ui/features/auth/domain/repos/auth_repo.dart';
 import 'package:page_ui/features/auth/presentation/controllers/delete_account_cubit/delete_account_cubit.dart';
 import 'package:page_ui/features/auth/presentation/controllers/settings_cubit/settings_cubit.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/core/enum/screen_type.dart';
 import 'package:page_ui/core/helpers/panel_scrollbar.dart';
@@ -12,8 +14,6 @@ import 'package:page_ui/features/chat/presentation/widgets/history_panel/chat_ro
 import 'package:page_ui/features/chat/presentation/widgets/history_panel/chat_rooms_loading_indicators.dart';
 import 'package:page_ui/features/chat/presentation/widgets/history_panel/on_delete_chat_room_function.dart';
 import 'package:page_ui/features/chat/presentation/widgets/history_panel/on_rename_chat_room_function.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ListOfChatRooms extends StatefulWidget {
   const ListOfChatRooms({
@@ -69,29 +69,12 @@ class _ListOfChatRoomsState extends State<ListOfChatRooms> {
           }
 
           if (state is ChatHistoryFailure) {
-            return Center(
-              child: Text(
-                state.message,
-                style: TextStyle(
-                  color: AppColors.lightGray.withValues(alpha: 0.6),
-                  fontSize: 13,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            );
+            return FailureMessageWidget(message: state.message,);
           }
 
           if (state is ChatHistoryLoaded) {
             if (state.chats.isEmpty) {
-              return Center(
-                child: Text(
-                  'No chats yet',
-                  style: TextStyle(
-                    color: AppColors.lightGray.withValues(alpha: 0.5),
-                    fontSize: 13,
-                  ),
-                ),
-              );
+              return const NoChatsYetWidget();
             }
 
             return PanelScrollbar(
@@ -128,6 +111,41 @@ class _ListOfChatRoomsState extends State<ListOfChatRooms> {
 
           return const SizedBox.shrink();
         },
+      ),
+    );
+  }
+}
+
+class FailureMessageWidget extends StatelessWidget {
+  const FailureMessageWidget({super.key, required this.message});
+  final String message;
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        message,
+        style: TextStyle(
+          color: AppColors.lightGray.withValues(alpha: 0.6),
+          fontSize: 13,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+}
+
+class NoChatsYetWidget extends StatelessWidget {
+  const NoChatsYetWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'No chats yet',
+        style: TextStyle(
+          color: AppColors.lightGray.withValues(alpha: 0.5),
+          fontSize: 13,
+        ),
       ),
     );
   }

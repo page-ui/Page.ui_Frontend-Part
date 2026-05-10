@@ -10,8 +10,6 @@ class HomeView extends StatelessWidget {
   const HomeView({super.key, this.initialChat});
 
   static const String routeName = "HomeView";
-
-  /// When navigating to `/app/chat/:chatName`, this carries the [ChatEntity].
   final ChatEntity? initialChat;
 
   @override
