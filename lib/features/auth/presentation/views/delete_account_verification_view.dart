@@ -49,7 +49,7 @@ class DeleteAccountOTPWidget extends StatefulWidget {
 
 class _DeleteAccountOTPWidgetState extends State<DeleteAccountOTPWidget> {
   final List<TextEditingController> controllers =
-      List.generate(6, (_) => TextEditingController());
+      List.generate(5, (_) => TextEditingController());
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool isLoading = false;
@@ -97,6 +97,18 @@ class _DeleteAccountOTPWidgetState extends State<DeleteAccountOTPWidget> {
           setState(() {
             isLoading = true;
           });
+        } else if (state is DeleteAccountRequestError) {
+          showSnackBar(
+            context: context,
+            message: state.message,
+            backgroundColor: AppColors.red,
+            textColor: AppColors.white,
+          );
+        } else if (state is DeleteAccountRequestSuccess) {
+          showSnackBar(
+            context: context,
+            message: 'Verification code resent successfully.',
+          );
         }
       },
       child: Form(
@@ -107,7 +119,7 @@ class _DeleteAccountOTPWidgetState extends State<DeleteAccountOTPWidget> {
             text,
             const SizedBox(height: 8),
             const Text(
-              "ENTER THE 6-DIGIT CODE SENT TO YOUR EMAIL",
+              "ENTER THE 5-DIGIT CODE SENT TO YOUR EMAIL",
               style: TextStyle(color: AppColors.primaryColor, fontSize: 13),
               textAlign: TextAlign.center,
             ),

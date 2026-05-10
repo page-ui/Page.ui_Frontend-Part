@@ -91,7 +91,11 @@ class Queries {
 
   static String chatRoomsQuery = r'''
     query GetChats($first: Int, $after: String) {
-      chats(first: $first, after: $after) {
+      chats(
+        first: $first
+        after: $after
+        order: [{ createdAt: DESC }]
+      ) {
         pageInfo {
           hasNextPage
           endCursor
@@ -100,7 +104,6 @@ class Queries {
           node {
             chatKey
             name
-            modelId
             createdAt
           }
         }
