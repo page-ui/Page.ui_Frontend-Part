@@ -1,7 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:page_ui/features/auth/presentation/widgets/OTP_code_verfication.dart';
 import 'package:page_ui/features/auth/presentation/widgets/forget_password_request.dart';
 import 'package:page_ui/features/auth/presentation/widgets/password_reset.dart';
-import 'package:flutter/material.dart';
 
 class ForgetPaswordViewForm extends StatefulWidget {
   const ForgetPaswordViewForm({super.key});
@@ -15,6 +15,11 @@ class _ForgetPaswordViewFormState extends State<ForgetPaswordViewForm> {
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   String? email;
   String? token;
+
+  final ScrollController _scrollController1 = ScrollController();
+  final ScrollController _scrollController2 = ScrollController();
+  final ScrollController _scrollController3 = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -24,12 +29,16 @@ class _ForgetPaswordViewFormState extends State<ForgetPaswordViewForm> {
   @override
   void dispose() {
     controllers.forEach((controller) => controller.dispose());
+    _scrollController1.dispose();
+    _scrollController2.dispose();
+    _scrollController3.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (_currentStep > 0)
           Align(
@@ -39,36 +48,51 @@ class _ForgetPaswordViewFormState extends State<ForgetPaswordViewForm> {
               onPressed: previousStep,
             ),
           ),
-        SizedBox(
-          height: 450,
+        Container(
+          constraints: const BoxConstraints(minHeight: 0, maxHeight: 300),
           child: PageView(
             controller: _controller,
             physics: const NeverScrollableScrollPhysics(),
             children: [
-              SingleChildScrollView(
-                child: ForgetPasswordRequest(
-                  nextStep: nextStep,
-                  onEmailChanged: (String e) {
-                    setState(() {
-                      email = e;
-                    });
-                  },
+              Scrollbar(
+                controller: _scrollController1,
+                thumbVisibility: true,
+                child: SingleChildScrollView(
+                  controller: _scrollController1,
+                  child: ForgetPasswordRequest(
+                    nextStep: nextStep,
+                    onEmailChanged: (String e) {
+                      setState(() {
+                        email = e;
+                      });
+                    },
+                  ),
                 ),
               ),
-              SingleChildScrollView(
-                child: OTPCodeVerfication(
-                  controllers: controllers,
-                  nextStep: nextStep,
-                  email: email ?? "",
-                  onGetToken: (String value) {
-                    setState(() {
-                      token = value;
-                    });
-                  },
+              Scrollbar(
+                controller: _scrollController2,
+                thumbVisibility: true,
+                child: SingleChildScrollView(
+                  controller: _scrollController2,
+                  child: OTPCodeVerfication(
+                    controllers: controllers,
+                    nextStep: nextStep,
+                    email: email ?? "",
+                    onGetToken: (String value) {
+                      setState(() {
+                        token = value;
+                      });
+                    },
+                  ),
                 ),
               ),
-              SingleChildScrollView(
-                child: PasswordReset(email: email ?? "", token: token ?? ""),
+              Scrollbar(
+                controller: _scrollController3,
+                thumbVisibility: true,
+                child: SingleChildScrollView(
+                  controller: _scrollController3,
+                  child: PasswordReset(email: email ?? "", token: token ?? ""),
+                ),
               ),
             ],
           ),

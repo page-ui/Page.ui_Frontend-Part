@@ -112,8 +112,8 @@ class Queries {
   ''';
 
   static String searchChatQuery = r'''
-    query SearchChats($name: String!, $first: Int, $after: String) {
-      searchChats(name: $name, first: $first, after: $after) {
+    query SearchChats($name: String!, $first: Int, $after: String,) {
+      searchChats(name: $name, first: $first, after: $after, order: [{ createdAt: DESC }]) {
         pageInfo {
           hasNextPage
           endCursor
@@ -163,13 +163,13 @@ class Queries {
       }
     }
   ''';
-  
+
   static String requestDeleteMutation = r'''
     mutation RequestAccountDeletion {
       requestAccountDeletion
     }
   ''';
-  
+
   static String deleteChatMutation = r'''
     mutation DeleteChat($chatKey: String!) {
       deleteChat(chatKey: $chatKey)

@@ -63,7 +63,7 @@ class _ForgetPasswordRequestState extends State<ForgetPasswordRequest> {
         autovalidateMode: autovalidateMode,
         key: formKeyEmailCheck,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const customRowAuth(hint: "Type Your Email"),
             const SizedBox(height: 4),

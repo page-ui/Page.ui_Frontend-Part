@@ -35,6 +35,7 @@ class _OTPCodeVerficationState extends State<OTPCodeVerfication> {
   Widget build(BuildContext context) {
     var text = const Text(
       "VERIFY OTP",
+      textAlign: TextAlign.center,
       style: TextStyle(
         color: AppColors.primaryColor,
         fontSize: 22,
@@ -71,11 +72,13 @@ class _OTPCodeVerficationState extends State<OTPCodeVerfication> {
         key: formKeyCodeVerify,
         autovalidateMode: autovalidateMode,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             text,
             const SizedBox(height: 8),
             const Text(
               "ENTER THE 5-DIGIT CODE SENT TO YOU",
+              textAlign: TextAlign.center,
               style: TextStyle(color: AppColors.primaryColor, fontSize: 13),
             ),
             const SizedBox(height: 24),
@@ -123,7 +126,7 @@ class _OTPCodeVerficationState extends State<OTPCodeVerfication> {
             ),
             const SizedBox(height: 8),
             Align(
-              alignment: AlignmentGeometry.bottomLeft,
+              alignment: Alignment.bottomLeft,
               child: Text(
                 "Note: email maybe in spam emails.",
                 style: AppTextStyles.bodyMedium!.copyWith(color: AppColors.red),
