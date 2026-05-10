@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:page_ui/config/routes/on_generate_routes.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/core/enum/screen_type.dart';
 import 'package:page_ui/core/helpers/panel_scrollbar.dart';
@@ -33,7 +34,7 @@ class _ListOfChatRoomsState extends State<ListOfChatRooms> {
   final _scrollController = ScrollController();
 
   void _onChatSelected(ChatEntity chat) {
-    context.read<ChatHomeCubit>().selectChat(chat: chat);
+    AppRoutes.goChat(context, chat: chat);
 
     if (context.isMobile || context.isTablet) {
       widget.onChatSelected?.call();

@@ -4,8 +4,10 @@ import 'package:page_ui/config/routes/on_generate_routes.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/config/themes/app_text_style.dart';
 import 'package:page_ui/core/constants/constants.dart';
+import 'package:page_ui/core/enum/screen_type.dart';
 import 'package:page_ui/features/chat/presentation/widgets/ui_frame/iframe_view.dart';
 import 'package:page_ui/features/intro_screens/presentation/widgets/read_docs_button.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class HeroSection extends StatelessWidget {
   const HeroSection({super.key});
@@ -15,8 +17,8 @@ class HeroSection extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final w = constraints.maxWidth;
-        final compact = w < 600;
-        final medium = w >= 600 && w < 1100;
+        final compact = context.isMobile;
+        final medium = context.isTablet;
 
         final heroFont = compact
             ? 26.0
@@ -183,44 +185,44 @@ class HeroSection extends StatelessWidget {
               const SizedBox(height: 60),
 
               // --- Preview placeholder ---
-              Container(
-                width: compact
-                    ? double.infinity
-                    : (w * 0.6).clamp(400.0, 900.0),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      AppColors.white.withValues(alpha: 0.05),
-                      AppColors.anotherGray,
-                    ],
+              PointerInterceptor(
+                child: Container(
+                  width: compact
+                      ? double.infinity
+                      : (w * 1.5).clamp(400.0, 900.0),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        AppColors.white.withValues(alpha: 0.05),
+                        AppColors.anotherGray,
+                      ],
+                    ),
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    border: Border(
+                      bottom: BorderSide(
+                        color: AppColors.white.withValues(alpha: 0.1),
+                      ),
+                      top: BorderSide(
+                        color: AppColors.white.withValues(alpha: 0.1),
+                      ),
+                      left: BorderSide(
+                        color: AppColors.white.withValues(alpha: 0.1),
+                      ),
+                      right: BorderSide(
+                        color: AppColors.white.withValues(alpha: 0.1),
+                      ),
+                    ),
                   ),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(20),
-                  ),
-                  border: Border(
-                  bottom: BorderSide(
-                      color: AppColors.white.withValues(alpha: 0.1),
+                  child: const AspectRatio(
+                    aspectRatio: 3 / 1,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                      child: IframeView(url: 'htmlFiles/index.html'),
                     ),
-                    top: BorderSide(
-                      color: AppColors.white.withValues(alpha: 0.1),
-                    ),
-                    left: BorderSide(
-                      color: AppColors.white.withValues(alpha: 0.1),
-                    ),
-                    right: BorderSide(
-                      color: AppColors.white.withValues(alpha: 0.1),
-                    ),
-                  ),
-                ),
-                child: const AspectRatio(
-                  aspectRatio: 3 / 1,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(20),
-                    ),
-                    child: IframeView(url: 'htmlFiles/index.html'),
                   ),
                 ),
               ),

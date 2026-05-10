@@ -65,7 +65,7 @@ class _PasswordResetState extends State<PasswordReset> {
         key: formKeyPasswordReset,
         autovalidateMode: autovalidateMode,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const customRowAuth(hint: "New Password"),
             const SizedBox(height: 4),

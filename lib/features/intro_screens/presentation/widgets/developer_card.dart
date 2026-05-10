@@ -1,8 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/config/themes/app_text_style.dart';
 import 'package:page_ui/core/helpers/open_external_link.dart';
 import 'package:page_ui/features/intro_screens/presentation/widgets/developer_profile.dart';
-import 'package:flutter/material.dart';
 
 class DeveloperCard extends StatelessWidget {
   final DeveloperProfile developer;
@@ -39,8 +39,45 @@ class DeveloperCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
+          Text(
+            "GitHub",
+            style: AppTextStyles.bodySmall?.copyWith(
+              color: AppColors.textGray,
+              fontSize: repoFont,
+              decorationColor: AppColors.black,
+            ),
+          ),
+          const SizedBox(height: 10),
           TextButton(
             onPressed: () => openExternalLink(developer.repoUrl),
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              alignment: Alignment.centerLeft,
+            ),
+            child: Text(
+              developer.repoUrl,
+              style: AppTextStyles.bodySmall?.copyWith(
+                color: accent,
+                fontSize: repoFont,
+                decoration: TextDecoration.underline,
+                decorationColor: accent,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            "linkedin",
+            style: AppTextStyles.bodySmall?.copyWith(
+              color: AppColors.textGray,
+              fontSize: repoFont,
+              decorationColor: AppColors.black,
+            ),
+          ),
+          const SizedBox(height: 10),
+          TextButton(
+            onPressed: () => openExternalLink(developer.linkedin),
             style: TextButton.styleFrom(
               padding: EdgeInsets.zero,
               minimumSize: Size.zero,
