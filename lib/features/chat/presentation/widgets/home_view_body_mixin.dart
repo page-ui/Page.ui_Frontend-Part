@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:page_ui/config/routes/on_generate_routes.dart';
 import 'package:page_ui/config/themes/app_colors.dart';
 import 'package:page_ui/core/enum/screen_type.dart';
 import 'package:page_ui/core/helpers/custom_show_snack_bar.dart';
@@ -23,7 +24,11 @@ mixin HomeViewBodyMixin on State<HomeViewBody> {
   }
 
   void updateUrlForChat(ChatEntity chat) {
-    AppRoutes.goChat(context, chat: chat);
+    final targetPath = '/app/chat/${chat.name}';
+    SystemNavigator.routeInformationUpdated(
+      uri: Uri.parse(targetPath),
+      replace: true,
+    );
   }
 
   void toggleHistory() => setState(() => isHistoryOpen = !isHistoryOpen);

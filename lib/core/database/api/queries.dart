@@ -186,6 +186,8 @@ class Queries {
         updatedAt
       }
     }
+
+    
   ''';
 
   static String onMessageCreatedSubscription = r'''

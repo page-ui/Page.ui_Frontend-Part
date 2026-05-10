@@ -29,7 +29,7 @@ sealed class AppRoutes {
   static const String forgetPasswordPath = '/auth/forgot-password';
   static const String emailVerificationPath = '/auth/verify-email';
   static const String homePath = '/app';
-  static const String chatPath = '/app/chat/:chatId/:chatName';
+  static const String chatPath = '/app/chat/:chatName';
   static const String trainPath = '/onboarding';
   static const String deleteAccountVerificationPath = '/app/delete-account-verify';
 
@@ -191,21 +191,18 @@ sealed class AppRoutes {
             _instantTransition(key: state.pageKey, child: const HomeView()),
         routes: [
           GoRoute(
-            path: 'chat/:chatId/:chatName',
+            path: 'chat/:chatName',
             name: 'chat',
+            redirect: (context, state) {
+              // Deep-linking without ChatEntity data → fall back to /app
+              if (state.extra == null) return homePath;
+              return null;
+            },
             pageBuilder: (_, state) {
-              final chat = state.extra as ChatEntity?;
-              final chatId = state.pathParameters['chatId'];
-              final chatName = state.pathParameters['chatName'];
-
-              // If extra is missing (e.g. on refresh), reconstruct ChatEntity from parameters
-              final effectiveChat = chat ?? (chatId != null && chatName != null 
-                ? ChatEntity(id: chatId, name: chatName)
-                : null);
-
+              final chat = state.extra! as ChatEntity;
               return _instantTransition(
                 key: state.pageKey,
-                child: HomeView(initialChat: effectiveChat),
+                child: HomeView(initialChat: chat),
               );
             },
           ),
@@ -259,10 +256,7 @@ sealed class AppRoutes {
   static void goChat(BuildContext context, {required ChatEntity chat}) {
     context.goNamed(
       'chat',
-      pathParameters: {
-        'chatId': chat.id,
-        'chatName': chat.name,
-      },
+      pathParameters: {'chatName': chat.name},
       extra: chat,
     );
   }
