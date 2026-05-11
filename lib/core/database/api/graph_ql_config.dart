@@ -18,7 +18,7 @@ class GraphQLConfig {
   static String? refreshToken;
   static Future<UserTokensModel?>? _ongoingRefresh;
 
-  //! WebSocket Configration
+  
   static WebSocketLink? _webSocketLink;
   static WebSocketLink get webSocketLink {
     return _webSocketLink ??= WebSocketLink(
@@ -32,9 +32,9 @@ class GraphQLConfig {
   }
 
   static String get _webSocketUri {
-    // final parsedUri = Uri.parse(uri);
-    // final scheme = parsedUri.scheme == 'https' ? 'wss' : 'ws';
-    // return parsedUri.replace(scheme: scheme).toString();
+    
+    
+    
     return 'ws://${baseURL}?access_token=${accessToken}';
   }
 
@@ -52,7 +52,7 @@ class GraphQLConfig {
     try {
       await link.dispose();
     } catch (_) {
-      // Ignore: dispose may throw if the socket is already closed.
+      
     }
   }
 
@@ -61,7 +61,7 @@ class GraphQLConfig {
     webSocketLink,
     httpLinkChain,
   );
-  //! GraphQL Links
+  
   static HttpLink httpLink = HttpLink(uri);
   static GraphQLLoggerLink loggerLink = GraphQLLoggerLink();
   static AuthLink authLink = AuthLink(
@@ -210,7 +210,7 @@ class GraphQLConfig {
     );
   }
 
-  //! Refresh Tokens
+  
 
   static Future<UserTokensModel?> _refreshTokens() {
     final ongoingRefresh = _ongoingRefresh;

@@ -27,7 +27,7 @@ class _VerifyOTPWidgetState extends State<VerifyOTPWidget> {
       return;
     }
 
-    // Normal typing behavior
+    
     if (value.isNotEmpty && index < 4) {
       _focusNodes[index + 1].requestFocus();
     }

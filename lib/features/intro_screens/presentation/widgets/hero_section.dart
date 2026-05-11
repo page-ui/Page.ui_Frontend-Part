@@ -58,7 +58,7 @@ class HeroSection extends StatelessWidget {
             children: [
               const SizedBox(height: 90),
 
-              // --- Pill badge ---
+              
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 18,
@@ -124,7 +124,7 @@ class HeroSection extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              // --- Subtitle ---
+              
               ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: compact ? w * 0.95 : 700),
                 child: Text(
@@ -139,7 +139,7 @@ class HeroSection extends StatelessWidget {
               ),
               const SizedBox(height: 40),
 
-              // --- CTA buttons ---
+              
               Wrap(
                 alignment: WrapAlignment.center,
                 spacing: 20,
@@ -184,7 +184,7 @@ class HeroSection extends StatelessWidget {
 
               const SizedBox(height: 60),
 
-              // --- Preview placeholder ---
+              
               PointerInterceptor(
                 child: Container(
                   width: compact

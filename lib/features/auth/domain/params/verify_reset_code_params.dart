@@ -4,7 +4,7 @@ class VerifyResetCodeParams {
 
   VerifyResetCodeParams({required this.email, required this.code});
 
-  // Map<String, dynamic> toJson() {
-  //   return {'email': email, 'password': password, "returnSecureToken": true, "displayName" : userName};
-  // }
+  
+  
+  
 }

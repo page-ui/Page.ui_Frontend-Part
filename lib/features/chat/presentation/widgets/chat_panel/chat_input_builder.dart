@@ -16,9 +16,9 @@ import 'package:page_ui/features/chat/presentation/widgets/chat_panel/chat_input
 class ChatInputBuilder extends StatefulWidget {
   const ChatInputBuilder({super.key, this.onSend});
 
-  /// When provided the widget is in "landing" mode (create new chat).
-  /// The subscription-active block is skipped so the user can always
-  /// send a first message regardless of what the current chat is doing.
+  
+  
+  
   final void Function(String content)? onSend;
 
   bool get isLandingMode => onSend != null;
@@ -70,7 +70,7 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
           builder: (context, isSendLoading) {
             return BlocSelector<ChatMessagesCubit, ChatMessagesState, bool>(
               selector: (state) {
-                // In landing mode we never block — creating a chat is always allowed.
+                
                 if (widget.isLandingMode) return false;
                 return state is ChatMessagesLoaded &&
                     (state.isAwaitingAiResponse ||
@@ -111,8 +111,8 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
     final message = _controller.text;
     if (message.isEmpty && !pickFileCubit.isImagePicked) return;
 
-    // Capture the content now so the optimistic bubble can use it later
-    // even after the controller is cleared.
+    
+    
     _lastSentContent = message.trim();
 
     if (widget.onSend != null) {
@@ -134,7 +134,7 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
 
     final messagesCubit = context.read<ChatMessagesCubit>();
 
-    // Show outgoing message immediately.
+    
     if (_lastSentContent.isNotEmpty) {
       messagesCubit.addOutgoingMessage(
         chatId: selectedChat.id,
@@ -142,7 +142,7 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
       );
     }
 
-    // Start subscription BEFORE sending to catch all AI_MESSAGE/THINKING chunks.
+    
     messagesCubit.startMessageSubscription(selectedChat.id);
 
     sendMessageCubit.sendMessage(
@@ -153,7 +153,7 @@ class _ChatInputBuilderState extends State<ChatInputBuilder> {
     );
   }
 
-  // String _normalizeOutgoingMessage(String rawMessage) {
-  //   return rawMessage.replaceAll('\r\n', '\n').replaceAll('\r', '\n').trim();
-  // }
+  
+  
+  
 }

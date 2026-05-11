@@ -37,7 +37,7 @@ class _ChatPanelState extends State<ChatPanel> {
     _messagesCubit = context.read<ChatMessagesCubit>();
     _openedChatId = chatId;
 
-    // Skip fetching messages for newly created chats — there are none to fetch.
+    
     if (homeState is ChatHomeActive && homeState.isNewlyCreated) return;
 
     _messagesCubit!.openChat(chatId: chatId);
@@ -70,7 +70,7 @@ class _ChatPanelState extends State<ChatPanel> {
         _messagesCubit = context.read<ChatMessagesCubit>();
         _openedChatId = chatId;
 
-        // Skip fetching messages for newly created chats.
+        
         if (state is ChatHomeActive && state.isNewlyCreated) return;
 
         _messagesCubit!.openChat(chatId: chatId);

@@ -70,7 +70,7 @@ class LandingNavBar extends StatelessWidget {
                 children: [
                   NameAndTheLogo(onTap: _scrollToTop),
 
-                  // Desktop nav items
+                  
                   if (!compact)
                     Row(
                       children: [
@@ -91,7 +91,7 @@ class LandingNavBar extends StatelessWidget {
                       ],
                     ),
 
-                  // Right side: Log in + optional hamburger
+                  
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -105,7 +105,7 @@ class LandingNavBar extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // Mobile hamburger menu
+                      
                       if (compact)
                         PopupMenuButton<String>(
                           icon: Icon(

@@ -24,7 +24,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
   ChatSession _session(String chatId) =>
       _sessions.putIfAbsent(chatId, ChatSession.new);
 
-  // ─── Open / close chat ────────────────────────────────────────────────────
+  
 
   Future<void> openChat({required String chatId}) async {
     _activeChatId = chatId;
@@ -87,22 +87,22 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     }
   }
 
-  // ─── Subscription lifecycle ───────────────────────────────────────────────
+  
 
-  /// Called by the UI immediately after .
-  /// Opens the WebSocket subscription for this chat. The subscription will
-  /// auto-close when:
-  ///   - a message with `isQuestion == true` arrives, OR
-  ///   - an AI_RUN message arrives (the full response pair is complete).
+  
+  
+  
+  
+  
   void startMessageSubscription(String chatId) {
-    // Always mark this chat as the active one.  For newly-created chats
-    // openChat() is intentionally skipped (nothing to fetch yet), so
-    // _activeChatId would otherwise remain stale and every incoming
-    // subscription message would be silently dropped.
+    
+    
+    
+    
     _activeChatId = chatId;
     final session = _session(chatId);
 
-    // Cancel any stale subscription first.
+    
     _cancelSubscription(chatId);
 
     session.isSubscriptionActive = true;
@@ -110,7 +110,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     session.activeThinkingMessage = null;
     if (_activeChatId == chatId) _emitLoaded(chatId);
 
-    // ignore: cancel_subscriptions
+    
     session.subscription = _chatRepo
         .subscribeToMessages(chatId: chatId)
         .listen(
@@ -154,17 +154,17 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     final type = message.type.trim().toUpperCase();
 
     if (type == MessageType.thinking) {
-      // Replace the active thinking bubble — only the latest one is shown.
+      
       session.activeThinkingMessage = message;
       session.isAwaitingAiResponse = true;
     } else if (type == MessageType.aiMessage) {
-      // Clear thinking, persist the AI text. Stay open — AI_RUN may follow.
+      
       session.activeThinkingMessage = null;
       session.isAwaitingAiResponse = false;
       session.messages = _mergeMessages(session.messages, [message]);
       ChatTypewriterRegistry.markArrived(message.id);
     } else if (type == MessageType.aiRun) {
-      // UI arrived — this is the terminal event. Add & close.
+      
       session.activeThinkingMessage = null;
       session.isAwaitingAiResponse = false;
       final isNew = !session.messages.any((m) => m.id == message.id);
@@ -172,12 +172,12 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
       if (isNew) ChatTypewriterRegistry.markArrived(message.id);
       _closeSubscriptionInternal(chatId, session);
 
-      // Fetch the full history silently to ensure no messages (like AI_MESSAGE) 
-      // were missed due to subscription race conditions (especially for new chats).
+      
+      
       _fetchMessagesSilently(chatId, session);
     } else if (type == MessageType.userMessage) {
-      // Real USER_MESSAGE arrived — drop the client-side optimistic bubble
-      // (different temp-ID) and replace it with the authoritative server copy.
+      
+      
       final optimisticId = session.optimisticMessageId;
       if (optimisticId != null) {
         session.messages =
@@ -186,21 +186,21 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
       }
       session.messages = _mergeMessages(session.messages, [message]);
     } else {
-      // Other unknown types — just persist.
+      
       session.messages = _mergeMessages(session.messages, [message]);
     }
 
     if (_activeChatId == chatId) _emitLoaded(chatId);
   }
 
-  /// Cancels the stream subscription and clears the active flag.
+  
   void _closeSubscriptionInternal(String chatId, ChatSession session) {
     final sub = session.subscription;
     session.subscription = null;
     session.isSubscriptionActive = false;
     sub?.cancel();
 
-    // Disconnect WebSocket if no other chat has an open subscription.
+    
     final anySubLeft = _sessions.values.any((s) => s.subscription != null);
     if (!anySubLeft) {
       GraphQLConfig.disconnectWebSocket();
@@ -215,7 +215,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     if (sub != null) await sub.cancel();
   }
 
-  // ─── Load more ────────────────────────────────────────────────────────────
+  
 
   Future<void> loadMoreMessages({required String chatId}) async {
     final session = _sessions[chatId];
@@ -248,7 +248,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     );
   }
 
-  // ─── Misc helpers ─────────────────────────────────────────────────────────
+  
 
   Future<void> _fetchMessagesSilently(String chatId, ChatSession session) async {
     try {
@@ -261,7 +261,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
         (response) {
           session.isHydrated = true;
 
-          // If history contains real user messages, clear the optimistic bubble.
+          
           final hasRealUserMessage =
               response.messages.any((m) => m.type == MessageType.userMessage);
           final optId = session.optimisticMessageId;
@@ -280,10 +280,10 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     }
   }
 
-  /// Immediately inserts a client-side user message bubble so the UI shows
-  /// the outgoing message without waiting for the subscription to echo it back.
-  /// The temp ID is tracked so it can be swapped out when the real server
-  /// message arrives via `_handleIncomingMessage`.
+  
+  
+  
+  
   void addOutgoingMessage({
     required String chatId,
     required String content,

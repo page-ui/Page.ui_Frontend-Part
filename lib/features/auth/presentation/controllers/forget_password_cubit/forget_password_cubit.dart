@@ -56,12 +56,12 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
     return "";
   }
 
-  // Inside ForgetPasswordCubit
+  
   Future<void> resetPassword({required ResetPasswordParams params}) async {
     emit(ForgetPasswordLoading());
     final result = await authRepoImpl.changePassword(
       params: params,
-    ); // Update Repo interface too
+    ); 
     result.fold(
       (failure) => emit(ForgetPasswordFailure(message: failure.message)),
       (_) => emit(ForgetPasswordSuccess()),
