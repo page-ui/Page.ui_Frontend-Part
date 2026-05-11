@@ -1,5 +1,5 @@
 class Queries {
-  // ─── Auth ─────────────────────────────────────────────────────────
+  
   static String loginMutation = r'''
     mutation Login($input: LoginInput!) {
       login(input: $input) {
@@ -66,7 +66,7 @@ class Queries {
     }
   ''';
 
-  // ─── Chat ─────────────────────────────────────────────────────────
+  
 
   static String createChatMutation = r'''
     mutation CreateChat($input: CreateChatInput!) {
@@ -209,9 +209,9 @@ class Queries {
     }
   ''';
 
-  // static String reportRenderErrorMutation = r'''
-  //   mutation ReportRenderError($input: ReportRenderErrorInput!) {
-  //     reportRenderError(input: $input)
-  //   }
-  // ''';
+  
+  
+  
+  
+  
 }

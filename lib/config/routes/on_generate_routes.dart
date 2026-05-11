@@ -18,9 +18,9 @@ import 'package:page_ui/features/auth/presentation/views/delete_account_verifica
 sealed class AppRoutes {
   const AppRoutes();
 
-  // ──────────────────────────────────────────────────────────────────────
-  // Path constants
-  // ──────────────────────────────────────────────────────────────────────
+  
+  
+  
   static const String landingPath = '/';
   static const String splashPath = '/splash';
   static const String developersPath = '/developers';
@@ -42,9 +42,9 @@ sealed class AppRoutes {
     emailVerificationPath,
   };
 
-  // ──────────────────────────────────────────────────────────────────────
-  // Page transitions
-  // ──────────────────────────────────────────────────────────────────────
+  
+  
+  
 
   static CustomTransitionPage<T> _slideTransition<T>({
     required LocalKey key,
@@ -104,9 +104,9 @@ sealed class AppRoutes {
     );
   }
 
-  // ──────────────────────────────────────────────────────────────────────
-  // Router
-  // ──────────────────────────────────────────────────────────────────────
+  
+  
+  
   static final GoRouter router = GoRouter(
     initialLocation: landingPath,
 
@@ -194,7 +194,7 @@ sealed class AppRoutes {
             path: 'chat/:chatName',
             name: 'chat',
             redirect: (context, state) {
-              // Deep-linking without ChatEntity data → fall back to /app
+              
               if (state.extra == null) return homePath;
               return null;
             },

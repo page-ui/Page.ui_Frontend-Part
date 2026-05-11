@@ -65,13 +65,13 @@ mixin HomeViewBodyMixin on State<HomeViewBody> {
 
     if (!context.mounted) return;
 
-    // Start the subscription immediately — the backend is already
-    // processing the initial message so the AI response will arrive soon.
+    
+    
     final chatId = chatHomeCubit.state.selectedChat?.id;
     if (chatId != null) {
       final messagesCubit = context.read<ChatMessagesCubit>();
-      // Show the user's message immediately (backend echoes it last via
-      // the subscription, after AI_RUN, so we add it optimistically).
+      
+      
       messagesCubit.addOutgoingMessage(
         chatId: chatId,
         content: content,

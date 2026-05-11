@@ -20,15 +20,15 @@ import 'package:page_ui/features/chat/presentation/controllers/send_message_cubi
 final getit = GetIt.instance;
 
 setUpServiceLocator() {
-  // Initialize REST client with refresh token support
+  
   GraphQLConfig.initializeRestClient();
 
-  // ─── Network ────────────────────────────────────────────────────
+  
   getit.registerLazySingleton<NetworkInfo>(
     () => NetworkInfoImpl(Connectivity()),
   );
 
-  // ─── Auth ───────────────────────────────────────────────────────
+  
   getit.registerLazySingleton<AuthDataSourceImpl>(() => AuthDataSourceImpl());
   getit.registerLazySingleton<AuthRepoImpl>(
     () => AuthRepoImpl(
@@ -37,7 +37,7 @@ setUpServiceLocator() {
     ),
   );
 
-  // ─── Chat ───────────────────────────────────────────────────────
+  
   getit.registerLazySingleton<ChatDataSource>(() => ChatDataSourceImpl());
   getit.registerLazySingleton<UploadService>(() => UploadService());
   getit.registerLazySingleton<ChatRepo>(
@@ -47,7 +47,7 @@ setUpServiceLocator() {
     ),
   );
 
-  // Use cases
+  
   getit.registerLazySingleton<UploadAttachmentUseCase>(
     () => UploadAttachmentUseCase(uploadService: getit.get<UploadService>()),
   );
@@ -64,7 +64,7 @@ setUpServiceLocator() {
     ),
   );
 
-  // Chat cubits — registered as factory so each HomeView gets fresh instances
+  
   getit.registerFactory<ChatHomeCubit>(
     () => ChatHomeCubit(createChat: getit.get<CreateChatUseCase>()),
   );

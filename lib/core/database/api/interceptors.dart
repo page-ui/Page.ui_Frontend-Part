@@ -3,7 +3,7 @@ import 'package:page_ui/core/errors/exceptions.dart';
 import 'package:graphql_flutter/graphql_flutter.dart' hide ServerException;
 import 'package:logger/logger.dart';
 
-/// This Link is used to show GraphQL request and response logs
+
 class GraphQLLoggerLink extends Link {
   final Logger _logger = Logger(
     printer: PrettyPrinter(methodCount: 0, noBoxingByDefault: false),
@@ -14,7 +14,7 @@ class GraphQLLoggerLink extends Link {
     final String operationName =
         request.operation.operationName ?? "Unnamed Operation";
 
-    // 1. Log Request Info
+    
     _logger.i(
       '🚀 GRAPHQL REQUEST: $operationName\n'
       'Variables: ${request.variables}',
@@ -22,7 +22,7 @@ class GraphQLLoggerLink extends Link {
 
     return forward!(request)
         .map((response) {
-          // 2. Log Response/Errors
+          
           if (response.errors != null && response.errors!.isNotEmpty) {
             _logger.e(
               '❌ GRAPHQL ERRORS [$operationName]:\n'
@@ -38,7 +38,7 @@ class GraphQLLoggerLink extends Link {
           return response;
         })
         .handleError((Object error) {
-          // 3. Log Network/Link Errors
+          
           _logger.f('🚨 GRAPHQL TERMINAL ERROR [$operationName]:\n$error');
           if (error is ServerException) {
             throw error;
