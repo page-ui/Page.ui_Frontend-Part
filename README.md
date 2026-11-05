@@ -7,6 +7,16 @@ The platform emphasizes a sophisticated, immersive user experience with seamless
 
 ---
 
+## 🎬 App Demo
+
+Experience **Page UI** in action:
+
+[![Watch Page UI Demo](https://res.cloudinary.com/rj3iz5na/video/upload/Demo_1.jpg)](https://player.cloudinary.com/embed/?cloud_name=rj3iz5na&public_id=Demo_1)
+
+> 📺 **[Watch the Interactive Demo Video](https://player.cloudinary.com/embed/?cloud_name=rj3iz5na&public_id=Demo_1)** | 📥 **[Direct Video Stream (MP4)](https://res.cloudinary.com/rj3iz5na/video/upload/Demo_1.mp4)**
+
+---
+
 ## 🎯 Key Features
 
 ### 1. Interactive AI Chat & UI Generation
