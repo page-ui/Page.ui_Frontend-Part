@@ -11,7 +11,7 @@ import 'package:page_ui/features/auth/presentation/controllers/delete_account_cu
 import 'package:page_ui/features/auth/presentation/controllers/settings_cubit/settings_cubit.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
-enum _SettingsAction { signOut, deleteAccount }
+enum _SettingsAction { profile, signOut, deleteAccount }
 
 class SettingsMenuButton extends StatelessWidget {
   const SettingsMenuButton({super.key});
@@ -61,6 +61,19 @@ class _SettingsMenuButtonContent extends StatelessWidget {
         ),
         items: const [
           PopupMenuItem(
+            value: _SettingsAction.profile,
+            child: Row(
+              children: [
+                Icon(Icons.person_outline, size: 16, color: AppColors.white),
+                SizedBox(width: 8),
+                Text(
+                  'User profile',
+                  style: TextStyle(color: AppColors.white, fontSize: 13),
+                ),
+              ],
+            ),
+          ),
+          PopupMenuItem(
             value: _SettingsAction.signOut,
             child: Row(
               children: [
@@ -90,7 +103,9 @@ class _SettingsMenuButtonContent extends StatelessWidget {
       );
 
       if (!context.mounted) return;
-      if (action == _SettingsAction.signOut) {
+      if (action == _SettingsAction.profile) {
+        AppRoutes.goProfile(context);
+      } else if (action == _SettingsAction.signOut) {
         await context.read<SettingsCubit>().signOut();
       } else if (action == _SettingsAction.deleteAccount) {
         await context.read<DeleteAccountCubit>().requestAccountDeletion();
