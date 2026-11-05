@@ -1,0 +1,50 @@
+# GraphQL API Contracts: User Profile
+
+This contract defines the GraphQL operations required for fetching and updating user profiles.
+
+## Queries
+
+### Get User Profile
+
+Fetches the profile details of the currently authenticated user.
+
+```graphql
+query GetUserProfile {
+  me {
+    id
+    name
+    birthdate
+    photoUrl
+  }
+}
+```
+
+## Mutations
+
+### Update User Profile
+
+Updates the text and media details of the user profile.
+
+```graphql
+mutation UpdateUserProfile($name: String!, $birthdate: String, $photoUrl: String) {
+  updateUserProfile(input: { name: $name, birthdate: $birthdate, photoUrl: $photoUrl }) {
+    id
+    name
+    birthdate
+    photoUrl
+  }
+}
+```
+
+### Get Profile Photo Upload URL
+
+Requests a presigned Minio upload URL to upload the profile photo.
+
+```graphql
+mutation GetProfilePhotoUploadUrl($fileName: String!, $contentType: String!) {
+  getProfilePhotoUploadUrl(fileName: $fileName, contentType: $contentType) {
+    uploadUrl
+    downloadUrl
+  }
+}
+```

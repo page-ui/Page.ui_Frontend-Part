@@ -16,6 +16,12 @@ import 'package:page_ui/features/chat/presentation/controllers/chat_history_cubi
 import 'package:page_ui/features/chat/presentation/controllers/chat_home_cubit/chat_home_cubit.dart';
 import 'package:page_ui/features/chat/presentation/controllers/chat_messages_cubit/chat_messages_cubit.dart';
 import 'package:page_ui/features/chat/presentation/controllers/send_message_cubit/send_message_cubit.dart';
+import 'package:page_ui/features/profile/data/datasources/profile_remote_data_source.dart';
+import 'package:page_ui/features/profile/data/repositories/profile_repository_impl.dart';
+import 'package:page_ui/features/profile/domain/repositories/profile_repository.dart';
+import 'package:page_ui/features/profile/domain/usecases/get_user_profile_usecase.dart';
+import 'package:page_ui/features/profile/domain/usecases/update_user_profile_usecase.dart';
+import 'package:page_ui/features/profile/presentation/cubit/user_profile_cubit.dart';
 
 final getit = GetIt.instance;
 
@@ -65,6 +71,23 @@ setUpServiceLocator() {
   );
 
   
+  getit.registerLazySingleton<ProfileRemoteDataSource>(
+    () => ProfileRemoteDataSourceImpl(),
+  );
+  getit.registerLazySingleton<ProfileRepository>(
+    () => ProfileRepositoryImpl(
+      remoteDataSource: getit.get<ProfileRemoteDataSource>(),
+      networkInfo: getit.get<NetworkInfo>(),
+    ),
+  );
+  getit.registerLazySingleton<GetUserProfileUseCase>(
+    () => GetUserProfileUseCase(profileRepository: getit.get<ProfileRepository>()),
+  );
+  getit.registerLazySingleton<UpdateUserProfileUseCase>(
+    () => UpdateUserProfileUseCase(profileRepository: getit.get<ProfileRepository>()),
+  );
+
+  
   getit.registerFactory<ChatHomeCubit>(
     () => ChatHomeCubit(createChat: getit.get<CreateChatUseCase>()),
   );
@@ -77,4 +100,12 @@ setUpServiceLocator() {
   getit.registerFactory<SendMessageCubit>(
     () => SendMessageCubit(sendMessage: getit.get<SendMessageUseCase>()),
   );
+  getit.registerFactory<UserProfileCubit>(
+    () => UserProfileCubit(
+      getUserProfileUseCase: getit.get<GetUserProfileUseCase>(),
+      updateUserProfileUseCase: getit.get<UpdateUserProfileUseCase>(),
+      uploadService: getit.get<UploadService>(),
+    ),
+  );
 }
+
