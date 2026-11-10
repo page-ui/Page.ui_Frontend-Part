@@ -75,7 +75,7 @@ mixin HomeViewBodyMixin on State<HomeViewBody> {
       messagesCubit.addOutgoingMessage(
         chatId: chatId,
         content: content,
-        attachmentUrl: pickFileCubit.isImagePicked ? null : null,
+        downloadUrl: pickFileCubit.isImagePicked ? null : null,
       );
       messagesCubit.startMessageSubscription(chatId);
     }

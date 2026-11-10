@@ -24,8 +24,6 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
   ChatSession _session(String chatId) =>
       _sessions.putIfAbsent(chatId, ChatSession.new);
 
-  
-
   Future<void> openChat({required String chatId}) async {
     _activeChatId = chatId;
     final session = _session(chatId);
@@ -87,22 +85,10 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     }
   }
 
-  
-
-  
-  
-  
-  
-  
   void startMessageSubscription(String chatId) {
-    
-    
-    
-    
     _activeChatId = chatId;
     final session = _session(chatId);
 
-    
     _cancelSubscription(chatId);
 
     session.isSubscriptionActive = true;
@@ -110,7 +96,6 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     session.activeThinkingMessage = null;
     if (_activeChatId == chatId) _emitLoaded(chatId);
 
-    
     session.subscription = _chatRepo
         .subscribeToMessages(chatId: chatId)
         .listen(
@@ -154,17 +139,14 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     final type = message.type.trim().toUpperCase();
 
     if (type == MessageType.thinking) {
-      
       session.activeThinkingMessage = message;
       session.isAwaitingAiResponse = true;
     } else if (type == MessageType.aiMessage) {
-      
       session.activeThinkingMessage = null;
       session.isAwaitingAiResponse = false;
       session.messages = _mergeMessages(session.messages, [message]);
       ChatTypewriterRegistry.markArrived(message.id);
     } else if (type == MessageType.aiRun) {
-      
       session.activeThinkingMessage = null;
       session.isAwaitingAiResponse = false;
       final isNew = !session.messages.any((m) => m.id == message.id);
@@ -172,35 +154,29 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
       if (isNew) ChatTypewriterRegistry.markArrived(message.id);
       _closeSubscriptionInternal(chatId, session);
 
-      
-      
       _fetchMessagesSilently(chatId, session);
     } else if (type == MessageType.userMessage) {
-      
-      
       final optimisticId = session.optimisticMessageId;
       if (optimisticId != null) {
-        session.messages =
-            session.messages.where((m) => m.id != optimisticId).toList();
+        session.messages = session.messages
+            .where((m) => m.id != optimisticId)
+            .toList();
         session.optimisticMessageId = null;
       }
       session.messages = _mergeMessages(session.messages, [message]);
     } else {
-      
       session.messages = _mergeMessages(session.messages, [message]);
     }
 
     if (_activeChatId == chatId) _emitLoaded(chatId);
   }
 
-  
   void _closeSubscriptionInternal(String chatId, ChatSession session) {
     final sub = session.subscription;
     session.subscription = null;
     session.isSubscriptionActive = false;
     sub?.cancel();
 
-    
     final anySubLeft = _sessions.values.any((s) => s.subscription != null);
     if (!anySubLeft) {
       GraphQLConfig.disconnectWebSocket();
@@ -214,8 +190,6 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     session?.isSubscriptionActive = false;
     if (sub != null) await sub.cancel();
   }
-
-  
 
   Future<void> loadMoreMessages({required String chatId}) async {
     final session = _sessions[chatId];
@@ -248,9 +222,10 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     );
   }
 
-  
-
-  Future<void> _fetchMessagesSilently(String chatId, ChatSession session) async {
+  Future<void> _fetchMessagesSilently(
+    String chatId,
+    ChatSession session,
+  ) async {
     try {
       final result = await _chatRepo.getMessages(chatId: chatId, first: 20);
       if (isClosed) return;
@@ -261,17 +236,21 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
         (response) {
           session.isHydrated = true;
 
-          
-          final hasRealUserMessage =
-              response.messages.any((m) => m.type == MessageType.userMessage);
+          final hasRealUserMessage = response.messages.any(
+            (m) => m.type == MessageType.userMessage,
+          );
           final optId = session.optimisticMessageId;
           if (hasRealUserMessage && optId != null) {
-            session.messages =
-                session.messages.where((m) => m.id != optId).toList();
+            session.messages = session.messages
+                .where((m) => m.id != optId)
+                .toList();
             session.optimisticMessageId = null;
           }
 
-          session.messages = _mergeMessages(session.messages, response.messages);
+          session.messages = _mergeMessages(
+            session.messages,
+            response.messages,
+          );
           if (_activeChatId == chatId) _emitLoaded(chatId);
         },
       );
@@ -280,14 +259,10 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     }
   }
 
-  
-  
-  
-  
   void addOutgoingMessage({
     required String chatId,
     required String content,
-    String? attachmentUrl,
+    String? downloadUrl,
   }) {
     final tempId = 'opt_${DateTime.now().millisecondsSinceEpoch}';
     final session = _session(chatId);
@@ -299,7 +274,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
       type: MessageType.userMessage,
       status: 'sent',
       createdAt: DateTime.now(),
-      attachmentUrl: attachmentUrl,
+      downloadUrl: downloadUrl,
       isQuestion: true,
     );
     session.messages = _mergeMessages(session.messages, [optimistic]);

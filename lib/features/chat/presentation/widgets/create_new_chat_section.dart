@@ -11,7 +11,7 @@ class CreateNewChatSection extends StatelessWidget {
     this.errorMessage,
   });
 
-  final Function({required String content, String? attachmentUrl}) onSend;
+  final Function({required String content, String? downloadUrl}) onSend;
   final String? errorMessage;
 
   @override

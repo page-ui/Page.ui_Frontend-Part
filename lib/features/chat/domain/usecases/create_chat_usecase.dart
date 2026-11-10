@@ -19,15 +19,12 @@ class CreateChatUseCase {
     required String content,
     UploadAttachmentInput? attachment,
   }) async {
-    String? attachmentUrl;
+    String? downloadUrl;
     if (attachment != null) {
-      attachmentUrl = await _uploadAttachment(attachment);
+      downloadUrl = await _uploadAttachment(attachment);
     }
     return _chatRepo.createChat(
-      params: CreateChatParams(
-        content: content,
-        attachmentUrl: attachmentUrl,
-      ),
+      params: CreateChatParams(content: content, downloadUrl: downloadUrl),
     );
   }
 }

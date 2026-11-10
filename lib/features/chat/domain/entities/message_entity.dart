@@ -6,7 +6,7 @@ class MessageEntity {
   final String type;
   final String status;
   final DateTime createdAt;
-  final String? attachmentUrl;
+  final String? downloadUrl;
   final bool isDeleted;
   final bool isQuestion;
 
@@ -18,8 +18,11 @@ class MessageEntity {
     required this.type,
     required this.status,
     required this.createdAt,
-    this.attachmentUrl,
+    this.downloadUrl,
     this.isDeleted = false,
     this.isQuestion = false,
   });
+
+  @Deprecated('Use downloadUrl instead')
+  String? get attachmentUrl => downloadUrl;
 }

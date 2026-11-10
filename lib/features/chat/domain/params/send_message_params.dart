@@ -3,48 +3,51 @@ import 'message_content_codec.dart';
 class SendMessageParams {
   final String chatId;
   final String content;
-  final String? attachmentUrl;
+  final String? downloadUrl;
 
   const SendMessageParams({
     required this.chatId,
     required this.content,
-    this.attachmentUrl,
+    this.downloadUrl,
   });
+
+  @Deprecated('Use downloadUrl instead')
+  String? get attachmentUrl => downloadUrl;
 
   SendMessageParams copyWith({
     String? chatId,
     String? content,
-    String? attachmentUrl,
+    String? downloadUrl,
   }) {
     return SendMessageParams(
       chatId: chatId ?? this.chatId,
       content: content ?? this.content,
-      attachmentUrl: attachmentUrl ?? this.attachmentUrl,
+      downloadUrl: downloadUrl ?? this.downloadUrl,
     );
   }
 
   Map<String, dynamic> toInputJson() {
     final normalizedContent = _normalizeContent(
       content: content,
-      attachmentUrl: attachmentUrl,
+      downloadUrl: downloadUrl,
     );
 
     return {
       'chatKey': chatId,
       'content': normalizedContent,
-      if (attachmentUrl != null && attachmentUrl!.trim().isNotEmpty)
-        'attachmentUrl': attachmentUrl,
+      if (downloadUrl != null && downloadUrl!.trim().isNotEmpty)
+        'attachmentUrl': downloadUrl,
     };
   }
 }
 
 String _normalizeContent({
   required String content,
-  required String? attachmentUrl,
+  required String? downloadUrl,
 }) {
   final normalizedLineEndings = encodeMessageContent(content);
 
-  if (attachmentUrl == null || attachmentUrl.trim().isEmpty) {
+  if (downloadUrl == null || downloadUrl.trim().isEmpty) {
     return normalizedLineEndings;
   }
 

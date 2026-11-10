@@ -21,7 +21,7 @@ class SendMessageUseCase {
     SendMessageParams finalParams = params;
     if (attachment != null) {
       final downloadUrl = await _uploadAttachment(attachment);
-      finalParams = params.copyWith(attachmentUrl: downloadUrl);
+      finalParams = params.copyWith(downloadUrl: downloadUrl);
     }
     return _chatRepo.sendMessage(params: finalParams);
   }

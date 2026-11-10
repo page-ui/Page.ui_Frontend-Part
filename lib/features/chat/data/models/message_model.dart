@@ -15,7 +15,7 @@ class MessageModel extends MessageEntity {
     required super.type,
     required super.status,
     required super.createdAt,
-    super.attachmentUrl,
+    super.downloadUrl,
     super.isDeleted,
     super.isQuestion,
   });
@@ -40,7 +40,7 @@ class MessageModel extends MessageEntity {
       type: json['type'] as String,
       status: (json['status'] as String?) ?? defaultStatus,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      attachmentUrl: json['attachmentUrl'] as String?,
+      downloadUrl: (json['downloadUrl'] ?? json['attachmentUrl']) as String?,
       isDeleted: (json['isDeleted'] as bool?) ?? false,
       isQuestion: (json['isQuestion'] as bool?) ?? false,
     );

@@ -2,24 +2,27 @@ import 'message_content_codec.dart';
 
 class CreateChatParams {
   final String content;
-  final String? attachmentUrl;
+  final String? downloadUrl;
 
   const CreateChatParams({
     required this.content,
-    this.attachmentUrl,
+    this.downloadUrl,
   });
+
+  @Deprecated('Use downloadUrl instead')
+  String? get attachmentUrl => downloadUrl;
 
   Map<String, dynamic> toInputJson() {
     final normalizedContent = _normalizeContent(
       content: content,
-      attachmentUrl: attachmentUrl,
+      downloadUrl: downloadUrl,
     );
 
     return {
       'initialUserMessage': {
         'content': normalizedContent,
-        if (attachmentUrl != null && attachmentUrl!.trim().isNotEmpty)
-          'attachmentUrl': attachmentUrl,
+        if (downloadUrl != null && downloadUrl!.trim().isNotEmpty)
+          'attachmentUrl': downloadUrl,
       },
     };
   }
@@ -27,11 +30,11 @@ class CreateChatParams {
 
 String _normalizeContent({
   required String content,
-  required String? attachmentUrl,
+  required String? downloadUrl,
 }) {
   final normalizedLineEndings = encodeMessageContent(content);
 
-  if (attachmentUrl == null || attachmentUrl.trim().isEmpty) {
+  if (downloadUrl == null || downloadUrl.trim().isEmpty) {
     return normalizedLineEndings;
   }
 

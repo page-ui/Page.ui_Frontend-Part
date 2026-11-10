@@ -75,7 +75,7 @@ class _HomeViewBodyState extends State<HomeViewBody> with HomeViewBodyMixin {
 
     if (!hasChat) {
       return CreateNewChatSection(
-        onSend: ({required content, attachmentUrl}) =>
+        onSend: ({required content, downloadUrl}) =>
             onSendFromLanding(context, content),
       );
     }

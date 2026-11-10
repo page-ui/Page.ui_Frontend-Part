@@ -18,8 +18,8 @@ class ChatMessageContent extends StatelessWidget {
 
   bool get _hasImage =>
       !_isAssistant &&
-      message.attachmentUrl != null &&
-      message.attachmentUrl!.trim().isNotEmpty;
+      message.downloadUrl != null &&
+      message.downloadUrl!.trim().isNotEmpty;
 
   String? get _displayText {
     final content = message.content.trim();
@@ -39,7 +39,7 @@ class ChatMessageContent extends StatelessWidget {
       children: [
         if (!_isAssistant)
           _ChatMessageImage(
-            imageUrl: message.attachmentUrl,
+            imageUrl: message.downloadUrl,
             heroTag: 'chat-image-${message.id}',
           ),
         if (_hasImage && _displayText != null) const SizedBox(height: 8),
